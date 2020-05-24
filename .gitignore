@@ -11,3 +11,5 @@
 /src/DevEngine.Core/bin/Debug/netstandard2.1
 /src/DevEngine.Tests/bin/Debug/netcoreapp3.1
 /src/DevEngine.Tests/obj
+/src/DevEngine.RealTypes/bin/Debug/netstandard2.1
+/src/DevEngine.RealTypes/obj

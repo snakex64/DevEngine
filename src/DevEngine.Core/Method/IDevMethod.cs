@@ -7,7 +7,7 @@ namespace DevEngine.Core.Method
 {
     public interface IDevMethod
     {
-        IDevClass DeclaringClass { get; }
+        IDevType DeclaringType { get; }
 
         public string Name { get; }
 

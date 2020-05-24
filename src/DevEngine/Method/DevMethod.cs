@@ -11,13 +11,13 @@ namespace DevEngine.Method
     {
         public DevMethod(IDevClass declaringClass, string name, bool isStatic, Visibility visibility = Visibility.Private)
         {
-            DeclaringClass = declaringClass;
+            DeclaringType = declaringClass;
             Name = name;
             IsStatic = isStatic;
             Visibility = visibility;
         }
 
-        public IDevClass DeclaringClass { get; }
+        public IDevType DeclaringType { get; }
 
         public string Name { get; }
 

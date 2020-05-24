@@ -6,6 +6,6 @@ namespace DevEngine.Core
 {
     public enum Visibility
     {
-        Private, Internal, Protected, Public
+        None, Private, Internal, Protected, Public
     }
 }

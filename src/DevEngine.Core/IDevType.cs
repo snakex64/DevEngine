@@ -10,6 +10,8 @@ namespace DevEngine.Core
 
         string TypeNamespace { get; }
 
+        string TypeNamespaceAndName => $"{TypeNamespace}.{TypeName}";
+
         bool IsClass { get; }
 
         bool CanBeAssignedTo(IDevType type);

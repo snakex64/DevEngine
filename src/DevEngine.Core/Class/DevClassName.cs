@@ -54,5 +54,10 @@ namespace DevEngine.Core.Class
         {
             return FullNameWithNamespace.StartsWith(@namespace + ".");
         }
+
+        public static implicit operator DevClassName(string nameWithNamespace)
+        {
+            return new DevClassName(nameWithNamespace);
+        }
     }
 }

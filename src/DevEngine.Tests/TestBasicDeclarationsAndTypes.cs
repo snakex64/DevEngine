@@ -2,6 +2,8 @@ using DevEngine.Class;
 using DevEngine.Core.Class;
 using DevEngine.Method;
 using DevEngine.Project;
+using DevEngine.RealTypes;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DevEngine.Tests
@@ -9,10 +11,12 @@ namespace DevEngine.Tests
     [TestClass]
     public class TestBasicDeclarationsAndTypes
     {
-        private DevProject GetBasicDevProject()
+        public static DevProject GetBasicDevProject()
         {
-
-            var project = new DevProject();
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<RealTypesProviderService>()
+                .BuildServiceProvider();
+            var project = new DevProject(serviceProvider);
 
             var class1 = new DevClass(null, new Core.Class.DevClassName("DevEngine.Tests.Class1"));
             var class2 = new DevClass(null, new Core.Class.DevClassName("DevEngine.Tests.Class2"));
@@ -39,7 +43,7 @@ namespace DevEngine.Tests
 
             Assert.IsNotNull(method1);
             Assert.AreEqual("method1", method1.Name);
-            Assert.AreEqual("DevEngine.Tests.Class1", method1.DeclaringClass.Name.FullNameWithNamespace);
+            Assert.AreEqual("DevEngine.Tests.Class1", method1.DeclaringType.TypeNamespaceAndName);
         }
 
 

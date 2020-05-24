@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEngine", "DevEngine\DevE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEngine.Tests", "DevEngine.Tests\DevEngine.Tests.csproj", "{A0675048-AA5F-4848-85E4-19BE1D933CD1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEngine.RealTypes", "DevEngine.RealTypes\DevEngine.RealTypes.csproj", "{48562EF5-5A06-4AD9-8148-7B6E8E65427C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A0675048-AA5F-4848-85E4-19BE1D933CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0675048-AA5F-4848-85E4-19BE1D933CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0675048-AA5F-4848-85E4-19BE1D933CD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48562EF5-5A06-4AD9-8148-7B6E8E65427C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48562EF5-5A06-4AD9-8148-7B6E8E65427C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48562EF5-5A06-4AD9-8148-7B6E8E65427C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48562EF5-5A06-4AD9-8148-7B6E8E65427C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,33 +10,6 @@ namespace DevEngine.Method
 {
     internal class DevMethodCollection: IDevMethodCollection
     {
-        public IDevMethod GetMethod(string name, IDevType[] parameters)
-        {
-            foreach( var method in Methods)
-            {
-                if (method.Name != name)
-                    continue;
-
-                if (method.Parameters.Count != parameters.Length)
-                    continue;
-
-                bool found = true;
-                for( var i = 0; i < parameters.Length; ++i)
-                {
-                    if (!parameters[i].CanBeAssignedTo(method.Parameters[i].ParameterType))
-                    {
-                        found = false;
-                        break;
-                    }
-                }
-                if (found)
-                    return method;
-            }
-
-            throw new Exception("Method not found with specified parameters: " + name);
-        }
-
-
         #region Collection
 
         public int Count => Methods.Count;
