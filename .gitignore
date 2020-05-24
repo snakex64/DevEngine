@@ -4,3 +4,5 @@
 
 /DevEngine/.vs/DevEngine/v16
 /DevEngine/DevEngine.Core/obj
+/src/.vs/DevEngine
+/src/DevEngine.Core/obj
