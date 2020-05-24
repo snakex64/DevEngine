@@ -6,3 +6,6 @@
 /DevEngine/DevEngine.Core/obj
 /src/.vs/DevEngine
 /src/DevEngine.Core/obj
+/src/DevEngine/bin/Debug/netstandard2.1
+/src/DevEngine/obj
+/src/DevEngine.Core/bin/Debug/netstandard2.1
