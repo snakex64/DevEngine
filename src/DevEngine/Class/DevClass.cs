@@ -2,6 +2,7 @@ using DevEngine.Core;
 using DevEngine.Core.Class;
 using DevEngine.Core.Method;
 using DevEngine.Core.Property;
+using DevEngine.Method;
 using DevEngine.Property;
 using System;
 using System.Collections.Generic;
@@ -13,18 +14,17 @@ namespace DevEngine.Class
     {
         #region Declarations
 
-        public DevClass(IDevType? baseType, DevClassName name, IDevMethodCollection methods)
+        public DevClass(IDevType? baseType, DevClassName name)
         {
             BaseType = baseType;
             Name = name;
-            Methods = methods;
         }
 
         public IDevType? BaseType { get; }
 
         public DevClassName Name { get; }
 
-        public IDevMethodCollection Methods { get; }
+        public IDevMethodCollection Methods { get; } = new DevMethodCollection();
 
         public IDevPropertyCollection Properties { get; } = new DevPropertyCollection();
 
