@@ -1,4 +1,5 @@
 using DevEngine.Class;
+using DevEngine.Core.Class;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,46 @@ namespace DevEngine.Tests
             var project = TestBasicDeclarationsAndTypes.GetBasicDevProject();
 
             Assert.IsNotNull(project.GetRealType<TestType2>());
+        }
+
+        [TestMethod]
+        public void ImportBasicType_CheckMethods()
+        {
+            var project = TestBasicDeclarationsAndTypes.GetBasicDevProject();
+
+            var testType2 = project.GetRealType<TestType2>();
+            Assert.IsTrue(testType2.IsClass);
+
+            var testType2Class = (IDevClass)testType2;
+            var method2 = testType2Class.Methods.GetMethod("Method2");
+
+            Assert.IsNotNull(method2);
+
+            Assert.AreEqual(project.GetRealType<int>(), method2.Parameters[0].ParameterType);
+            Assert.AreEqual(project.GetRealType<TestType1>(), method2.Parameters[1].ParameterType);
+
+            Assert.AreEqual("parameter1", method2.Parameters[0].Name);
+            Assert.AreEqual("parameter2", method2.Parameters[1].Name);
+        }
+
+        [TestMethod]
+        public void ImportBasicType_CheckMethodsInherited()
+        {
+            var project = TestBasicDeclarationsAndTypes.GetBasicDevProject();
+
+            var testType2 = project.GetRealType<TestType2>();
+            Assert.IsTrue(testType2.IsClass);
+
+            var testType2Class = (IDevClass)testType2;
+            var method2 = testType2Class.Methods.GetMethod("Method1");
+
+            Assert.IsNotNull(method2);
+
+            Assert.AreEqual(project.GetRealType<int>(), method2.Parameters[0].ParameterType);
+            Assert.AreEqual(project.GetRealType<string>(), method2.Parameters[1].ParameterType);
+
+            Assert.AreEqual("parameter1", method2.Parameters[0].Name);
+            Assert.AreEqual("parameter2", method2.Parameters[1].Name);
         }
 
         [TestMethod]

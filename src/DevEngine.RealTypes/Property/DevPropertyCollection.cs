@@ -14,7 +14,7 @@ namespace DevEngine.RealTypes.Property
         {
             var collection = new Dictionary<string, IDevProperty>();
 
-            foreach (var property in type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance))
+            foreach (var property in type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.FlattenHierarchy))
             {
                 collection[property.Name] = new DevProperty(realTypesProviderService, property);
             }

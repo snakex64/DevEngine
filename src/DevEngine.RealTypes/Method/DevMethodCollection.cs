@@ -1,4 +1,5 @@
 using DevEngine.Core;
+using DevEngine.Core.Class;
 using DevEngine.Core.Method;
 using System;
 using System.Collections;
@@ -10,21 +11,21 @@ namespace DevEngine.RealTypes.Method
 {
     internal class DevMethodCollection: IDevMethodCollection
     {
+        public IDevClass DevClass { get; }
 
-        static internal DevMethodCollection CreateFromType(Type type, RealTypesProviderService realTypesProviderService)
+        static internal DevMethodCollection CreateFromType(IDevClass devClass, Type type, RealTypesProviderService realTypesProviderService)
         {
             var methods = new HashSet<IDevMethod>();
 
-            foreach (var method in type.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
-            {
+            foreach (var method in type.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.FlattenHierarchy))
                 methods.Add(new DevMethod(realTypesProviderService, method));
-            }
 
-            return new DevMethodCollection(methods);
+            return new DevMethodCollection(devClass, methods);
         }
 
-        private DevMethodCollection(HashSet<IDevMethod> methods)
+        private DevMethodCollection(IDevClass devClass, HashSet<IDevMethod> methods)
         {
+            DevClass = devClass;
             Methods = methods;
         }
 
@@ -35,6 +36,7 @@ namespace DevEngine.RealTypes.Method
         public bool IsReadOnly => true;
 
         private IReadOnlyCollection<IDevMethod> Methods { get; }
+
 
         public void Add(IDevMethod item)
         {

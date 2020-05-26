@@ -22,7 +22,7 @@ namespace DevEngine.RealTypes.Class
             Name = new DevClassName(RealType.Namespace, RealType.Name);
 
             LazyProperties = new Lazy<IDevPropertyCollection>(() => DevPropertyCollection.CreateFromType(RealType, RealTypesProviderService));
-            LazyMethods = new Lazy<IDevMethodCollection>(() => DevMethodCollection.CreateFromType(RealType, RealTypesProviderService));
+            LazyMethods = new Lazy<IDevMethodCollection>(() => DevMethodCollection.CreateFromType(this, RealType, RealTypesProviderService));
         }
 
         private Type RealType { get; }

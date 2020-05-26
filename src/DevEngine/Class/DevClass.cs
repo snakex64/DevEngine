@@ -18,13 +18,14 @@ namespace DevEngine.Class
         {
             BaseType = baseType;
             Name = name;
+            Methods = new DevMethodCollection(this);
         }
 
         public IDevType? BaseType { get; }
 
         public DevClassName Name { get; }
 
-        public IDevMethodCollection Methods { get; } = new DevMethodCollection();
+        public IDevMethodCollection Methods { get; }
 
         public IDevPropertyCollection Properties { get; } = new DevPropertyCollection();
 

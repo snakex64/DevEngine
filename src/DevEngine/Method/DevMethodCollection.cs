@@ -1,4 +1,5 @@
 using DevEngine.Core;
+using DevEngine.Core.Class;
 using DevEngine.Core.Method;
 using System;
 using System.Collections;
@@ -10,6 +11,13 @@ namespace DevEngine.Method
 {
     internal class DevMethodCollection: IDevMethodCollection
     {
+        public DevMethodCollection(IDevClass devClass)
+        {
+            DevClass = devClass;
+        }
+
+        public IDevClass DevClass { get; }
+
         #region Collection
 
         public int Count => Methods.Count;
