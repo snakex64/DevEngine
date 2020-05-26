@@ -5,6 +5,7 @@ using DevEngine.Project;
 using DevEngine.RealTypes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace DevEngine.Tests
 {
@@ -18,12 +19,12 @@ namespace DevEngine.Tests
                 .BuildServiceProvider();
             var project = new DevProject(serviceProvider);
 
-            var class1 = new DevClass(null, new Core.Class.DevClassName("DevEngine.Tests.Class1"));
-            var class2 = new DevClass(null, new Core.Class.DevClassName("DevEngine.Tests.Class2"));
+            var class1 = new DevClass(null, new DevClassName("DevEngine.Tests.Class1"));
+            var class2 = new DevClass(null, new DevClassName("DevEngine.Tests.Class2"));
             project.Classes.Add(class1);
             project.Classes.Add(class2);
 
-            var method1 = new DevMethod(class1, "method1", false);
+            var method1 = new DevMethod(class1, "method1", false, project.GetVoidType());
             class1.Methods.Add(method1);
 
             method1.Parameters.Add(new DevMethodParameter(class2, "p1", false, false));

@@ -31,5 +31,9 @@ namespace DevEngine.Project
             return GetRealType(typeof(T));
         }
 
+        public IDevType GetVoidType()
+        {
+            return GetRealType(typeof(void));
+        }
     }
 }

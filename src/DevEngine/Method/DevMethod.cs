@@ -9,12 +9,13 @@ namespace DevEngine.Method
 {
     public class DevMethod : IDevMethod
     {
-        public DevMethod(IDevClass declaringClass, string name, bool isStatic, Visibility visibility = Visibility.Private)
+        public DevMethod(IDevClass declaringClass, string name, bool isStatic, IDevType returnType, Visibility visibility = Visibility.Private)
         {
             DeclaringType = declaringClass;
             Name = name;
             IsStatic = isStatic;
             Visibility = visibility;
+            ReturnType = returnType;
         }
 
         public IDevType DeclaringType { get; }
@@ -27,5 +28,6 @@ namespace DevEngine.Method
 
         public Visibility Visibility { get; }
 
+        public IDevType ReturnType { get; }
     }
 }

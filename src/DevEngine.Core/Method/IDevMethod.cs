@@ -16,5 +16,7 @@ namespace DevEngine.Core.Method
         IList<IDevMethodParameter> Parameters { get; }
 
         Visibility Visibility { get; }
+
+        IDevType ReturnType { get; }
     }
 }

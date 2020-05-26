@@ -18,6 +18,7 @@ namespace DevEngine.RealTypes.Method
             Name = methodInfo.Name;
             IsStatic = methodInfo.IsStatic;
             Visibility = Visibility.Private;
+            ReturnType = realTypesProviderService.GetDevType(methodInfo.ReturnType);
 
             LazyParameters = new Lazy<IList<IDevMethodParameter>>(() =>
             {
@@ -38,5 +39,7 @@ namespace DevEngine.RealTypes.Method
         public IList<IDevMethodParameter> Parameters => LazyParameters.Value;
 
         public Visibility Visibility { get; }
+
+        public IDevType ReturnType { get; }
     }
 }
