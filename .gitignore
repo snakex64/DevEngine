@@ -13,3 +13,9 @@
 /src/DevEngine.Tests/obj
 /src/DevEngine.RealTypes/bin/Debug/netstandard2.1
 /src/DevEngine.RealTypes/obj
+/src/DevEngine/bin/Debug/net5.0
+/src/DevEngine.Core/bin/Debug/net5.0
+/src/DevEngine.Graph/bin/Debug/net5.0
+/src/DevEngine.Graph/obj
+/src/DevEngine.RealTypes/bin/Debug/net5.0
+/src/DevEngine.Tests/bin/Debug/net5.0
