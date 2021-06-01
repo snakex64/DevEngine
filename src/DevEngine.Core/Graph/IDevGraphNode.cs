@@ -6,7 +6,7 @@ namespace DevEngine.Core.Graph
 {
     public interface IDevGraphNode
     {
-        string Name { get; set; }
+        string Name { get; }
 
         /// <summary>
         /// If true, the node contains one ExecType as the first input, it's not inlined and will follow the flow of execution

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DevEngine.Core.Graph
@@ -8,9 +9,9 @@ namespace DevEngine.Core.Graph
     {
         string Name { get; }
 
-        IDevGraphEntryPoint EntryPoint { get; }
+        public IDevGraphEntryPoint EntryPoint => (IDevGraphEntryPoint)Nodes.Single(x => x is IDevGraphEntryPoint);
 
-        ICollection<IDevGraphExitPoint> ExitPoints { get; }
+        IEnumerable<IDevGraphExitPoint> ExitPoints => Nodes.OfType<IDevGraphExitPoint>();
 
         ICollection<IDevGraphNode> Nodes { get; }
     }
