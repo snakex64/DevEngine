@@ -1,6 +1,7 @@
 using DevEngine.Core;
 using DevEngine.Core.Class;
 using DevEngine.Core.Method;
+using DevEngine.Core.Project;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,7 @@ namespace DevEngine.Method
 {
     public class DevMethod : IDevMethod
     {
-        public DevMethod(IDevClass declaringClass, string name, bool isStatic, IDevType returnType, Visibility visibility = Visibility.Private)
+        public DevMethod( IDevClass declaringClass, string name, bool isStatic, IDevType returnType, Visibility visibility = Visibility.Private)
         {
             DeclaringType = declaringClass;
             Name = name;
@@ -29,5 +30,8 @@ namespace DevEngine.Method
         public Visibility Visibility { get; }
 
         public IDevType ReturnType { get; }
+
+        public Core.Graph.IDevGraphDefinition? GraphDefinition { get; set; }
+
     }
 }

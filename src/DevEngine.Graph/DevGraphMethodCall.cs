@@ -10,17 +10,11 @@ namespace DevEngine.Graph
 {
     public class DevGraphMethodCall : DevGraphNode, IDevGraphMethodCall
     {
-        public DevGraphMethodCall(IDevMethod method, IEnumerable<IDevGraphNodeParameter> inputs, IEnumerable<IDevGraphNodeParameter> outputs)
+        public DevGraphMethodCall(IDevMethod method)
         {
             Method = method;
-            Inputs = inputs.ToList();
-            Outputs = outputs.ToList();
         }
 
         public IDevMethod Method { get; }
-
-        public override ICollection<IDevGraphNodeParameter> Inputs { get; }
-
-        public override ICollection<IDevGraphNodeParameter> Outputs { get; }
     }
 }

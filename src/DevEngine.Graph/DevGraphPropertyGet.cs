@@ -10,17 +10,11 @@ namespace DevEngine.Graph
 {
     public class DevGraphPropertyGet : DevGraphNode, IDevGraphPropertyGet
     {
-        public DevGraphPropertyGet(IDevProperty property, IEnumerable<IDevGraphNodeParameter> inputs, IEnumerable<IDevGraphNodeParameter> outputs)
+        public DevGraphPropertyGet(IDevProperty property)
         {
             Property = property;
-            Inputs = inputs.ToList();
-            Outputs = outputs.ToList();
         }
 
         public IDevProperty Property { get; }
-
-        public override ICollection<IDevGraphNodeParameter> Inputs { get; }
-
-        public override ICollection<IDevGraphNodeParameter> Outputs { get; }
     }
 }

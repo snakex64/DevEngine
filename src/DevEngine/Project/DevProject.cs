@@ -23,7 +23,7 @@ namespace DevEngine.Project
 
         public IDevType GetRealType(Type type)
         {
-            return ServiceProvider.GetRequiredService<RealTypesProviderService>().GetDevType(type);
+            return ServiceProvider.GetRequiredService<RealTypesProviderService>().GetDevType(this, type);
         }
 
         public IDevType GetRealType<T>()

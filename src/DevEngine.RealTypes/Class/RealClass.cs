@@ -1,6 +1,7 @@
 using DevEngine.Core;
 using DevEngine.Core.Class;
 using DevEngine.Core.Method;
+using DevEngine.Core.Project;
 using DevEngine.Core.Property;
 using DevEngine.RealTypes.Method;
 using DevEngine.RealTypes.Property;
@@ -14,22 +15,25 @@ namespace DevEngine.RealTypes.Class
     {
         #region Declarations
 
-        internal RealClass(Type realType, RealTypesProviderService realTypesProviderService)
+        internal RealClass(IDevProject project, Type realType, RealTypesProviderService realTypesProviderService)
         {
+            Project = project;
             RealType = realType;
             RealTypesProviderService = realTypesProviderService;
 
             Name = new DevClassName(RealType.Namespace, RealType.Name);
 
-            LazyProperties = new Lazy<IDevPropertyCollection>(() => DevPropertyCollection.CreateFromType(RealType, RealTypesProviderService));
+            LazyProperties = new Lazy<IDevPropertyCollection>(() => DevPropertyCollection.CreateFromType(project, RealType, RealTypesProviderService));
             LazyMethods = new Lazy<IDevMethodCollection>(() => DevMethodCollection.CreateFromType(this, RealType, RealTypesProviderService));
         }
+
+        public IDevProject Project { get; }
 
         private Type RealType { get; }
 
         private RealTypesProviderService RealTypesProviderService { get; }
 
-        public IDevType? BaseType => RealType.BaseType != null ? RealTypesProviderService.GetDevType(RealType.BaseType) : null;
+        public IDevType? BaseType => RealType.BaseType != null ? RealTypesProviderService.GetDevType(Project, RealType.BaseType) : null;
 
         public DevClassName Name { get; }
 

@@ -1,3 +1,4 @@
+using DevEngine.Core.Project;
 using DevEngine.Core.Property;
 using System;
 using System.Collections;
@@ -10,13 +11,13 @@ namespace DevEngine.RealTypes.Property
 {
     internal class DevPropertyCollection: IDevPropertyCollection
     {
-        static internal DevPropertyCollection CreateFromType(Type type, RealTypesProviderService realTypesProviderService)
+        static internal DevPropertyCollection CreateFromType(IDevProject project, Type type, RealTypesProviderService realTypesProviderService)
         {
             var collection = new Dictionary<string, IDevProperty>();
 
             foreach (var property in type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.FlattenHierarchy))
             {
-                collection[property.Name] = new DevProperty(realTypesProviderService, property);
+                collection[property.Name] = new DevProperty(project, realTypesProviderService, property);
             }
 
             return new DevPropertyCollection(collection);

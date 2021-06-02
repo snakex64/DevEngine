@@ -7,16 +7,11 @@ using System.Threading.Tasks;
 
 namespace DevEngine.Graph
 {
-    public class DevGraphExitPoint : DevGraphNode, IDevGraphEntryPoint
+    public class DevGraphExitPoint : DevGraphNode, IDevGraphExitPoint
     {
-        public DevGraphExitPoint(IEnumerable<IDevGraphNodeParameter> inputs)
+        public DevGraphExitPoint()
         {
-            Inputs = inputs.ToList();
-            Outputs = new List<IDevGraphNodeParameter>();
+            Inputs.Add(new DevGraphNodeParameter(true, Core.DevExecType.ExecType, "Exec", this));
         }
-
-        public override ICollection<IDevGraphNodeParameter> Inputs { get; }
-
-        public override ICollection<IDevGraphNodeParameter> Outputs { get; }
     }
 }

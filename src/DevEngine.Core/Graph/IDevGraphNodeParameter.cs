@@ -6,6 +6,8 @@ namespace DevEngine.Core.Graph
 {
     public interface IDevGraphNodeParameter
     {
+        IDevGraphNode ParentNode { get; }
+
         bool IsInput { get; }
 
         bool IsOutput => !IsInput;

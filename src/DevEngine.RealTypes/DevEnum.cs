@@ -1,4 +1,5 @@
 using DevEngine.Core;
+using DevEngine.Core.Project;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,8 +8,10 @@ namespace DevEngine.RealTypes
 {
     internal class DevEnum : IDevType
     {
-        internal DevEnum(Type type)
+        internal DevEnum(IDevProject project, Type type)
         {
+            Project = project;
+
             if (!type.IsEnum)
                 throw new Exception("Type is not an enum:" + type.FullName);
 
@@ -22,6 +25,8 @@ namespace DevEngine.RealTypes
         public string TypeNamespace { get; }
 
         public bool IsClass => false;
+
+        public IDevProject Project { get; }
 
         public bool CanBeAssignedTo(IDevType type)
         {

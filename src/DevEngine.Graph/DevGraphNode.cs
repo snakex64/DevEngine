@@ -9,12 +9,18 @@ namespace DevEngine.Graph
 {
     public abstract class DevGraphNode : IDevGraphNode
     {
+        protected DevGraphNode()
+        {
+            Inputs = new List<IDevGraphNodeParameter>();
+            Outputs = new List<IDevGraphNodeParameter>();
+        }
+
         public string Name { get; set; }
 
         public bool IsExecNode => Inputs.Any(x => x.Type is Core.DevExecType);
 
-        public abstract ICollection<IDevGraphNodeParameter> Inputs { get; }
+        public ICollection<IDevGraphNodeParameter> Inputs { get; }
 
-        public abstract ICollection<IDevGraphNodeParameter> Outputs { get; }
+        public ICollection<IDevGraphNodeParameter> Outputs { get; }
     }
 }

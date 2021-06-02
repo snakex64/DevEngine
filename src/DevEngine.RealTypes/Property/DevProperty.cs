@@ -1,4 +1,5 @@
 using DevEngine.Core;
+using DevEngine.Core.Project;
 using DevEngine.Core.Property;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,9 @@ namespace DevEngine.RealTypes.Property
 {
     public class DevProperty : IDevProperty
     {
-        public DevProperty( RealTypesProviderService realTypesProviderService, PropertyInfo propertyInfo)
+        public DevProperty(IDevProject project, RealTypesProviderService realTypesProviderService, PropertyInfo propertyInfo)
         {
-            PropertyType = realTypesProviderService.GetDevType(propertyInfo.PropertyType);
+            PropertyType = realTypesProviderService.GetDevType(project, propertyInfo.PropertyType);
             Name = propertyInfo.Name;
             GetVisibility = propertyInfo.CanRead ? Visibility.Public : Visibility.None;
             SetVisibility = propertyInfo.CanWrite ? Visibility.Public : Visibility.None;

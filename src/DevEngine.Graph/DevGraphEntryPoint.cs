@@ -9,14 +9,11 @@ namespace DevEngine.Graph
 {
     public class DevGraphEntryPoint : DevGraphNode, IDevGraphEntryPoint
     {
-        public DevGraphEntryPoint(IEnumerable<IDevGraphNodeParameter> inputs, IEnumerable<IDevGraphNodeParameter> outputs)
+        public DevGraphEntryPoint()
         {
-            Inputs = inputs.ToList();
-            Outputs = outputs.ToList();
+            Outputs.Add(new DevGraphNodeParameter(false, Core.DevExecType.ExecType, "Exec", this));
         }
 
-        public override ICollection<IDevGraphNodeParameter> Inputs { get; }
-
-        public override ICollection<IDevGraphNodeParameter> Outputs { get; }
+        bool IDevGraphNode.IsExecNode => true;
     }
 }

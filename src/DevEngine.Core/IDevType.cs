@@ -1,3 +1,4 @@
+using DevEngine.Core.Project;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,6 +7,8 @@ namespace DevEngine.Core
 {
     public interface IDevType
     {
+        IDevProject Project { get; }
+
         string TypeName { get; }
 
         string TypeNamespace { get; }

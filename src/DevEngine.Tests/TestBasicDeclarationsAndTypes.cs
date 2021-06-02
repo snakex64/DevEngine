@@ -19,8 +19,8 @@ namespace DevEngine.Tests
                 .BuildServiceProvider();
             var project = new DevProject(serviceProvider);
 
-            var class1 = new DevClass(null, new DevClassName("DevEngine.Tests.Class1"));
-            var class2 = new DevClass(null, new DevClassName("DevEngine.Tests.Class2"));
+            var class1 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class1"));
+            var class2 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class2"));
             project.Classes.Add(class1);
             project.Classes.Add(class2);
 

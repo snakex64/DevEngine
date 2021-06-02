@@ -18,7 +18,7 @@ namespace DevEngine.RealTypes.Method
             var methods = new HashSet<IDevMethod>();
 
             foreach (var method in type.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.FlattenHierarchy))
-                methods.Add(new DevMethod(realTypesProviderService, method));
+                methods.Add(new DevMethod(devClass.Project, realTypesProviderService, method));
 
             return new DevMethodCollection(devClass, methods);
         }

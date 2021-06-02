@@ -11,12 +11,13 @@ namespace DevEngine.Graph
 {
     public class DevGraphNodeParameter : IDevGraphNodeParameter
     {
-        public DevGraphNodeParameter(bool isInput, IDevType type, string name, IEnumerable<IDevGraphNodeParameter> connections)
+        public DevGraphNodeParameter(bool isInput, IDevType type, string name, IDevGraphNode parentNode)
         {
             IsInput = isInput;
             Type = type;
             Name = name;
-            Connections = connections.ToList();
+            Connections = new List<IDevGraphNodeParameter>();
+            ParentNode = parentNode;
         }
 
         public bool IsInput { get; }
@@ -26,5 +27,7 @@ namespace DevEngine.Graph
         public string Name { get; }
 
         public ICollection<IDevGraphNodeParameter> Connections { get; }
+
+        public IDevGraphNode ParentNode { get; }
     }
 }

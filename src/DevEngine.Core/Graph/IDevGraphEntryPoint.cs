@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DevEngine.Core.Graph
@@ -9,6 +10,6 @@ namespace DevEngine.Core.Graph
     /// </summary>
     public interface IDevGraphEntryPoint: IDevGraphNode
     {
-
+        IDevGraphNodeParameter ExecNodeParameter => Outputs.Single(x => x.Type == DevExecType.ExecType);
     }
 }

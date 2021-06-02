@@ -1,6 +1,7 @@
 using DevEngine.Core;
 using DevEngine.Core.Class;
 using DevEngine.Core.Method;
+using DevEngine.Core.Project;
 using DevEngine.Core.Property;
 using DevEngine.Method;
 using DevEngine.Property;
@@ -12,10 +13,10 @@ namespace DevEngine.Class
 {
     public class DevClass : IDevClass
     {
-        #region Declarations
 
-        public DevClass(IDevType? baseType, DevClassName name)
+        public DevClass(IDevProject project, IDevType? baseType, DevClassName name)
         {
+            Project = project;
             BaseType = baseType;
             Name = name;
             Methods = new DevMethodCollection(this);
@@ -37,7 +38,7 @@ namespace DevEngine.Class
 
         public bool IsClass => true;
 
-        #endregion
+        public IDevProject Project { get; }
 
         public bool CanBeAssignedTo(IDevType type)
         {

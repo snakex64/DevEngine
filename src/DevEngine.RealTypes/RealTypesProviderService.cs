@@ -1,4 +1,5 @@
 using DevEngine.Core;
+using DevEngine.Core.Project;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,15 +11,15 @@ namespace DevEngine.RealTypes
 
         private Dictionary<Type, IDevType> CachedTypes { get; } = new Dictionary<Type, IDevType>();
 
-        public IDevType GetDevType(Type type)
+        public IDevType GetDevType(IDevProject project, Type type)
         {
             if (CachedTypes.TryGetValue(type, out var cachedType))
                 return cachedType;
 
             if (type.IsClass || type.IsValueType)
-                return CachedTypes[type] = new RealTypes.Class.RealClass(type, this);
+                return CachedTypes[type] = new RealTypes.Class.RealClass(project, type, this);
             else if (type.IsEnum)
-                return CachedTypes[type] = new DevEnum(type);
+                return CachedTypes[type] = new DevEnum(project, type);
             throw new NotImplementedException("Cannot create wrapper around real type:" + type.FullName);
         }
     }
