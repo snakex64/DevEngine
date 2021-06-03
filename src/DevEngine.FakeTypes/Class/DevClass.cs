@@ -3,13 +3,13 @@ using DevEngine.Core.Class;
 using DevEngine.Core.Method;
 using DevEngine.Core.Project;
 using DevEngine.Core.Property;
-using DevEngine.Method;
-using DevEngine.Property;
+using DevEngine.FakeTypes.Method;
+using DevEngine.FakeTypes.Property;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DevEngine.Class
+namespace DevEngine.FakeTypes.Class
 {
     public class DevClass : IDevClass
     {

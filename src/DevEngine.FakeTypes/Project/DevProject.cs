@@ -1,4 +1,4 @@
-using DevEngine.Class;
+using DevEngine.FakeTypes.Class;
 using DevEngine.Core;
 using DevEngine.Core.Class;
 using DevEngine.Core.Project;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DevEngine.Project
+namespace DevEngine.FakeTypes.Project
 {
     public class DevProject : IDevProject
     {

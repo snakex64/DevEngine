@@ -21,7 +21,7 @@ namespace DevEngine.RealTypes.Class
             RealType = realType;
             RealTypesProviderService = realTypesProviderService;
 
-            Name = new DevClassName(RealType.Namespace, RealType.Name);
+            Name = new DevClassName(RealType.Namespace ?? "", RealType.Name);
 
             LazyProperties = new Lazy<IDevPropertyCollection>(() => DevPropertyCollection.CreateFromType(project, RealType, RealTypesProviderService));
             LazyMethods = new Lazy<IDevMethodCollection>(() => DevMethodCollection.CreateFromType(this, RealType, RealTypesProviderService));

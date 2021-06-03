@@ -17,7 +17,7 @@ namespace DevEngine.RealTypes
 
             TypeName = type.Name;
 
-            TypeNamespace = type.Namespace;
+            TypeNamespace = type.Namespace ?? "";
         }
 
         public string TypeName { get; }

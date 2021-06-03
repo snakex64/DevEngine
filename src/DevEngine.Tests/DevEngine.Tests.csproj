@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DevEngine\DevEngine.csproj" />
+    <ProjectReference Include="..\DevEngine.FakeTypes\DevEngine.FakeTypes.csproj" />
   </ItemGroup>
 
 </Project>

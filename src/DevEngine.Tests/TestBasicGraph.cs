@@ -1,7 +1,7 @@
-using DevEngine.Class;
+using DevEngine.FakeTypes.Class;
 using DevEngine.Core.Class;
 using DevEngine.Graph;
-using DevEngine.Method;
+using DevEngine.FakeTypes.Method;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-using DevEngine.Class;
+using DevEngine.FakeTypes.Class;
 using DevEngine.Core.Class;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

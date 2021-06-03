@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DevEngine.Class
+namespace DevEngine.FakeTypes.Class
 {
     internal class DevClassCollection : IDevClassCollection
     {
@@ -85,7 +85,7 @@ namespace DevEngine.Class
             return ((IDictionary<DevClassName, IDevClass>)Classes).Remove(item);
         }
 
-        public bool TryGetValue(DevClassName key, out IDevClass value)
+        public bool TryGetValue(DevClassName key, [System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out IDevClass value)
         {
             return ((IDictionary<DevClassName, IDevClass>)Classes).TryGetValue(key, out value);
         }

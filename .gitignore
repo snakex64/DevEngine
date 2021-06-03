@@ -19,3 +19,7 @@
 /src/DevEngine.Graph/obj
 /src/DevEngine.RealTypes/bin/Debug/net5.0
 /src/DevEngine.Tests/bin/Debug/net5.0
+/src/DevEngine.Evaluator/bin/Debug/net5.0
+/src/DevEngine.Evaluator/obj
+/src/DevEngine.FakeTypes/bin/Debug
+/src/DevEngine.FakeTypes/obj

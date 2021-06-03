@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DevEngine.Property
+namespace DevEngine.FakeTypes.Property
 {
     internal class DevPropertyCollection: IDevPropertyCollection
     {
@@ -67,7 +67,7 @@ namespace DevEngine.Property
             return Properties.Remove(item);
         }
 
-        public bool TryGetValue(string key, out IDevProperty value)
+        public bool TryGetValue(string key, [System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out IDevProperty value)
         {
             return Properties.TryGetValue(key, out value);
         }

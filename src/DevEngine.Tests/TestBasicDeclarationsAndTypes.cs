@@ -1,7 +1,7 @@
-using DevEngine.Class;
+using DevEngine.FakeTypes.Class;
 using DevEngine.Core.Class;
-using DevEngine.Method;
-using DevEngine.Project;
+using DevEngine.FakeTypes.Method;
+using DevEngine.FakeTypes.Project;
 using DevEngine.RealTypes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

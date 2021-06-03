@@ -91,7 +91,7 @@ namespace DevEngine.RealTypes.Property
             throw new Exception("Cannot modify real types");
         }
 
-        public bool TryGetValue(string key, out IDevProperty value)
+        public bool TryGetValue(string key, [System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out IDevProperty value)
         {
             return Properties.TryGetValue(key, out value);
         }

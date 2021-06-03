@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DevEngine.Property
+namespace DevEngine.FakeTypes.Property
 {
     public class DevProperty : IDevProperty
     {

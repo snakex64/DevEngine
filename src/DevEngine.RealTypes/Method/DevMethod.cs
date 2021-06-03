@@ -15,7 +15,7 @@ namespace DevEngine.RealTypes.Method
     {
         public DevMethod(IDevProject project, RealTypesProviderService realTypesProviderService, MethodInfo methodInfo)
         {
-            DeclaringType = realTypesProviderService.GetDevType(project, methodInfo.DeclaringType);
+            DeclaringType =  realTypesProviderService.GetDevType(project, methodInfo.DeclaringType ?? throw new Exception("How can a method not be in a parent class..."));
             Name = methodInfo.Name;
             IsStatic = methodInfo.IsStatic;
             Visibility = Visibility.Private;
@@ -25,7 +25,7 @@ namespace DevEngine.RealTypes.Method
             {
                 return new ReadOnlyCollection<IDevMethodParameter>(methodInfo.GetParameters().Select(x =>
                 {
-                    return new DevMethodParameter(realTypesProviderService.GetDevType(project, x.ParameterType), x.Name, x.IsOut, x.ParameterType.IsByRef);
+                    return new DevMethodParameter(realTypesProviderService.GetDevType(project, x.ParameterType), x.Name ?? "", x.IsOut, x.ParameterType.IsByRef);
                 }).OfType<IDevMethodParameter>().ToList());
             });
         }

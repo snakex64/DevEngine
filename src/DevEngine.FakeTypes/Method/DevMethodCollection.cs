@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DevEngine.Method
+namespace DevEngine.FakeTypes.Method
 {
     internal class DevMethodCollection: IDevMethodCollection
     {
