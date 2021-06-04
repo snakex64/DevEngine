@@ -6,11 +6,21 @@ using System.Text;
 
 namespace DevEngine.Core.Graph
 {
+    public enum DevGraphDefinitionType
+    {
+        Method
+    }
     public interface IDevGraphDefinition
     {
         IDevProject Project { get; }
 
         string Name { get; }
+
+        IDevType OwningType { get; }
+
+        DevGraphDefinitionType DefinitionType { get; }
+
+        string OwningMemberName { get; }
 
         IDevGraphEntryPoint EntryPoint { get; }
 

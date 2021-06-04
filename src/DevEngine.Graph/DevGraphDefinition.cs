@@ -12,11 +12,14 @@ namespace DevEngine.Graph
 {
     public class DevGraphDefinition : IDevGraphDefinition
     {
-        public DevGraphDefinition(IDevProject project, string name)
+        public DevGraphDefinition(IDevProject project, string name, IDevType owningType, DevGraphDefinitionType definitionType, string owningMemberName)
         {
             Name = name;
             Nodes = new HashSet<IDevGraphNode>();
             Project = project;
+            OwningType = owningType;
+            DefinitionType = definitionType;
+            OwningMemberName = owningMemberName;
         }
 
         public string Name { get; }
@@ -28,6 +31,12 @@ namespace DevEngine.Graph
         public IDevGraphEntryPoint EntryPoint => (IDevGraphEntryPoint)Nodes.Single(x => x is IDevGraphEntryPoint);
 
         public IEnumerable<IDevGraphExitPoint> ExitPoints => Nodes.OfType<IDevGraphExitPoint>();
+
+        public IDevType OwningType { get; }
+
+        public DevGraphDefinitionType DefinitionType { get; }
+
+        public string OwningMemberName { get; }
 
 
         #region InitializeEmptyForMethod

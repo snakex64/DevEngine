@@ -6,9 +6,8 @@ using System.Text;
 
 namespace DevEngine.RealTypes
 {
-    public class RealTypesProviderService
+    public class RealTypesProviderService : IRealTypesProviderService
     {
-
         private Dictionary<Type, IDevType> CachedTypes { get; } = new Dictionary<Type, IDevType>();
 
         public IDevType GetDevType(IDevProject project, Type type)

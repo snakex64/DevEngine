@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEngine.RealTypes", "DevE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEngine.Graph", "DevEngine.Graph\DevEngine.Graph.csproj", "{82C9DFF5-2D66-4D5E-B5D8-5857A37B6301}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEngine.Evaluator", "DevEngine.Evaluator\DevEngine.Evaluator.csproj", "{9ADEB621-184E-477B-B8E2-28F74FDA69D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEngine.Evaluator", "DevEngine.Evaluator\DevEngine.Evaluator.csproj", "{9ADEB621-184E-477B-B8E2-28F74FDA69D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEngine.Standard", "DevEngine.Standard\DevEngine.Standard.csproj", "{CE432440-252F-4611-A9B5-BE1090A6D1DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{9ADEB621-184E-477B-B8E2-28F74FDA69D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ADEB621-184E-477B-B8E2-28F74FDA69D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9ADEB621-184E-477B-B8E2-28F74FDA69D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE432440-252F-4611-A9B5-BE1090A6D1DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE432440-252F-4611-A9B5-BE1090A6D1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE432440-252F-4611-A9B5-BE1090A6D1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE432440-252F-4611-A9B5-BE1090A6D1DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

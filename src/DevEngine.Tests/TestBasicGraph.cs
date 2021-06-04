@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DevEngine.Core.Graph;
 
 namespace DevEngine.Tests
 {
@@ -28,7 +29,7 @@ namespace DevEngine.Tests
             method3.Parameters.Add(new DevMethodParameter(class3, "p2", isOut: false, isRef: false)); // demonstrate passing DevClasses
 
 
-            var graph = new DevGraphDefinition(project, "DevEngine.Tests.Class3.method3"); // name can be whatever really... 
+            var graph = new DevGraphDefinition(project, "DevEngine.Tests.Class3.method3", class3, DevGraphDefinitionType.Method, method3.Name); // name can be whatever really... 
             graph.InitializeEmptyForMethod(method3);
             method3.GraphDefinition = graph;
 
