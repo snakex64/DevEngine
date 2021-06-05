@@ -22,5 +22,7 @@ namespace DevEngine.Graph
         public ICollection<IDevGraphNodeParameter> Inputs { get; }
 
         public ICollection<IDevGraphNodeParameter> Outputs { get; }
+
+        public DevGraphNodeType DevGraphNodeType => throw new NotImplementedException();
     }
 }

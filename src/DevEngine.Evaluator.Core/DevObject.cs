@@ -1,11 +1,12 @@
 ﻿using DevEngine.Core;
+using DevEngine.Evaluator.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevEngine.Evaluator
+namespace DevEngine.Evaluator.Core
 {
     public class DevObject
     {
@@ -17,6 +18,6 @@ namespace DevEngine.Evaluator
 
         public IDevType DevType { get; }
 
-        public object? Value { get; private set; }
+        public object? Value { get; }
     }
 }

@@ -1,4 +1,5 @@
 using DevEngine.Core.Class;
+using DevEngine.Core.Graph;
 using System;
 
 namespace DevEngine.Core.Project
@@ -12,5 +13,7 @@ namespace DevEngine.Core.Project
         IDevType GetRealType<T>();
 
         IDevType GetVoidType();
+
+        IDevGraphNodeParameter CreateGraphNodeParameter(string name, IDevType devType, bool isInput, IDevGraphNode owner);
     }
 }

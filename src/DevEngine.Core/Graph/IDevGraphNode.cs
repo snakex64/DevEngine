@@ -14,6 +14,8 @@ namespace DevEngine.Core.Graph
         /// </summary>
         bool IsExecNode { get; }
 
+        DevGraphNodeType DevGraphNodeType { get; }
+
         ICollection<IDevGraphNodeParameter> Inputs { get; }
 
         ICollection<IDevGraphNodeParameter> Outputs { get; }

@@ -24,3 +24,6 @@
 /src/DevEngine.FakeTypes/bin/Debug
 /src/DevEngine.FakeTypes/obj
 /src/DevEngine.Standard/obj
+/src/DevEngine.Evaluator.Core/bin/Debug/net5.0
+/src/DevEngine.Evaluator.Core/obj
+/src/DevEngine.Standard/bin/Debug/net5.0

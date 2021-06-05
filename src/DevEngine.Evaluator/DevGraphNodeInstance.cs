@@ -1,4 +1,5 @@
 ﻿using DevEngine.Core.Graph;
+using DevEngine.Evaluator.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +8,20 @@ using System.Threading.Tasks;
 
 namespace DevEngine.Evaluator
 {
-    public class DevGraphNodeInstance
+    public class DevGraphNodeInstance: IDevGraphNodeInstance
     {
-        public readonly IDevGraphNode GraphNode;
+        public IDevGraphNode GraphNode { get; }
 
-        public Dictionary<IDevGraphNodeParameter, DevObject> Parameters { get; } = new();
+        public IDictionary<IDevGraphNodeParameter, DevObject> Parameters { get; } = new Dictionary<IDevGraphNodeParameter, DevObject>();
 
-        public DevGraphNodeInstance(IDevGraphNode graphNode)
+        public IDevGraphInstance DevGraphInstance { get; }
+
+        public DevGraphNodeInstance(IDevGraphNode graphNode, IDevGraphInstance devGraphInstance)
         {
             GraphNode = graphNode;
+            DevGraphInstance = devGraphInstance;
+
+            devGraphInstance.NodeInstances[graphNode] = this;
         }
     }
 }

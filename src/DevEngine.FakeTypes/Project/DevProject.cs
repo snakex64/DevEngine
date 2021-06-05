@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using DevEngine.Core.Graph;
 
 namespace DevEngine.FakeTypes.Project
 {
@@ -34,6 +35,11 @@ namespace DevEngine.FakeTypes.Project
         public IDevType GetVoidType()
         {
             return GetRealType(typeof(void));
+        }
+
+        public IDevGraphNodeParameter CreateGraphNodeParameter(string name, IDevType devType, bool isInput, IDevGraphNode owner)
+        {
+            return new Graph.DevGraphNodeParameter(isInput, devType, name, owner);
         }
     }
 }
