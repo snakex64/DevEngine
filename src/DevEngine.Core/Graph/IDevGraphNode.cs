@@ -4,6 +4,10 @@ using System.Text;
 
 namespace DevEngine.Core.Graph
 {
+    public enum DevGraphNodeExecuteResult
+    {
+        Continue, Break, Exit
+    }
     public interface IDevGraphNode
     {
         string Name { get; }
@@ -14,11 +18,28 @@ namespace DevEngine.Core.Graph
         /// </summary>
         bool IsExecNode { get; }
 
-        DevGraphNodeType DevGraphNodeType { get; }
-
         ICollection<IDevGraphNodeParameter> Inputs { get; }
 
         ICollection<IDevGraphNodeParameter> Outputs { get; }
+
+
+        /// <summary>
+        /// Execute the node
+        /// </summary>
+        DevGraphNodeExecuteResult Execute(IDevGraphNodeInstance devGraphNodeInstance);
+
+        /// <summary>
+        /// Returns true if, when the output exec is done executing, the graph must come back to this node instead of leaving
+        /// This is generally false for all nodes, except nodes like "while" or "sequence", who needs to execute multiple exec paths
+        /// </summary>
+        bool ExecuteExecAsSubGraph { get; }
+
+        /// <summary>
+        /// Return the exec node to go through. This will be called multiple times only if <seealso cref="ExecuteExecAsSubGraph"/> is true
+        /// Not called if the IsExecNode == false
+        /// Can return null if there's no output exec
+        /// </summary>
+        IDevGraphNodeParameter? GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance);
 
     }
 }

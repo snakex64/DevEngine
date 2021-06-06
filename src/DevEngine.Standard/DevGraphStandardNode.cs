@@ -1,6 +1,5 @@
 ﻿using DevEngine.Core.Graph;
 using DevEngine.Core.Project;
-using DevEngine.Evaluator.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DevEngine.Standard
 {
-    public abstract class DevGraphStandardNode : IDevGraphStandardNode
+    public abstract class DevGraphStandardNode : IDevGraphNode
     {
         public string Name { get; }
 
@@ -21,8 +20,6 @@ namespace DevEngine.Standard
 
         public abstract bool ExecuteExecAsSubGraph { get; }
 
-        public DevGraphNodeType DevGraphNodeType => DevGraphNodeType.StandardNode;
-
         protected DevGraphStandardNode(string name)
         {
             Name = name;
@@ -31,7 +28,7 @@ namespace DevEngine.Standard
             Outputs = new List<IDevGraphNodeParameter>();
         }
 
-        public abstract void Execute(IDevGraphNodeInstance devGraphNodeInstance);
+        public abstract DevGraphNodeExecuteResult Execute(IDevGraphNodeInstance devGraphNodeInstance);
 
         public abstract IDevGraphNodeParameter GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance);
     }

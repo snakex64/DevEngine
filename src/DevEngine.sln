@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEngine.Evaluator", "DevE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevEngine.Standard", "DevEngine.Standard\DevEngine.Standard.csproj", "{CE432440-252F-4611-A9B5-BE1090A6D1DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevEngine.Evaluator.Core", "DevEngine.Evaluator.Core\DevEngine.Evaluator.Core.csproj", "{3132A08F-5A38-4368-AD4D-4A0E01655C4A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,10 +51,6 @@ Global
 		{CE432440-252F-4611-A9B5-BE1090A6D1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE432440-252F-4611-A9B5-BE1090A6D1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE432440-252F-4611-A9B5-BE1090A6D1DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3132A08F-5A38-4368-AD4D-4A0E01655C4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3132A08F-5A38-4368-AD4D-4A0E01655C4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3132A08F-5A38-4368-AD4D-4A0E01655C4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3132A08F-5A38-4368-AD4D-4A0E01655C4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

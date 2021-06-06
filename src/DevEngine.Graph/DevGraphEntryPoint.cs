@@ -7,13 +7,36 @@ using System.Threading.Tasks;
 
 namespace DevEngine.Graph
 {
-    public class DevGraphEntryPoint : DevGraphNode, IDevGraphEntryPoint
+    public class DevGraphEntryPoint :  IDevGraphEntryPoint
     {
         public DevGraphEntryPoint()
         {
-            Outputs.Add(new DevGraphNodeParameter(false, Core.DevExecType.ExecType, "Exec", this));
+            Inputs = new List<IDevGraphNodeParameter>();
+            Outputs = new List<IDevGraphNodeParameter>();
+
+            Outputs.Add(ExecNode = new DevGraphNodeParameter(false, Core.DevExecType.ExecType, "Exec", this));
         }
 
-        bool IDevGraphNode.IsExecNode => true;
+        public string Name { get; }
+
+        public bool IsExecNode => true;
+
+        public ICollection<IDevGraphNodeParameter> Inputs { get; }
+
+        public ICollection<IDevGraphNodeParameter> Outputs { get; }
+
+        public bool ExecuteExecAsSubGraph => false;
+
+        private IDevGraphNodeParameter ExecNode;
+
+        public DevGraphNodeExecuteResult Execute(IDevGraphNodeInstance devGraphNodeInstance)
+        {
+            return DevGraphNodeExecuteResult.Continue;
+        }
+
+        public IDevGraphNodeParameter GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance)
+        {
+            return ExecNode;
+        }
     }
 }

@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevEngine.Core\DevEngine.Core.csproj" />
-    <ProjectReference Include="..\DevEngine.Evaluator.Core\DevEngine.Evaluator.Core.csproj" />
   </ItemGroup>
 
 </Project>

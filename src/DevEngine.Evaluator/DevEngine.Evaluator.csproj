@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevEngine.Core\DevEngine.Core.csproj" />
-    <ProjectReference Include="..\DevEngine.Evaluator.Core\DevEngine.Evaluator.Core.csproj" />
     <ProjectReference Include="..\DevEngine.FakeTypes\DevEngine.FakeTypes.csproj" />
     <ProjectReference Include="..\DevEngine.RealTypes\DevEngine.RealTypes.csproj" />
   </ItemGroup>

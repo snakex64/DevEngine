@@ -1,5 +1,5 @@
-﻿using DevEngine.Core.Graph;
-using DevEngine.Evaluator.Core;
+﻿using DevEngine.Core;
+using DevEngine.Core.Graph;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -38,30 +38,80 @@ namespace DevEngine.Evaluator
         /// </summary>
         /// <param name="exitInstance">The node instance of the exit node, if any</param>
         /// <returns>True if it ended with an exit not</returns>
-        private bool EvaluateUntilExit(DevGraphInstance devGraphInstance, DevGraphNodeInstance startNode, [MaybeNullWhen(false)] out DevGraphNodeInstance exitInstance)
+        private bool EvaluateUntilExit(DevGraphInstance devGraphInstance, DevGraphNodeInstance startNode, [MaybeNullWhen(false)] out IDevGraphNodeInstance exitInstance)
         {
             if (!startNode.GraphNode.IsExecNode)
                 throw new Exception("Cannot use EvaluateUntilExit on a node with no exec parameter");
 
+            var nextExecutionNode = startNode.GraphNode.GetNextExecutionParameter(startNode);
 
-            DevGraphNodeInstance currentNode = startNode;
+            // shouldn't happen ?
+            if (nextExecutionNode == null)
+            {
+                exitInstance = null;
+                return false;
+            }
 
-            var stack = new Stack<DevGraphNodeInstance>();
+            var currentNode = devGraphInstance.NodeInstances[nextExecutionNode.Connections.First().ParentNode];
+
+            var stack = new Stack<IDevGraphNodeInstance>();
 
             while (true)
             {
-                switch(currentNode.GraphNode)
-                {
-                    case IDevGraphStandardNode standardNode:
+                if (currentNode.GraphNode.ExecuteExecAsSubGraph)
+                    stack.Push(currentNode);
 
-                        break;
+                PopulateNodeInputs(currentNode);
+
+                var executeResult = currentNode.GraphNode.Execute(currentNode);
+
+                if( executeResult == DevGraphNodeExecuteResult.Exit )
+                {
+                    // if it was an exit node, there's nothing to do, the PopulateNodeInputs should already have filled the values to return
+                    exitInstance = currentNode;
+                    return true;
                 }
 
+                var nextExec = currentNode.GraphNode.GetNextExecutionParameter(currentNode);
 
+                // if there's nothing else to exec, just pop the stack and roll back to the upper node
+                if( nextExec == null )
+                {
+                    // if the stack is empty, we just quit, this is an error from the user who created this graph, this shouldn't have happened but we still gracefully exit
+                    if( stack.Count == 0 )
+                    {
+                        exitInstance = null;
+                        return false;
+                    }
+
+                    currentNode = stack.Pop();
+                }
+                else
+                    currentNode = devGraphInstance.NodeInstances[nextExec.ParentNode];
             }
         }
 
-//        private void PopulateNode
+        private void PopulateNodeInputs(IDevGraphNodeInstance node)
+        {
+            foreach( var input in node.GraphNode.Inputs)
+            {
+
+                var otherNodeParameter = input.Connections.FirstOrDefault();
+
+                // not plugged to anything
+                if (otherNodeParameter == null)
+                    node.Parameters[input] = new DevObject(input.Type, null);
+                else
+                {
+                    // get the linked node and populate it's own inputs
+                    var otherNode = node.DevGraphInstance.NodeInstances[otherNodeParameter.ParentNode];
+                    PopulateNodeInputs(otherNode);
+
+                    // then set the newly set value from the other node, to ourself
+                    node.Parameters[input] = otherNode.Parameters[otherNodeParameter];
+                }
+            }
+        }
 
 
     }

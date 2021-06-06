@@ -1,7 +1,6 @@
 ﻿using DevEngine.Core;
 using DevEngine.Core.Graph;
 using DevEngine.Core.Project;
-using DevEngine.Evaluator.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,9 +26,11 @@ namespace DevEngine.Standard
 
         private IDevGraphNodeParameter SelfParameterNode;
 
-        public override void Execute(IDevGraphNodeInstance devGraphNodeInstance)
+        public override DevGraphNodeExecuteResult Execute(IDevGraphNodeInstance devGraphNodeInstance)
         {
             devGraphNodeInstance.Parameters[SelfParameterNode] = devGraphNodeInstance.DevGraphInstance.Self;
+
+            return DevGraphNodeExecuteResult.Continue;
         }
 
         public override IDevGraphNodeParameter GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance)

@@ -1,6 +1,6 @@
-﻿using DevEngine.Core.Graph;
+﻿using DevEngine.Core;
+using DevEngine.Core.Graph;
 using DevEngine.Core.Project;
-using DevEngine.Evaluator.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace DevEngine.Standard.Math
             Outputs.Add(OutputNode = project.CreateGraphNodeParameter("V", project.GetRealType<T>(), false, this));
         }
 
-        public override void Execute(IDevGraphNodeInstance devGraphNodeInstance)
+        public override DevGraphNodeExecuteResult Execute(IDevGraphNodeInstance devGraphNodeInstance)
         {
             if (Parameter_A == null || Parameter_B == null || OutputNode == null)
                 throw new Exception("Inputs aren't initialized");
@@ -47,6 +47,8 @@ namespace DevEngine.Standard.Math
                 T v = DoMath(a, b);
                 devGraphNodeInstance.Parameters[OutputNode] = new DevObject(parameterA.DevType, v);
             }
+
+            return DevGraphNodeExecuteResult.Continue;
         }
 
         public abstract T DoMath(dynamic a, dynamic b);
