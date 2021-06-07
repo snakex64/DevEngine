@@ -15,7 +15,7 @@ namespace DevEngine.Tests
         public static DevProject GetBasicDevProject()
         {
             var serviceProvider = new ServiceCollection()
-                .AddSingleton<IRealTypesProviderService>()
+                .AddSingleton<IRealTypesProviderService>( _ => new RealTypesProviderService())
                 .BuildServiceProvider();
             var project = new DevProject(serviceProvider);
 

@@ -22,6 +22,10 @@ namespace DevEngine.Evaluator
         {
             GraphDefinition = graphDefinition;
             Self = self;
+
+
+            foreach (var node in graphDefinition.Nodes)
+                NodeInstances[node] = new DevGraphNodeInstance(node, this);
         }
     }
 }

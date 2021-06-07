@@ -19,7 +19,7 @@ namespace DevEngine.Graph
 
         public string Name { get; }
 
-        public bool IsExecNode => false;
+        public bool IsExecNode => true;
 
         public ICollection<IDevGraphNodeParameter> Inputs { get; }
 

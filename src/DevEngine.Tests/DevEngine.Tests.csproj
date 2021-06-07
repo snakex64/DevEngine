@@ -14,7 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DevEngine.Evaluator\DevEngine.Evaluator.csproj" />
     <ProjectReference Include="..\DevEngine.FakeTypes\DevEngine.FakeTypes.csproj" />
+    <ProjectReference Include="..\DevEngine.Standard\DevEngine.Standard.csproj" />
   </ItemGroup>
 
 </Project>
