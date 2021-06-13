@@ -1,0 +1,19 @@
+﻿
+<div class="devNode">
+
+    @*Name*@
+    <div class="devTitle">
+        @DevGraphNode.Name
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public DevEngine.Core.Graph.IDevGraphDefinition DevGraphDefinition { get; set; }
+
+    [Parameter]
+    public DevEngine.Core.Graph.IDevGraphNode DevGraphNode { get; set; }
+
+}

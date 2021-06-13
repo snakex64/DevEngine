@@ -11,6 +11,8 @@ namespace DevEngine.Graph
     {
         public DevGraphEntryPoint()
         {
+            Name = "Entry";
+
             Inputs = new List<IDevGraphNodeParameter>();
             Outputs = new List<IDevGraphNodeParameter>();
 
@@ -26,6 +28,10 @@ namespace DevEngine.Graph
         public ICollection<IDevGraphNodeParameter> Outputs { get; }
 
         public bool ExecuteExecAsSubGraph => false;
+
+        public IDictionary<string, string> AdditionalContent { get; } = new Dictionary<string, string>();
+
+        public IDictionary<string, Func<string?>> AdditionalContentProvider { get; } = new Dictionary<string, Func<string?>>();
 
         private IDevGraphNodeParameter ExecNode;
 

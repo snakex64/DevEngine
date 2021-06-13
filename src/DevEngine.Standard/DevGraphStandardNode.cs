@@ -20,6 +20,10 @@ namespace DevEngine.Standard
 
         public abstract bool ExecuteExecAsSubGraph { get; }
 
+        public IDictionary<string, string> AdditionalContent { get; } = new Dictionary<string, string>();
+
+        public IDictionary<string, Func<string?>> AdditionalContentProvider { get; } = new Dictionary<string, Func<string?>>();
+
         protected DevGraphStandardNode(string name)
         {
             Name = name;

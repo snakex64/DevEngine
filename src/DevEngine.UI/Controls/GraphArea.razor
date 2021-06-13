@@ -1,0 +1,21 @@
+﻿
+<div class="devGraph" style="height: 100%; width: 100%">
+
+    @foreach (var node in DevGraphDefinition.Nodes)
+    {
+        <GraphNode DevGraphDefinition="DevGraphDefinition" DevGraphNode="node"></GraphNode>
+    }
+
+</div>
+
+
+
+
+@code {
+
+    [Parameter]
+    public DevEngine.Core.Graph.IDevGraphDefinition DevGraphDefinition { get; set; }
+
+
+
+}

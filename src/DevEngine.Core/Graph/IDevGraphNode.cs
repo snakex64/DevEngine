@@ -41,5 +41,17 @@ namespace DevEngine.Core.Graph
         /// </summary>
         IDevGraphNodeParameter? GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance);
 
+
+        /// <summary>
+        /// Additional content to be saved and loaded with this node.
+        /// One should only add one KeyValuePair per system using this node, ex a single one for the XY position, do not over-use this
+        /// </summary>
+        IDictionary<string, string> AdditionalContent { get; }
+
+        /// <summary>
+        /// Each provider is called before this node is saved, and the content is added to <seealso cref="AdditionalContent"/>.
+        /// if null is returned, the content is not added, any previous value saved with this key will be removed
+        /// </summary>
+        IDictionary<string, Func<string?>> AdditionalContentProvider { get; }
     }
 }

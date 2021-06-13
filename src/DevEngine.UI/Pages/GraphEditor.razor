@@ -1,0 +1,72 @@
+﻿@page "/grapheditor"
+@using DevEngine.Core.Class
+@using DevEngine.Core.Graph
+@using DevEngine.FakeTypes.Class
+@using DevEngine.FakeTypes.Method
+@using DevEngine.FakeTypes.Project
+@using DevEngine.Graph
+@using Microsoft.Extensions.DependencyInjection
+
+
+@if (DevGraphDefinition != null)
+{
+    <DevEngine.UI.Controls.GraphArea DevGraphDefinition="DevGraphDefinition" ></DevEngine.UI.Controls.GraphArea>
+}
+
+@code {
+
+
+
+    private DevEngine.Core.Graph.IDevGraphDefinition? DevGraphDefinition { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender)
+        {
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<RealTypes.IRealTypesProviderService>(_ => new RealTypes.RealTypesProviderService())
+                .BuildServiceProvider();
+            var project = new DevProject(serviceProvider);
+
+            var class3 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class3"));
+            project.Classes.Add(class3);
+
+            var method3 = new DevMethod(class3, "method3", isStatic: true, returnType: project.GetRealType<int>(), Core.Visibility.Public);
+            class3.Methods.Add(method3);
+
+            method3.Parameters.Add(new DevMethodParameter(project.GetRealType<int>(), name: "p1", isOut: false, isRef: false));
+            method3.Parameters.Add(new DevMethodParameter(class3, "p2", isOut: false, isRef: false)); // demonstrate passing DevClasses
+
+
+            var graph = new DevGraphDefinition(project, "DevEngine.Tests.Class3.method3", class3, DevGraphDefinitionType.Method, method3.Name); // name can be whatever really...
+            graph.InitializeEmptyForMethod(method3);
+            method3.GraphDefinition = graph;
+
+
+            // we add a "Add" node to the graph
+            var addNode = new Standard.Math.AddNode<int>("Add", project);
+            graph.Nodes.Add(addNode);
+
+
+            // connect the entry "p1" node parameter to both inputs of the "addNode"
+            graph.ConnectNodesParameters(graph.EntryPoint.Outputs.First(x => x.Name == "p1"), addNode.Inputs.First(x => x.Name == "A"));
+            graph.ConnectNodesParameters(graph.EntryPoint.Outputs.First(x => x.Name == "p1"), addNode.Inputs.First(x => x.Name == "B"));
+
+            // connect the output from the "Add" to the exit node return parameter
+            graph.ConnectNodesParameters(addNode.Outputs.Single(), graph.ExitPoints.First().ReturnNodeParameter);
+
+            // connect the exec directly from the entry to the exit
+            graph.ConnectNodesParameters(graph.EntryPoint.ExecNodeParameter, graph.ExitPoints.First().ExecNodeParameter);
+
+            DevGraphDefinition = graph;
+
+            StateHasChanged();
+        }
+    }
+
+
+
+}
+

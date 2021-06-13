@@ -1,0 +1,20 @@
+﻿
+<div class="devParameter">
+    @if (DevGraphNodeParameter.IsOutput)
+    {
+        <div>@DevGraphNodeParameter.Name</div>
+    }
+
+    <div class="devParameterNode">
+    </div>
+
+    @if (DevGraphNodeParameter.IsInput)
+    {
+        <div>@DevGraphNodeParameter.Name</div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public DevEngine.Core.Graph.IDevGraphNodeParameter DevGraphNodeParameter { get; set; }
+}
