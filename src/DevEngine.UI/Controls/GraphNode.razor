@@ -1,19 +1,34 @@
-﻿
-<div class="devNode">
+﻿@if (GraphNodeSavedContent != null)
+{
+    <div class="devNode" draggable="true" style="left: @(GraphNodeSavedContent.Location.X)px; top: @(GraphNodeSavedContent.Location.Y)px" @ondragend="OnDragEnd" @ondragstart="OnDragStart" @ondrag="OnDrag">
 
-    @*Name*@
-    <div class="devTitle">
-        @DevGraphNode.Name
+        @*Name*@
+        <div class="devTitle">
+            @DevGraphNode.Name
+        </div>
+
+        <div class="devNodeBody">
+
+            <div class="devNodeInputs">
+
+                @foreach (var input in DevGraphNode.Inputs)
+                {
+                    <GraphNodeParameter DevGraphNodeParameter="input"></GraphNodeParameter>
+                }
+
+            </div>
+
+
+            <div class="devNodeOutputs">
+
+                @foreach (var output in DevGraphNode.Outputs)
+                {
+                    <GraphNodeParameter DevGraphNodeParameter="output"></GraphNodeParameter>
+                }
+
+            </div>
+
+        </div>
+
     </div>
-
-</div>
-
-@code {
-
-    [Parameter]
-    public DevEngine.Core.Graph.IDevGraphDefinition DevGraphDefinition { get; set; }
-
-    [Parameter]
-    public DevEngine.Core.Graph.IDevGraphNode DevGraphNode { get; set; }
-
 }

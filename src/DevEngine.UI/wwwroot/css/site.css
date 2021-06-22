@@ -55,6 +55,7 @@ a, .btn-link {
     font-family: sans-serif;
     height: 100%;
     width: 100%;
+    position: relative;
 }
 
 .devNode {
@@ -65,18 +66,59 @@ a, .btn-link {
     position: absolute;
 }
 
-    .devNode > .devTitle {
+    .devNode .devTitle {
         border-bottom: solid black;
         text-align: center;
         background-color: #6e6e6e;
+        cursor: move;
     }
 
-    .devNode > .devParameter {
+    .devNode .devNodeBody {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
     }
 
-    .devNode > .devParameterNode {
-        width: 0.5rem;
-        height: 0.5rem;
-        background-color: #2e2e2e;
-        border: solid 1px black;
-    }
+        .devNode .devNodeBody .devNodeInputs {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            flex: auto;
+        }
+
+            .devNode .devNodeBody .devNodeInputs .devParameterNode {
+                margin-left: 3px;
+                margin-right: 3px;
+            }
+
+        .devNode .devNodeBody .devNodeOutputs {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            flex: auto;
+        }
+
+            .devNode .devNodeBody .devNodeOutputs .devParameterNode {
+                margin-left: 3px;
+                margin-right: 3px;
+            }
+
+            .devNode .devNodeBody .devNodeOutputs .devNodeParameter {
+                justify-content: flex-end;
+            }
+
+        .devNode .devNodeBody .devParameterNode {
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: #2e2e2e;
+            border: solid 1px black;
+            border-radius: 0.5em;
+        }
+
+
+        .devNode .devNodeBody .devNodeParameter {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            align-items: center;
+        }
