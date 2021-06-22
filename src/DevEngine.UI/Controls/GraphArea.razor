@@ -1,21 +1,32 @@
 ﻿
-<div class="devGraph" style="height: 100%; width: 100%" ondragover="allowDrop(event)">
+<div class="devGraph" ondragover="allowDrop(event)">
+
+    <svg class="devSvg">
+        @foreach (var node in DevGraphDefinition.Nodes)
+        {
+            @foreach (var output in node.Outputs)
+            {
+                var position1 = GetParameterAbsolutePosition(output);
+                if (position1 == null)
+                    continue;
+
+                @foreach (var input in output.Connections)
+                {
+                    var position2 = GetParameterAbsolutePosition(input);
+                    if (position2 == null)
+                        continue;
+
+                    <path stroke="#8e8e8e" stroke-width="2" fill="none" d="@GetSvgPath(position2.Value, position1.Value)"></path>
+                }
+            }
+        }
+    </svg>
 
     @foreach (var node in DevGraphDefinition.Nodes)
     {
-        <GraphNode DevGraphDefinition="DevGraphDefinition" DevGraphNode="node"></GraphNode>
+        <GraphNode DevGraphDefinition="DevGraphDefinition" DevGraphNode="node" GraphArea="this"></GraphNode>
     }
+
 
 </div>
 
-
-
-
-@code {
-
-    [Parameter]
-    public DevEngine.Core.Graph.IDevGraphDefinition DevGraphDefinition { get; set; }
-
-
-
-}

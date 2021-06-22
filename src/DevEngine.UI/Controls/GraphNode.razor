@@ -1,6 +1,6 @@
 ﻿@if (GraphNodeSavedContent != null)
 {
-    <div class="devNode" draggable="true" style="left: @(GraphNodeSavedContent.Location.X)px; top: @(GraphNodeSavedContent.Location.Y)px" @ondragend="OnDragEnd" @ondragstart="OnDragStart" @ondrag="OnDrag">
+    <div class="devNode" draggable="true" style="width: @(GetWidth())px; left: @(GraphNodeSavedContent.Location.X)px; top: @(GraphNodeSavedContent.Location.Y)px" @ondragend="OnDragEnd" @ondragstart="OnDragStart" @ondrag="OnDrag">
 
         @*Name*@
         <div class="devTitle">

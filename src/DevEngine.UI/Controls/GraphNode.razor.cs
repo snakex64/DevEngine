@@ -1,4 +1,5 @@
-﻿using DevEngine.UI.Shared;
+﻿using DevEngine.Core.Graph;
+using DevEngine.UI.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
@@ -16,6 +17,9 @@ namespace DevEngine.UI.Controls
         [Parameter]
         public Core.Graph.IDevGraphNode DevGraphNode { get; set; }
 
+        [Parameter]
+        public GraphArea GraphArea { get; set; }
+
         private GraphNodeSavedContent? GraphNodeSavedContent { get; set; }
 
 
@@ -25,6 +29,8 @@ namespace DevEngine.UI.Controls
 
             if (firstRender)
             {
+                GraphArea.Nodes[DevGraphNode] = this;
+
                 if (DevGraphNode.AdditionalContent.TryGetValue("GraphNodeUI", out var content))
                     GraphNodeSavedContent = System.Text.Json.JsonSerializer.Deserialize<GraphNodeSavedContent>(content);
                 else
@@ -35,6 +41,48 @@ namespace DevEngine.UI.Controls
                 StateHasChanged();
             }
         }
+
+        #region GetParameterAbsolutePosition
+
+        public System.Drawing.PointF? GetParameterAbsolutePosition(IDevGraphNodeParameter devGraphNodeParameter)
+        {
+            if (GraphNodeSavedContent == null)
+                return null;
+
+            var index = devGraphNodeParameter.IsInput ? GetIndex(DevGraphNode.Inputs, devGraphNodeParameter) : GetIndex(DevGraphNode.Outputs, devGraphNodeParameter);
+
+            if (index == null)
+                return null;
+
+            float y = GraphNodeSavedContent.Location.Y + 38 + index.Value * 24;
+            float x = GraphNodeSavedContent.Location.X + (devGraphNodeParameter.IsInput ? 1 : GetWidth() - 1);
+
+            return new System.Drawing.PointF(x, y);
+        }
+
+        private int? GetIndex(ICollection<IDevGraphNodeParameter> inputs, IDevGraphNodeParameter devGraphNodeParameter)
+        {
+            int i = 0;
+            foreach (var input in inputs)
+            {
+                if (input == devGraphNodeParameter)
+                    return i;
+
+                ++i;
+            }
+            return null;
+        }
+
+        #endregion
+
+        #region GetWidth
+
+        private float GetWidth()
+        {
+            return Math.Max(100, DevGraphNode.Name.Length * 5 + 20); // basic formulas to define the width of the node based on the name of the node
+        }
+
+        #endregion
 
         #region Dragging
 
@@ -60,10 +108,14 @@ namespace DevEngine.UI.Controls
                 throw new Exception("GraphNodeSavedContent should be set");
 
             GraphNodeSavedContent.Location = new System.Drawing.PointF((float)(InitialDragNodeLocation.X + args.ClientX - DragStartX), (float)(InitialDragNodeLocation.Y + args.ClientY - DragStartY));
+
+            GraphArea.GraphNodeMoved();
         }
         private void OnDragEnd(DragEventArgs args)
         {
             OnDrag(args);
+
+            GraphArea.GraphNodeMoved();
         }
 
         #endregion
