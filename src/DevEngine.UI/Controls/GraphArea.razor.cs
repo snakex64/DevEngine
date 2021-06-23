@@ -26,12 +26,12 @@ namespace DevEngine.UI.Controls
 
         private string GetSvgPath(System.Drawing.PointF a, System.Drawing.PointF b)
         {
-            var diff = new System.Drawing.PointF(b.X - a.Y, b.Y - a.Y);
+            var diff = new System.Drawing.PointF(b.X - a.X, b.Y - a.Y);
 
             var pathStr = "M" + a.X + "," + a.Y + " ";
             pathStr += "C";
-            pathStr += a.X + diff.X / 10 * 0.5 + "," + a.Y + " ";
-            pathStr += a.X + diff.X / 10 + "," + b.Y + " ";
+            pathStr += a.X + diff.X / 3 * 2 + "," + a.Y + " ";
+            pathStr += a.X + diff.X / 3 + "," + b.Y + " ";
             pathStr += b.X + "," + b.Y;
 
             return pathStr;
