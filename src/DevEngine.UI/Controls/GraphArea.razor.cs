@@ -1,5 +1,6 @@
 ﻿using DevEngine.Core.Graph;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,5 +43,19 @@ namespace DevEngine.UI.Controls
             StateHasChanged();
         }
 
+        #region node parameter dragging
+
+
+        internal void OnNodeParameterMouseDown(GraphNode graphNode, GraphNodeParameter graphNodeParameter)
+        {
+        }
+
+        internal void OnMouseMove(MouseEventArgs mouseEventArgs)
+        { 
+
+        }
+
+
+        #endregion
     }
 }

@@ -1,5 +1,5 @@
 ﻿
-<div class="devGraph" ondragover="allowDrop(event)">
+<div class="devGraph" ondragover="allowDrop(event)" @onmousemove="OnMouseMove">
 
     <svg class="devSvg">
         @foreach (var node in DevGraphDefinition.Nodes)

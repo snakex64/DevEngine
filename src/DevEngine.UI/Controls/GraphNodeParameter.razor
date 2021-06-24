@@ -1,5 +1,5 @@
 ﻿
-<div class="devNodeParameter">
+<div class="devNodeParameter" @onmousedown="OnMouseDown">
     @if (DevGraphNodeParameter.IsOutput)
     {
         <div>@DevGraphNodeParameter.Name</div>
@@ -14,7 +14,3 @@
     }
 </div>
 
-@code {
-    [Parameter]
-    public DevEngine.Core.Graph.IDevGraphNodeParameter DevGraphNodeParameter { get; set; }
-}

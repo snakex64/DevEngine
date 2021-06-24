@@ -12,10 +12,10 @@ namespace DevEngine.UI.Controls
     public partial class GraphNode : ComponentBase
     {
         [Parameter]
-        public Core.Graph.IDevGraphDefinition DevGraphDefinition { get; set; }
+        public IDevGraphDefinition DevGraphDefinition { get; set; }
 
         [Parameter]
-        public Core.Graph.IDevGraphNode DevGraphNode { get; set; }
+        public IDevGraphNode DevGraphNode { get; set; }
 
         [Parameter]
         public GraphArea GraphArea { get; set; }
@@ -117,6 +117,16 @@ namespace DevEngine.UI.Controls
 
             GraphArea.GraphNodeMoved();
         }
+
+        #endregion
+
+        #region Dragging parameter
+
+        public void OnNodeParameterMouseDown(GraphNodeParameter graphNodeParameter)
+        {
+            GraphArea.OnNodeParameterMouseDown(this, graphNodeParameter);
+        }
+
 
         #endregion
     }
