@@ -1,11 +1,13 @@
 ﻿
-<div class="devNodeParameter" @onmousedown="OnMouseDown">
+<div class="devNodeParameter">
     @if (DevGraphNodeParameter.IsOutput)
     {
         <div>@DevGraphNodeParameter.Name</div>
     }
 
     <div class="devParameterNode">
+        <div class="devParameterNodeDraggable" draggable="true" @ondragstart="OnDragStart" @ondrag="OnDrag" @ondragend="OnDragEnd">
+        </div>
     </div>
 
     @if (DevGraphNodeParameter.IsInput)

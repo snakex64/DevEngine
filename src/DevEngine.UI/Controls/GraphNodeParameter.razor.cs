@@ -15,9 +15,17 @@ namespace DevEngine.UI.Controls
         [Parameter]
         public GraphNode ParentGraphNode { get; set; }
 
-        private void OnMouseDown(MouseEventArgs args)
+        private void OnDragStart(DragEventArgs args)
         {
-            ParentGraphNode.OnNodeParameterMouseDown(this);
+            ParentGraphNode.OnNodeParameterDragStart(this, args);
+        }
+        private void OnDrag(DragEventArgs args)
+        {
+            ParentGraphNode.OnNodeParameterDrag(this, args);
+        }
+        private void OnDragEnd(DragEventArgs args)
+        {
+            ParentGraphNode.OnNodeParameterDragEnd(this, args);
         }
     }
 }

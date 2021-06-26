@@ -1,5 +1,5 @@
 ﻿
-<div class="devGraph" ondragover="allowDrop(event)" @onmousemove="OnMouseMove">
+<div class="devGraph" ondragover="allowDrop(event)">
 
     <svg class="devSvg">
         @foreach (var node in DevGraphDefinition.Nodes)
@@ -18,6 +18,17 @@
 
                     <path stroke="#8e8e8e" stroke-width="2" fill="none" d="@GetSvgPath(position2.Value, position1.Value)"></path>
                 }
+            }
+        }
+
+        @if (CurrentDraggedNodeParameter != null)
+        {
+            var initialPos = GetParameterAbsolutePosition(CurrentDraggedNodeParameter.DevGraphNodeParameter);
+            if (initialPos != null)
+            {
+                var newPos = new System.Drawing.PointF(initialPos.Value.X + CurrentNodeParameterDragPosition.X - CurrentNodeParameterDragStartPosition.X, initialPos.Value.Y + CurrentNodeParameterDragPosition.Y - CurrentNodeParameterDragStartPosition.Y);
+
+                <path stroke="#8e8e8e" stroke-width="2" fill="none" d="@GetSvgPath(initialPos.Value, newPos)"></path>
             }
         }
     </svg>

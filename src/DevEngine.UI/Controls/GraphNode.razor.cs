@@ -44,6 +44,11 @@ namespace DevEngine.UI.Controls
 
         #region GetParameterAbsolutePosition
 
+        private float? GetAbsoluteYPositionFromParameterIndex(int index)
+        {
+            return GraphNodeSavedContent?.Location.Y + 38 + index * 24;
+        }
+
         public System.Drawing.PointF? GetParameterAbsolutePosition(IDevGraphNodeParameter devGraphNodeParameter)
         {
             if (GraphNodeSavedContent == null)
@@ -54,7 +59,7 @@ namespace DevEngine.UI.Controls
             if (index == null)
                 return null;
 
-            float y = GraphNodeSavedContent.Location.Y + 38 + index.Value * 24;
+            float y = GetAbsoluteYPositionFromParameterIndex(index.Value) ?? throw new Exception("Unable to get y position of parameter node");
             float x = GraphNodeSavedContent.Location.X + (devGraphNodeParameter.IsInput ? 1 : GetWidth() - 1);
 
             return new System.Drawing.PointF(x, y);
@@ -71,6 +76,19 @@ namespace DevEngine.UI.Controls
                 ++i;
             }
             return null;
+        }
+
+        #endregion
+
+        #region GetNodeRectangle
+
+        public System.Drawing.RectangleF? GetNodeRectangle()
+        {
+            if (GraphNodeSavedContent == null)
+                return null;
+
+            var lastParameterIndex = Math.Max(DevGraphNode.Inputs.Count, DevGraphNode.Outputs.Count);
+            return new System.Drawing.RectangleF(GraphNodeSavedContent.Location, new System.Drawing.SizeF(GetWidth(), GetAbsoluteYPositionFromParameterIndex(lastParameterIndex) ?? throw new Exception("Unable to get node rectangle")));
         }
 
         #endregion
@@ -122,9 +140,17 @@ namespace DevEngine.UI.Controls
 
         #region Dragging parameter
 
-        public void OnNodeParameterMouseDown(GraphNodeParameter graphNodeParameter)
+        public void OnNodeParameterDragStart(GraphNodeParameter graphNodeParameter, DragEventArgs args)
         {
-            GraphArea.OnNodeParameterMouseDown(this, graphNodeParameter);
+            GraphArea.OnNodeParameterDragStart(this, graphNodeParameter, args);
+        }
+        public void OnNodeParameterDrag(GraphNodeParameter graphNodeParameter, DragEventArgs args)
+        {
+            GraphArea.OnNodeParameterDrag(this, graphNodeParameter, args);
+        }
+        public void OnNodeParameterDragEnd(GraphNodeParameter graphNodeParameter, DragEventArgs args)
+        {
+            GraphArea.OnNodeParameterDragEnd(this, graphNodeParameter, args);
         }
 
 
