@@ -51,6 +51,10 @@ namespace DevEngine.RealTypes.Class
 
         public bool IsClass => true;
 
+        public bool ShouldBeSaved => false;
+
+        public string Folder => throw new NotImplementedException();
+
         #endregion
 
         public bool CanBeAssignedTo(IDevType type)
@@ -65,6 +69,16 @@ namespace DevEngine.RealTypes.Class
                 return BaseType.CanBeAssignedTo(type);
 
             return false;
+        }
+
+        public void Save(string file)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Load(string file)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -14,13 +14,10 @@ namespace DevEngine.Tests
     {
         public static DevProject GetBasicDevProject()
         {
-            var serviceProvider = new ServiceCollection()
-                .AddSingleton<IRealTypesProviderService>( _ => new RealTypesProviderService())
-                .BuildServiceProvider();
-            var project = new DevProject(serviceProvider);
+            var project = new DevProject("Test", new RealTypesProviderService());
 
-            var class1 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class1"));
-            var class2 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class2"));
+            var class1 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class1"), "/");
+            var class2 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class2"), "/");
             project.Classes.Add(class1);
             project.Classes.Add(class2);
 

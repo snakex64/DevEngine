@@ -10,7 +10,7 @@
 
 @if (DevGraphDefinition != null)
 {
-    <DevEngine.UI.Controls.GraphArea DevGraphDefinition="DevGraphDefinition" ></DevEngine.UI.Controls.GraphArea>
+    <DevEngine.UI.Controls.GraphArea DevGraphDefinition="DevGraphDefinition"></DevEngine.UI.Controls.GraphArea>
 }
 
 @code {
@@ -25,12 +25,9 @@
 
         if (firstRender)
         {
-            var serviceProvider = new ServiceCollection()
-                .AddSingleton<RealTypes.IRealTypesProviderService>(_ => new RealTypes.RealTypesProviderService())
-                .BuildServiceProvider();
-            var project = new DevProject(serviceProvider);
+            var project = new DevProject("Test", new RealTypes.RealTypesProviderService());
 
-            var class3 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class3"));
+            var class3 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class3"), "/");
             project.Classes.Add(class3);
 
             var method3 = new DevMethod(class3, "method3", isStatic: true, returnType: project.GetRealType<int>(), Core.Visibility.Public);

@@ -6,6 +6,8 @@ namespace DevEngine.Core.Project
 {
     public interface IDevProject
     {
+        string Name { get; }
+
         IDevClassCollection Classes { get; }
 
         IDevType GetRealType(Type type);
@@ -15,5 +17,9 @@ namespace DevEngine.Core.Project
         IDevType GetVoidType();
 
         IDevGraphNodeParameter CreateGraphNodeParameter(string name, IDevType devType, bool isInput, IDevGraphNode owner);
+
+        void Save(string folder);
+
+        void Load(string folder);
     }
 }
