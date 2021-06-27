@@ -15,7 +15,6 @@ namespace DevEngine.UI.Controls
 {
     public partial class GraphArea : ComponentBase
     {
-
         [Parameter]
         public IDevGraphDefinition DevGraphDefinition { get; set; }
 

@@ -46,7 +46,7 @@ namespace DevEngine.UI.Controls
 
         private float? GetAbsoluteYPositionFromParameterIndex(int index)
         {
-            return GraphNodeSavedContent?.Location.Y + 30 + index * 18;
+            return GraphNodeSavedContent?.Location.Y + 39 + index * 24;
         }
 
         public System.Drawing.PointF? GetParameterAbsolutePosition(IDevGraphNodeParameter devGraphNodeParameter)
