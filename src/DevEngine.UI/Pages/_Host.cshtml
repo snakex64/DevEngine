@@ -12,23 +12,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DevEngine.UI</title>
     <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="DevEngine.UI.styles.css" rel="stylesheet" />
 </head>
-<body>
+<body style="height: 100vh; width: 100vw; margin: 0px">
     <component type="typeof(App)" render-mode="ServerPrerendered" />
-
-    <div id="blazor-error-ui">
-        <environment include="Staging,Production">
-            An error has occurred. This application may no longer respond until reloaded.
-        </environment>
-        <environment include="Development">
-            An unhandled exception has occurred. See browser dev tools for details.
-        </environment>
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
-    </div>
 
     <script src="_framework/blazor.server.js"></script>
 </body>
@@ -36,7 +24,97 @@
 
 
 <script>
-        function allowDrop(ev) {
-      ev.preventDefault();
+    function allowDrop(ev) {
+        ev.preventDefault();
     }
+
+    var currentDraggedGraph = null;
+    var dragStartX, dragStartY;
+    function onBackgroundMouseDown(ev, element) {
+        currentDraggedGraph = element;
+        dragStartX = ev.clientX;
+        dragStartY = ev.clientY;
+    }
+    function onBackgroundMouseMove(ev) {
+        if (currentDraggedGraph == null) {
+            return;
+        }
+        ev.preventDefault();
+
+        let newRectangle = getNewGraphRectangle(ev);
+        dragStartX = ev.clientX;
+        dragStartY = ev.clientY;
+
+
+        currentDraggedGraph.style.left = newRectangle.newLeft + 'px';
+        currentDraggedGraph.style.top = newRectangle.newTop + 'px';
+        currentDraggedGraph.style.width = newRectangle.width + 'px';
+        currentDraggedGraph.style.height = newRectangle.height + 'px';
+    }
+    function onBackgroundMouseUp(ev, netObj) {
+        if (currentDraggedGraph == null)
+            return;
+
+
+        let newRectangle = getNewGraphRectangle(ev);
+        dragStartX = null;
+        dragStartY = null;
+        ev.preventDefault();
+        currentDraggedGraph = null;
+
+        netObj.invokeMethodAsync('BackgroundMovedFromClient', newRectangle.newLeft, newRectangle.newTop, newRectangle.width, newRectangle.height);
+    }
+
+    function getNewGraphRectangle(ev) {
+
+        let diffX = ev.clientX - dragStartX;
+        let diffY = ev.clientY - dragStartY;
+
+        let left = parseFloat(currentDraggedGraph.style.left.replace("px", ""));
+        let top = parseFloat(currentDraggedGraph.style.top.replace("px", ""));
+        let width = parseFloat(currentDraggedGraph.style.width.replace("px", ""));
+        let height = parseFloat(currentDraggedGraph.style.height.replace("px", ""));
+
+        let parent = currentDraggedGraph.parentNode;
+        let maxWidth = parent.clientWidth;
+        let maxHeight = parent.clientWidth;
+
+        let newLeft = left + diffX;
+        let newTop = top + diffY;
+
+        // make sure the width and height auto-scale to always cover the screen
+        // if the box is 3000 large and we drag it left 1000 pixel, we need to add 1000 to the width so that it still cover the entire screen
+        let visualWidth = newLeft + width;
+        let visualHeight = newTop + height;
+        if (visualWidth < maxWidth)
+            width += maxWidth - visualWidth;
+        if (visualHeight < maxHeight)
+            height += maxHeight - visualHeight;
+
+        return {
+            newLeft, newTop, width, height
+        };
+    }
+
+    function initializeGraphAreaClientSide(netObj, graphDiv) {
+
+        let svg;
+        for (let i = 0; i < graphDiv.childElementCount; ++i) {
+            let c = graphDiv.children[i];
+            if (c.tagName.toLocaleLowerCase() == 'svg') {
+                svg = c;
+                break;
+            }
+        }
+
+        if (svg) {
+            svg.onmousedown = ev => onBackgroundMouseDown(ev, graphDiv);
+            svg.onmousemove = ev => onBackgroundMouseMove(ev, graphDiv);
+            svg.onmouseup = ev => onBackgroundMouseUp(ev, netObj);
+        }
+        else {
+            console.error('Unable to find SVG element');
+        }
+    }
+
 </script>

@@ -38,6 +38,10 @@ namespace DevEngine.Graph
 
         public string OwningMemberName { get; }
 
+        public IDictionary<string, string> AdditionalContent { get; } = new Dictionary<string, string>();
+
+        public IDictionary<string, object?> AdditionalContentToBeSerialized { get; } = new Dictionary<string, object?>();
+
 
         #region InitializeEmptyForMethod
 

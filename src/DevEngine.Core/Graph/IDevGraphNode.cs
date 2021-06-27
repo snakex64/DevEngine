@@ -49,9 +49,11 @@ namespace DevEngine.Core.Graph
         IDictionary<string, string> AdditionalContent { get; }
 
         /// <summary>
-        /// Each provider is called before this node is saved, and the content is added to <seealso cref="AdditionalContent"/>.
-        /// if null is returned, the content is not added, any previous value saved with this key will be removed
+        /// Content to be saved with this graph node
+        /// Every Value will be serialized and saved to <seealso cref="AdditionalContent"/>
+        /// If a Value is null, any previously saved content with that Key will be removed
+        /// If a Key existed before and isn't defined now, it wil stay the same
         /// </summary>
-        IDictionary<string, Func<string?>> AdditionalContentProvider { get; }
+        IDictionary<string, object?> AdditionalContentToBeSerialized { get; }
     }
 }

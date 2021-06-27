@@ -1,11 +1,15 @@
 ﻿using DevEngine.Core.Graph;
+using DevEngine.UI.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace DevEngine.UI.Controls
 {
@@ -15,8 +19,39 @@ namespace DevEngine.UI.Controls
         [Parameter]
         public IDevGraphDefinition DevGraphDefinition { get; set; }
 
+        private GraphSavedContent GraphSavedContent { get; set; } = new Shared.GraphSavedContent();
+
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+
+
+        private ElementReference? GraphAreaDivRef;
+
+
         public readonly IDictionary<IDevGraphNode, GraphNode> Nodes = new Dictionary<IDevGraphNode, GraphNode>();
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+            {
+                if (DevGraphDefinition.AdditionalContent.TryGetValue("GraphArea", out var content))
+                    GraphSavedContent = System.Text.Json.JsonSerializer.Deserialize<GraphSavedContent>(content) ?? new GraphSavedContent();
+                else
+                    GraphSavedContent = new GraphSavedContent();
+
+                DevGraphDefinition.AdditionalContentToBeSerialized["GraphArea"] = GraphSavedContent;
+            }
+
+            if (GraphAreaObjectReference == null && GraphAreaDivRef != null)
+            {
+                await InitializeClientSide();
+                StateHasChanged();
+            }
+        }
+
+        #region GetParameterAbsolutePosition
 
         private System.Drawing.PointF? GetParameterAbsolutePosition(IDevGraphNodeParameter devGraphNodeParameter)
         {
@@ -25,6 +60,10 @@ namespace DevEngine.UI.Controls
 
             return node.GetParameterAbsolutePosition(devGraphNodeParameter);
         }
+
+        #endregion
+
+        #region GetSvgPath
 
         private string GetSvgPath(System.Drawing.PointF a, System.Drawing.PointF b)
         {
@@ -39,10 +78,16 @@ namespace DevEngine.UI.Controls
             return pathStr;
         }
 
+        #endregion
+
+        #region GraphNodeMoved
+
         public void GraphNodeMoved()
         {
             StateHasChanged();
         }
+
+        #endregion
 
         #region node parameter dragging
 
@@ -177,8 +222,60 @@ namespace DevEngine.UI.Controls
             parameter1.Connections.Remove(parameter2);
             parameter2.Connections.Remove(parameter1);
 
-            if(changeState)
+            if (changeState)
                 StateHasChanged();
+        }
+
+        #endregion
+
+        #region Initialize Client side
+
+        private DotNetObjectReference<GraphArea>? GraphAreaObjectReference;
+
+        private ValueTask InitializeClientSide()
+        {
+            GraphAreaObjectReference = DotNetObjectReference.Create(this);
+
+            return JSRuntime.InvokeVoidAsync("initializeGraphAreaClientSide", GraphAreaObjectReference, GraphAreaDivRef ?? throw new Exception("Cannot initialize client side with null GraphAreaDivRef"));
+        }
+
+        #endregion
+
+        #region BackgroundMovedFromClient
+
+        private uint SmallMovementIncrement = 0;
+        [JSInvokable]
+        public bool BackgroundMovedFromClient(float newX, float newY, float newSizeX, float newSizeY)
+        {
+            if (newX > 0 || newY > 0)
+            {
+                // we can't drag the background to the right, it would means, to be able to drag nodes to the left we'd have to "leave" the background, which we can't do visually
+                // to patch that, we drag the background back to zero, but we move all the nodes right by the same amount.
+
+                foreach (var node in Nodes)
+                {
+                    var content = node.Value.GraphNodeSavedContent;
+                    if (content != null)
+                        content.Location = new PointF(newX > 0 ? content.Location.X + newX : content.Location.X, newY > 0 ? content.Location.Y + newY : content.Location.Y);
+                }
+
+                // ugly patch so that blazor understand that we changed the X,Y location
+                // if not, he will go : "oh it was 0 and it's still 0, nice nothing to do", not understanding the value was changed client side
+                unchecked
+                {
+                    if (newX > 0)
+                        newX = float.Parse($"0.{++SmallMovementIncrement}");
+                    if (newY > 0)
+                        newY = float.Parse($"0.{++SmallMovementIncrement}");
+                }
+            }
+
+            GraphSavedContent.BackgroundPosition = new PointF(newX, newY);
+            GraphSavedContent.AreaSize = new SizeF(newSizeX, newSizeY);
+
+            StateHasChanged();
+
+            return true;
         }
 
         #endregion

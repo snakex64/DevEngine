@@ -35,8 +35,19 @@ namespace DevEngine.Core.Graph
 
         /// <summary>
         /// Does nothing special but validating really basic checkups, if both are inputs, if they are in the same node, etc..
-        /// Direction doesn't mapper, input to output or output to input will both work
+        /// Direction doesn't matter, input to output or output to input will both work
         /// </summary>
         void ConnectNodesParameters(IDevGraphNodeParameter nodeParameter1, IDevGraphNodeParameter nodeParameter2);
+
+        /// <summary>
+        /// used to save content with the graph definition
+        /// </summary>
+        IDictionary<string, string> AdditionalContent { get; }
+
+        /// <summary>
+        /// set objects here, they'll be saved with this graph definition
+        /// If a Value is null, it won't be saved and any previously saved value associated with this Key will be removed
+        /// </summary>
+        IDictionary<string, object?> AdditionalContentToBeSerialized { get; }
     }
 }

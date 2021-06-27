@@ -1,43 +1,46 @@
 ﻿
-<div class="devGraph" ondragover="allowDrop(event)">
+<div class="devGraphContainer">
 
-    <svg class="devSvg">
-        @foreach (var node in DevGraphDefinition.Nodes)
-        {
-            @foreach (var output in node.Outputs)
+    <div @ref="GraphAreaDivRef" class="devGraph" ondragover="allowDrop(event)" style="width: @(GraphSavedContent.AreaSize.Width)px; height: @(GraphSavedContent.AreaSize.Height)px; left: @(GraphSavedContent.BackgroundPosition.X)px; top: @(GraphSavedContent.BackgroundPosition.Y)px; ">
+
+        <svg class="devSvg">
+            @foreach (var node in DevGraphDefinition.Nodes)
             {
-                var position1 = GetParameterAbsolutePosition(output);
-                if (position1 == null)
-                    continue;
-
-                @foreach (var input in output.Connections)
+                @foreach (var output in node.Outputs)
                 {
-                    var position2 = GetParameterAbsolutePosition(input);
-                    if (position2 == null)
+                    var position1 = GetParameterAbsolutePosition(output);
+                    if (position1 == null)
                         continue;
 
-                    <path stroke="#8e8e8e" stroke-width="2" fill="none" d="@GetSvgPath(position2.Value, position1.Value)"></path>
+                    @foreach (var input in output.Connections)
+                    {
+                        var position2 = GetParameterAbsolutePosition(input);
+                        if (position2 == null)
+                            continue;
+
+                        <path stroke="#8e8e8e" stroke-width="2" fill="none" d="@GetSvgPath(position2.Value, position1.Value)"></path>
+                    }
                 }
             }
-        }
 
-        @if (CurrentDraggedNodeParameter != null)
-        {
-            var initialPos = GetParameterAbsolutePosition(CurrentDraggedNodeParameter.DevGraphNodeParameter);
-            if (initialPos != null)
+            @if (CurrentDraggedNodeParameter != null)
             {
-                var newPos = new System.Drawing.PointF(initialPos.Value.X + CurrentNodeParameterDragPosition.X - CurrentNodeParameterDragStartPosition.X, initialPos.Value.Y + CurrentNodeParameterDragPosition.Y - CurrentNodeParameterDragStartPosition.Y);
+                var initialPos = GetParameterAbsolutePosition(CurrentDraggedNodeParameter.DevGraphNodeParameter);
+                if (initialPos != null)
+                {
+                    var newPos = new System.Drawing.PointF(initialPos.Value.X + CurrentNodeParameterDragPosition.X - CurrentNodeParameterDragStartPosition.X, initialPos.Value.Y + CurrentNodeParameterDragPosition.Y - CurrentNodeParameterDragStartPosition.Y);
 
-                <path stroke="#8e8e8e" stroke-width="2" fill="none" d="@GetSvgPath(initialPos.Value, newPos)"></path>
+                    <path stroke="#8e8e8e" stroke-width="2" fill="none" d="@GetSvgPath(initialPos.Value, newPos)"></path>
+                }
             }
+        </svg>
+
+        @foreach (var node in DevGraphDefinition.Nodes)
+        {
+            <GraphNode DevGraphDefinition="DevGraphDefinition" DevGraphNode="node" GraphArea="this"></GraphNode>
         }
-    </svg>
 
-    @foreach (var node in DevGraphDefinition.Nodes)
-    {
-        <GraphNode DevGraphDefinition="DevGraphDefinition" DevGraphNode="node" GraphArea="this"></GraphNode>
-    }
 
+    </div>
 
 </div>
-

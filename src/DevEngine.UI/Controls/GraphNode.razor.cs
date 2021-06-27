@@ -20,7 +20,7 @@ namespace DevEngine.UI.Controls
         [Parameter]
         public GraphArea GraphArea { get; set; }
 
-        private GraphNodeSavedContent? GraphNodeSavedContent { get; set; }
+        public GraphNodeSavedContent? GraphNodeSavedContent { get; private set; }
 
 
         protected override void OnAfterRender(bool firstRender)
@@ -36,7 +36,7 @@ namespace DevEngine.UI.Controls
                 else
                     GraphNodeSavedContent = new GraphNodeSavedContent();
 
-                DevGraphNode.AdditionalContentProvider["GraphNodeUI"] = () => System.Text.Json.JsonSerializer.Serialize(GraphNodeSavedContent);
+                DevGraphNode.AdditionalContentToBeSerialized["GraphNodeUI"] = GraphNodeSavedContent;
 
                 StateHasChanged();
             }
@@ -46,7 +46,7 @@ namespace DevEngine.UI.Controls
 
         private float? GetAbsoluteYPositionFromParameterIndex(int index)
         {
-            return GraphNodeSavedContent?.Location.Y + 38 + index * 24;
+            return GraphNodeSavedContent?.Location.Y + 30 + index * 18;
         }
 
         public System.Drawing.PointF? GetParameterAbsolutePosition(IDevGraphNodeParameter devGraphNodeParameter)
