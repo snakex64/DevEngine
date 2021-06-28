@@ -1,3 +1,4 @@
+using DevEngine.Core.Project;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -11,8 +12,20 @@ namespace DevEngine.UI
 {
     public class Program
     {
+        public static IDevProject Project { get; private set; } = null!;
+
         public static void Main(string[] args)
         {
+            if (args.Length != 1)
+                throw new Exception("Expected project path as argument");
+
+            Project = new FakeTypes.Project.DevProject(System.IO.Path.GetFileName(args[0]), new RealTypes.RealTypesProviderService());
+
+            if (!System.IO.File.Exists(System.IO.Path.Combine(args[0], "project.json")))
+                Project.Save(args[0]);
+            else
+                Project.Load(args[0]);
+
             CreateHostBuilder(args).Build().Run();
         }
 

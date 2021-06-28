@@ -1,0 +1,16 @@
+﻿
+<div class="solutionExplorer">
+
+
+    <div style="height: 100%; width: 100%" @onmouseup="OnSolutionExplorerClick" @onmouseup:preventDefault @onmouseup:stopPropagation>
+        <TreeView TNode="SolutionExplorerTreeViewItem" Nodes="Items" GetChildNodes="@(item => item.Children)" HasChildNodes="@(item => item.Children?.Any() == true)" SelectedNodeChanged="OnSelectedTreeViewItemChanged">
+
+            <NodeContent>
+                <Icon Name="@(context.Type == TreeViewItemType.Folder ? "fas fa-folder" : "fas fa-file-code")"></Icon>
+                @context.Name
+            </NodeContent>
+
+        </TreeView>
+    </div>
+
+</div>

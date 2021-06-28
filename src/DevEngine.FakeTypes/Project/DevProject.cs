@@ -56,11 +56,8 @@ namespace DevEngine.FakeTypes.Project
 
             // create a backup of the folder if it already exists, in case something goes wrong
             if (Directory.Exists(folder))
-            {
                 Directory.Move(folder, folder + "_backup");
-                Directory.Delete(folder, true);
 
-            }
             Directory.CreateDirectory(folder);
 
             var projectContent = JsonSerializer.Serialize(new DevProjectSerializedContent(Name, Classes.Values.ToDictionary(x => x.Name.FullNameWithNamespace, x => Path.Combine(x.Folder, x.Name.Name))));
@@ -88,7 +85,7 @@ namespace DevEngine.FakeTypes.Project
             if (!File.Exists(projectFile))
                 throw new Exception("Project file not found:" + projectFile);
 
-            var serializedContent = JsonSerializer.Deserialize<DevProjectSerializedContent>(projectFile);
+            var serializedContent = JsonSerializer.Deserialize<DevProjectSerializedContent>(File.ReadAllText(projectFile));
             if (serializedContent == null)
                 throw new Exception("Unable to deserialize project file:" + projectFile);
 

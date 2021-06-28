@@ -1,0 +1,57 @@
+﻿@if (CurrentlyDisplayedMenuItems != null)
+{
+    <div style="height: 100vh; width: 100vw; position: absolute; z-index: 1000" @onclick="BackgroundClicked">
+        <div style="position: absolute; left: @(MenuX)px; top: @(MenuY)px">
+            <Dropdown Visible="true">
+                <DropdownMenu>
+                    @foreach (var menuItem in CurrentlyDisplayedMenuItems)
+                    {
+                        <DropdownItem Clicked="() => ItemClick(menuItem)"></DropdownItem>
+                    }
+                </DropdownMenu>
+            </Dropdown>
+        </div>
+    </div>
+}
+
+
+
+@code {
+
+    public class MenuItem
+    {
+        public MenuItem(string name, Action callback)
+        {
+            Name = name;
+            Callback = callback;
+        }
+
+        public string Name { get; set; }
+
+        public Action Callback { get; set; }
+    }
+
+    private List<MenuItem>? CurrentlyDisplayedMenuItems { get; set; }
+    double MenuX, MenuY;
+
+    private void BackgroundClicked()
+    {
+        CurrentlyDisplayedMenuItems = null;
+    }
+
+    public void DisplayRightClickMenu(MouseEventArgs mouseEventArgs, List<MenuItem> menuItems)
+    {
+        CurrentlyDisplayedMenuItems = menuItems;
+        MenuX = mouseEventArgs.ClientX;
+        MenuY = mouseEventArgs.ClientY;
+
+        StateHasChanged();
+    }
+
+    private void ItemClick(MenuItem item)
+    {
+        CurrentlyDisplayedMenuItems = null;
+        item.Callback();
+    }
+
+}

@@ -90,3 +90,10 @@ html, body {
             width: 100%;
             align-items: center;
         }
+
+
+.solutionExplorer {
+    width: 300px;
+    height: 100%;
+    border-right: 2px solid black;
+}
