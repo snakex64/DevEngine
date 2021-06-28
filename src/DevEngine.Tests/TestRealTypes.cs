@@ -91,7 +91,7 @@ namespace DevEngine.Tests
 
             var testType1 = project.GetRealType<TestType1>();
             var testType2 = project.GetRealType<TestType2>();
-            var testType3 = new DevClass(project, testType1, "Tests.TestType3");
+            var testType3 = new DevClass(project, testType1, "Tests.TestType3", "folder");
             project.Classes.Add(testType3);
 
             Assert.IsTrue(testType3.CanBeAssignedTo(testType1));

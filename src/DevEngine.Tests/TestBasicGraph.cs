@@ -19,7 +19,7 @@ namespace DevEngine.Tests
         {
             var project = TestBasicDeclarationsAndTypes.GetBasicDevProject();
 
-            var class3 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class3"));
+            var class3 = new DevClass(project, null, new DevClassName("DevEngine.Tests.Class3"), "folder");
             project.Classes.Add(class3);
 
             var method3 = new DevMethod(class3, "method3", isStatic: false, returnType: project.GetRealType<int>(), Core.Visibility.Public);
