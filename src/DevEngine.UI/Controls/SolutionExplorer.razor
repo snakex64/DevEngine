@@ -1,8 +1,7 @@
 ﻿
 <div class="solutionExplorer">
 
-
-    <div style="height: 100%; width: 100%" @onmouseup="OnSolutionExplorerClick" @onmouseup:preventDefault @onmouseup:stopPropagation>
+    <div style="height: 100%; width: 100%" @oncontextmenu="OnSolutionExplorerClick" @oncontextmenu:preventDefault>
         <TreeView TNode="SolutionExplorerTreeViewItem" Nodes="Items" GetChildNodes="@(item => item.Children)" HasChildNodes="@(item => item.Children?.Any() == true)" SelectedNodeChanged="OnSelectedTreeViewItemChanged">
 
             <NodeContent>

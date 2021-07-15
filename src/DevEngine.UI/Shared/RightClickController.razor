@@ -6,7 +6,7 @@
                 <DropdownMenu>
                     @foreach (var menuItem in CurrentlyDisplayedMenuItems)
                     {
-                        <DropdownItem Clicked="() => ItemClick(menuItem)"></DropdownItem>
+                        <DropdownItem Clicked="() => ItemClick(menuItem)">@menuItem.Name</DropdownItem>
                     }
                 </DropdownMenu>
             </Dropdown>

@@ -9,21 +9,18 @@
 
 <div style="height: 100vh; width: 100vw">
 
+    <RightClickController @ref="RightClickController"></RightClickController>
+
     @if (RightClickController != null)
     {
         <CascadingValue TValue="RightClickController" Value="RightClickController" IsFixed="true">
 
             <div style="display: flex; flex-direction: row; height: 100%">
-
                 <DevEngine.UI.Controls.SolutionExplorer></DevEngine.UI.Controls.SolutionExplorer>
-
-
-
             </div>
 
         </CascadingValue>
     }
-    <RightClickController @ref="RightClickController"></RightClickController>
 
 </div>
 

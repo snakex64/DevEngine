@@ -64,6 +64,8 @@ namespace DevEngine.UI.Controls
                 Name = "new folder",
                 Type = TreeViewItemType.Folder
             });
+
+            StateHasChanged();
         }
 
         #endregion
