@@ -124,6 +124,16 @@ namespace DevEngine.FakeTypes.Project
             return PreloadClass(devClass, devProjectSerializedContent.Classes[devClass.FullNameWithNamespace], devProjectSerializedContent);
         }
 
+
+        #endregion
+
+        #region RenameClass
+
+        public void RenameClass(string oldFullNameWithNamespace, string newFullNameWithNamespace)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

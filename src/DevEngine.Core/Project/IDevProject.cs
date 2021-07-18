@@ -21,5 +21,7 @@ namespace DevEngine.Core.Project
         void Save(string folder);
 
         void Load(string folder);
+
+        void RenameClass(string oldFullNameWithNamespace, string newFullNameWithNamespace);
     }
 }

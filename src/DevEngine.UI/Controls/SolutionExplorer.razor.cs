@@ -1,9 +1,11 @@
-﻿using DevEngine.Core.Project;
+﻿using DevEngine.Core.Class;
+using DevEngine.Core.Project;
 using DevEngine.UI.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,14 +28,22 @@ namespace DevEngine.UI.Controls
             public TreeViewItemType Type { get; set; }
 
             public List<SolutionExplorerTreeViewItem> Children { get; } = new List<SolutionExplorerTreeViewItem>();
+
+            public bool IsRenaming { get; set; }
+            public FakeTypes.Class.DevClass? Class { get; internal set; }
         }
 
         private List<SolutionExplorerTreeViewItem> Items { get; } = new List<SolutionExplorerTreeViewItem>();
+
+        private IList<SolutionExplorerTreeViewItem> ExpandedTreeViewItems = new List<SolutionExplorerTreeViewItem>();
 
         private SolutionExplorerTreeViewItem? SelectedTreeViewItem { get; set; }
 
         [CascadingParameter]
         public RightClickController? RightClickController { get; set; }
+
+        [Parameter]
+        public EventCallback<FakeTypes.Class.DevClass> OnOpenClassRequested { get; set; }
 
         private void OnSelectedTreeViewItemChanged(SolutionExplorerTreeViewItem item)
         {
@@ -48,7 +58,6 @@ namespace DevEngine.UI.Controls
             {
                 InitializeTreeView();
 
-
                 StateHasChanged();
             }
         }
@@ -59,13 +68,20 @@ namespace DevEngine.UI.Controls
 
         private void OnCreateFolderClicked()
         {
-            SelectedTreeViewItem?.Children.Add(new SolutionExplorerTreeViewItem()
+            if (SelectedTreeViewItem != null)
             {
-                Name = "new folder",
-                Type = TreeViewItemType.Folder
-            });
+                var item = new SolutionExplorerTreeViewItem()
+                {
+                    Name = "",
+                    Type = TreeViewItemType.Folder,
+                    IsRenaming = true
+                };
+                SelectedTreeViewItem.Children.Add(item);
 
-            StateHasChanged();
+                ExpandedTreeViewItems.Add(SelectedTreeViewItem);
+
+                StateHasChanged();
+            }
         }
 
         #endregion
@@ -83,8 +99,19 @@ namespace DevEngine.UI.Controls
 
         private void OnCreateClassClicked()
         {
+            if (SelectedTreeViewItem == null)
+                return;
 
+            var item = new SolutionExplorerTreeViewItem()
+            {
+                Type = TreeViewItemType.Class,
+                IsRenaming = true,
+                Name = ""
+            };
+            SelectedTreeViewItem.Children.Add(item);
         }
+
+        #endregion
 
         #endregion
 
@@ -97,11 +124,37 @@ namespace DevEngine.UI.Controls
 
         #endregion
 
+        #region OnClassNamedAfterCreation
+
+        private Task OnClassNamedAfterCreation(SolutionExplorerTreeViewItem item, string name)
+        {
+            if (item.Class != null)
+                throw new Exception($"Cannot call {nameof(OnClassNamedAfterCreation)} on existing class");
+
+            var fullPathArr = GetSolutionExplorerItemFullPath(item);
+            var fullPath = string.Join(".", fullPathArr.Select(x => x.Name));
+
+            var devClass = new FakeTypes.Class.DevClass(Program.Project, null, new DevClassName(fullPath, name), fullPath.Replace(".", "/"));
+            item.Class = devClass;
+            Program.Project.Classes.Add(devClass);
+
+            return OpenClass(devClass);
+        }
+
+        #endregion
+
+        #region OpenClass
+
+        private Task OpenClass(FakeTypes.Class.DevClass devClass)
+        {
+            return OnOpenClassRequested.InvokeAsync(devClass);
+        }
+
         #endregion
 
         #region OnClick
 
-        private void OnSolutionExplorerClick(MouseEventArgs mouseEventArgs)
+        private void OnSolutionExplorerRightClick(MouseEventArgs mouseEventArgs)
         {
             if (mouseEventArgs.Button == 2 && SelectedTreeViewItem != null)
             {
@@ -134,7 +187,6 @@ namespace DevEngine.UI.Controls
 
         private void InitializeTreeView()
         {
-
             Items.Add(new SolutionExplorerTreeViewItem()
             {
                 Name = "/",
@@ -150,10 +202,14 @@ namespace DevEngine.UI.Controls
                     treeViewItem.Children.Add(new SolutionExplorerTreeViewItem()
                     {
                         Name = classToAdd.Key.Name,
-                        Type = TreeViewItemType.Class
+                        Type = TreeViewItemType.Class,
+                        Class = (classToAdd.Value as FakeTypes.Class.DevClass) ?? throw new Exception("Classes in project cannot be of other type then FakeTypes.Class.DevClass")
                     });
                 }
             }
+
+            foreach (var item in Items.Where(x => x.Type == TreeViewItemType.Folder))
+                ExpandedTreeViewItems.Add(item);
         }
 
         #endregion
@@ -190,9 +246,112 @@ namespace DevEngine.UI.Controls
 
         #endregion
 
-        #region GetTreeViewItemParent
+        #region OnTreeViewItemRenamed
+
+        private async Task OnTreeViewItemRenamed(SolutionExplorerTreeViewItem item, string newValue)
+        {
+            item.IsRenaming = false;
+
+            if (string.IsNullOrWhiteSpace(newValue))
+                return;
+
+            if (item.Type == TreeViewItemType.Folder)
+            {
+                item.Name = newValue;
 
 
+                var allClasses = GetAllClassesInFolder(item);
+                foreach (var subClass in allClasses)
+                {
+                    var fullPath = GetSolutionExplorerItemFullPath(subClass);
+
+                    if (subClass.Class is DevEngine.FakeTypes.Class.DevClass devClass)
+                        devClass.Folder = string.Join("/", fullPath.Select(x => x.Name));
+                }
+            }
+            else if (item.Type == TreeViewItemType.Class && item.Class == null) // first time we rename a class
+            {
+                item.IsRenaming = false;
+                await OnClassNamedAfterCreation(item, newValue);
+            }
+            else
+                throw new NotImplementedException("Cannot rename classes from the SolutionExplorer yet");
+        }
+
+        #endregion
+
+        #region GetAllClassesInFolder
+
+        private IEnumerable<SolutionExplorerTreeViewItem> GetAllClassesInFolder(SolutionExplorerTreeViewItem folder)
+        {
+            if (folder.Type != TreeViewItemType.Folder)
+                throw new ArgumentException("provided SolutionExplorerTreeViewItem must be a folder");
+
+            foreach (var subFolder in folder.Children)
+            {
+                if (subFolder.Type == TreeViewItemType.Class)
+                    yield return subFolder ?? throw new Exception("Class shoudln't be null here");
+                else if (subFolder.Type == TreeViewItemType.Folder)
+                {
+                    var subClasses = GetAllClassesInFolder(subFolder);
+                    foreach (var subClass in subClasses)
+                        yield return subClass;
+                }
+            }
+        }
+
+        #endregion
+
+        #region GetSolutionExplorerItemFullPath
+
+        private IEnumerable<SolutionExplorerTreeViewItem> GetSolutionExplorerItemFullPath(SolutionExplorerTreeViewItem itemToFind)
+        {
+
+            foreach (var item in Items)
+            {
+                if (TryGetSolutionItemPathInAllChildren(item, itemToFind, out var fullPath))
+                {
+                    yield return item;
+
+                    foreach (var subItem in fullPath)
+                        yield return subItem;
+
+                    yield break;
+                }
+            }
+        }
+
+        #endregion
+
+        #region GetSolutionItemPathInAllChildren
+
+        private bool TryGetSolutionItemPathInAllChildren(SolutionExplorerTreeViewItem parent, SolutionExplorerTreeViewItem child, [MaybeNullWhen(false)] out List<SolutionExplorerTreeViewItem> subItems)
+        {
+            if (parent.Type == TreeViewItemType.Class)
+            {
+                subItems = null;
+                return false;
+            }
+
+            foreach (var currentChild in parent.Children)
+            {
+                if (currentChild == child)
+                {
+                    subItems = new List<SolutionExplorerTreeViewItem> { currentChild };
+                    return true;
+                }
+
+                if (TryGetSolutionItemPathInAllChildren(currentChild, child, out var subSubItems))
+                {
+                    subSubItems.Insert(0, parent);
+                    subItems = subSubItems;
+                    return true;
+                }
+            }
+
+            subItems = null;
+            return false;
+        }
 
         #endregion
     }
