@@ -1,0 +1,25 @@
+﻿
+<div class="classesEditor">
+
+    <Tabs @bind-SelectedTab="CurrentSelectedTab">
+        <Items>
+            @foreach (var devClass in OpenedClasses)
+            {
+                <Tab @key="devClass" Name="@devClass.Name.FullNameWithNamespace">@devClass.Name.Name</Tab>
+            }
+        </Items>
+        <Content>
+
+            @foreach (var devClass in OpenedClasses)
+            {
+                <TabPanel @key="devClass" Name="@devClass.Name.FullNameWithNamespace">
+
+                    <ClassEditor @key="devClass" DevClass="devClass"></ClassEditor>
+
+                </TabPanel>
+            }
+
+        </Content>
+    </Tabs>
+
+</div>

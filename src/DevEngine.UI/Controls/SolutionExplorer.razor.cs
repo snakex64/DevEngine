@@ -109,6 +109,9 @@ namespace DevEngine.UI.Controls
                 Name = ""
             };
             SelectedTreeViewItem.Children.Add(item);
+
+            ExpandedTreeViewItems.Add(SelectedTreeViewItem);
+            StateHasChanged();
         }
 
         #endregion
@@ -137,6 +140,7 @@ namespace DevEngine.UI.Controls
             var devClass = new FakeTypes.Class.DevClass(Program.Project, null, new DevClassName(fullPath, name), fullPath.Replace(".", "/"));
             item.Class = devClass;
             Program.Project.Classes.Add(devClass);
+            item.Name = name;
 
             return OpenClass(devClass);
         }

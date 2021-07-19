@@ -8,5 +8,8 @@ namespace DevEngine.UI.Controls
 {
     public partial class ClassEditor : ComponentBase
     {
+        [Parameter]
+        public FakeTypes.Class.DevClass DevClass { get; set; } = null!;
+
     }
 }

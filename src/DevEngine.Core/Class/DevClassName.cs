@@ -8,6 +8,7 @@ namespace DevEngine.Core.Class
     {
         public string FullNameWithNamespace { get; }
 
+        // Name without namespace
         public string Name { get; }
 
         public string Namespace => FullNameWithNamespace[..^(Name.Length + 1)];

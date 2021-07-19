@@ -16,7 +16,9 @@
         <CascadingValue TValue="RightClickController" Value="RightClickController" IsFixed="true">
 
             <div style="display: flex; flex-direction: row; height: 100%">
-                <DevEngine.UI.Controls.SolutionExplorer></DevEngine.UI.Controls.SolutionExplorer>
+                <DevEngine.UI.Controls.SolutionExplorer OnOpenClassRequested="OnOpenClassRequested"></DevEngine.UI.Controls.SolutionExplorer>
+
+                <DevEngine.UI.Controls.ClassesEditor @ref="ClassesEditor"></DevEngine.UI.Controls.ClassesEditor>
             </div>
 
         </CascadingValue>
@@ -28,13 +30,19 @@
 
     private RightClickController? RightClickController { get; set; }
 
+    private DevEngine.UI.Controls.ClassesEditor? ClassesEditor;
+
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
 
         if (firstRender)
             StateHasChanged(); // force the re-render, now that we have the right click controller we can render the rest of the app... sigh..
+    }
 
+    private void OnOpenClassRequested(FakeTypes.Class.DevClass devClass)
+    {
+        ClassesEditor?.OpenClass(devClass);
     }
 
 
