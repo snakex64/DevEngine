@@ -156,7 +156,7 @@ namespace DevEngine.UI.Controls
 
         #endregion
 
-        #region OnClick
+        #region OnSolutionExplorerRightClick
 
         private void OnSolutionExplorerRightClick(MouseEventArgs mouseEventArgs)
         {

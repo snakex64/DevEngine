@@ -1,0 +1,23 @@
+﻿
+<div class="classPropertiesPanel" @oncontextmenu="OnTreeViewRightClick" @oncontextmenu:preventDefault>
+
+    <TreeView TNode="TreeViewItem" Nodes="Items" GetChildNodes="@(item => item.Children)" HasChildNodes="@(item => item.Children?.Any() == true)"
+              SelectedNodeChanged="OnSelectedTreeViewItemChanged" @bind-ExpandedNodes="ExpandedTreeViewItems">
+
+        <NodeContent>
+
+            @if (context.IsRenaming)
+            {
+                <TextEdit Placeholder="NewItem" Text="@context.Text" TextChanged="@(newValue => OnTreeViewItemRenamed(context, newValue))" ChangeTextOnKeyPress="false" Autofocus="true" Plaintext="true"></TextEdit>
+            }
+            else
+            {
+                <Icon Name="@(context.Type == TreeViewItemType.MethodHeader ? "fas fa-sitemap" : "fas fa-project-diagram")"></Icon>
+                @context.Text
+            }
+
+        </NodeContent>
+
+    </TreeView>
+
+</div>

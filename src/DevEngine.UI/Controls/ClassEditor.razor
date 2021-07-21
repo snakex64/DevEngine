@@ -1,4 +1,36 @@
-﻿
-<div class="classEditor">
+﻿<div class="classEditor">
+
+    <div class="classEditorTabsSection">
+
+        <Tabs @bind-SelectedTab="CurrentSelectedTab">
+            <Items>
+                @foreach (var tab in OpenedTabs)
+                {
+                    var id = tab.DevMethod != null ? $"method:{tab.DevMethod.Name}" : throw new Exception("Unable to find tab type");
+                    var name = tab.DevMethod != null ? tab.DevMethod.Name : throw new Exception("Unable to find tab type");
+                    <Tab @key="tab" Name="@id">@name</Tab>
+                }
+            </Items>
+            <Content>
+
+                @foreach (var tab in OpenedTabs)
+                {
+                    var id = tab.DevMethod != null ? $"method:{tab.DevMethod.Name}" : throw new Exception("Unable to find tab type");
+                    <TabPanel @key="tab" Name="@id">
+
+                        @if (tab.DevMethod?.GraphDefinition != null) // check both the DevMethod and the GraphDefinition
+                        {
+                            <GraphArea @key="tab" DevGraphDefinition="tab.DevMethod.GraphDefinition"></GraphArea>
+                        }
+
+                    </TabPanel>
+                }
+
+            </Content>
+        </Tabs>
+
+    </div>
+
+    <ClassPropertiesPanel DevClass="DevClass"></ClassPropertiesPanel>
 
 </div>
