@@ -89,12 +89,17 @@ namespace DevEngine.UI.Controls
 
         private void OnTreeViewItemRenamed(TreeViewItem item, string newValue)
         {
+            item.IsRenaming = false;
+
             if (item.Type == TreeViewItemType.Method && item.Method == null)
             {
                 item.Text = newValue;
+
+                item.Method = CreateNewEmptyMethod(newValue);
+
+                OnSelectedTreeViewItemChanged(item);
             }
 
-            item.IsRenaming = false;
         }
 
         #endregion
@@ -163,6 +168,20 @@ namespace DevEngine.UI.Controls
 
             StateHasChanged();
         }
+
+        #endregion
+
+        #region CreateNewEmptyMethod
+
+        private FakeTypes.Method.DevMethod CreateNewEmptyMethod(string name)
+        {
+            var method = new FakeTypes.Method.DevMethod(DevClass, name, false, Program.Project.GetVoidType(), Core.Visibility.Public);
+
+            DevClass.Methods.Add(method);
+
+            return method;
+        }
+
 
         #endregion
     }

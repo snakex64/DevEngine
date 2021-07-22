@@ -48,6 +48,9 @@ namespace DevEngine.UI.Controls
         private void OnSelectedTreeViewItemChanged(SolutionExplorerTreeViewItem item)
         {
             SelectedTreeViewItem = item;
+
+            if (item?.Type == TreeViewItemType.Class && !item.IsRenaming)
+                OpenClass(item.Class ?? throw new Exception("Class shouldn't be null here"));
         }
 
         protected override void OnAfterRender(bool firstRender)
@@ -129,20 +132,25 @@ namespace DevEngine.UI.Controls
 
         #region OnClassNamedAfterCreation
 
-        private Task OnClassNamedAfterCreation(SolutionExplorerTreeViewItem item, string name)
+        private void OnClassNamedAfterCreation(SolutionExplorerTreeViewItem item, string name)
         {
             if (item.Class != null)
                 throw new Exception($"Cannot call {nameof(OnClassNamedAfterCreation)} on existing class");
 
-            var fullPathArr = GetSolutionExplorerItemFullPath(item);
-            var fullPath = string.Join(".", fullPathArr.Select(x => x.Name));
-
-            var devClass = new FakeTypes.Class.DevClass(Program.Project, null, new DevClassName(fullPath, name), fullPath.Replace(".", "/"));
-            item.Class = devClass;
-            Program.Project.Classes.Add(devClass);
             item.Name = name;
 
-            return OpenClass(devClass);
+            var fullPathArr = GetSolutionExplorerItemFullPath(item).Skip(1).Select(x => x.Name); // skip the "/"
+            var fullPath = string.Join(".", fullPathArr);
+
+            var folder = string.Join("/", fullPathArr.Take(..^1));
+            var devClass = new FakeTypes.Class.DevClass(Program.Project, null, new DevClassName(fullPath, name), folder);
+            item.Class = devClass;
+            Program.Project.Classes.Add(devClass);
+
+
+            OnSelectedTreeViewItemChanged(item);
+
+            StateHasChanged();
         }
 
         #endregion
@@ -212,11 +220,13 @@ namespace DevEngine.UI.Controls
                 }
             }
 
-            foreach (var item in Items.Where(x => x.Type == TreeViewItemType.Folder))
+            ExpandedTreeViewItems.Clear();
+            foreach (var item in Items.RecursiveChildren(x => x.Children).Where(x => x.Type == TreeViewItemType.Folder))
                 ExpandedTreeViewItems.Add(item);
         }
 
         #endregion
+
 
         #region GetTreeViewItemFromFolder
 
@@ -233,12 +243,13 @@ namespace DevEngine.UI.Controls
                     currentFolder = subFolderItem;
                 else if (create)
                 {
+                    var parent = currentFolder;
                     currentFolder = new SolutionExplorerTreeViewItem()
                     {
                         Name = subFolder,
                         Type = TreeViewItemType.Folder
                     };
-                    currentFolder.Children.Add(currentFolder);
+                    parent.Children.Add(currentFolder);
                 }
                 else
                     return null;
@@ -252,7 +263,7 @@ namespace DevEngine.UI.Controls
 
         #region OnTreeViewItemRenamed
 
-        private async Task OnTreeViewItemRenamed(SolutionExplorerTreeViewItem item, string newValue)
+        private void OnTreeViewItemRenamed(SolutionExplorerTreeViewItem item, string newValue)
         {
             item.IsRenaming = false;
 
@@ -276,7 +287,7 @@ namespace DevEngine.UI.Controls
             else if (item.Type == TreeViewItemType.Class && item.Class == null) // first time we rename a class
             {
                 item.IsRenaming = false;
-                await OnClassNamedAfterCreation(item, newValue);
+                OnClassNamedAfterCreation(item, newValue);
             }
             else
                 throw new NotImplementedException("Cannot rename classes from the SolutionExplorer yet");
@@ -347,7 +358,7 @@ namespace DevEngine.UI.Controls
 
                 if (TryGetSolutionItemPathInAllChildren(currentChild, child, out var subSubItems))
                 {
-                    subSubItems.Insert(0, parent);
+                    subSubItems.Insert(0, currentChild);
                     subItems = subSubItems;
                     return true;
                 }
