@@ -65,13 +65,17 @@ namespace DevEngine.FakeTypes.Class
             if (serializedContent == null)
                 throw new Exception("Unable to deserialize DevClass during Preload:" + file);
 
+
             var parentClassName = serializedContent.ParentClassFullNameWithNamespace != null ? (DevClassName?)new DevClassName(serializedContent.ParentClassFullNameWithNamespace) : null;
             var parentClass = parentClassName == null ? null : devProject.PreloadClass(parentClassName.Value, projectSerializedContent);
 
-            return new DevClass(devProject, parentClass, new DevClassName(serializedContent.FullNameWithNamespace), System.IO.Path.GetDirectoryName(file) ?? throw new Exception("Unable to get directory name from file:" + file))
+            var devClass = new DevClass(devProject, parentClass, new DevClassName(serializedContent.FullNameWithNamespace), System.IO.Path.GetDirectoryName(file) ?? throw new Exception("Unable to get directory name from file:" + file))
             {
-                Visibility = serializedContent.Visibility
+                Visibility = serializedContent.Visibility,
+                PreloadedSerializedContent = serializedContent,
             };
+
+            return devClass;
         }
 
         public void Save(string file)

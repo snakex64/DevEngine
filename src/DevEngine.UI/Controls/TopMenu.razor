@@ -1,0 +1,28 @@
+﻿<div style="height: 50px; border-bottom: 1px gray solid">
+
+    <Bar Breakpoint="Breakpoint.Desktop" Style="height: 50px">
+        <BarBrand>
+            <BarItem>
+                <BarLink>
+                    <BarIcon IconName="IconName.Dashboard" />
+                    DevEngine
+                </BarLink>
+            </BarItem>
+        </BarBrand>
+        <BarToggler />
+        <BarMenu>
+            <BarItem>
+                <BarDropdown>
+                    <BarDropdownToggle>File</BarDropdownToggle>
+                    <BarDropdownMenu>
+                        <BarDropdownItem>
+                            <Button Clicked="()=> OnSaveRequested.InvokeAsync()">Save</Button>
+                        </BarDropdownItem>
+
+                    </BarDropdownMenu>
+                </BarDropdown>
+            </BarItem>
+        </BarMenu>
+    </Bar>
+
+</div>

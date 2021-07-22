@@ -15,10 +15,16 @@
     {
         <CascadingValue TValue="RightClickController" Value="RightClickController" IsFixed="true">
 
-            <div style="display: flex; flex-direction: row; height: 100%">
-                <DevEngine.UI.Controls.SolutionExplorer OnOpenClassRequested="OnOpenClassRequested"></DevEngine.UI.Controls.SolutionExplorer>
+            <div style="display: flex; flex-direction: column; min-width: 0; height: 100%; width: 100%">
 
-                <DevEngine.UI.Controls.ClassesEditor @ref="ClassesEditor"></DevEngine.UI.Controls.ClassesEditor>
+                <DevEngine.UI.Controls.TopMenu OnSaveRequested="Save"></DevEngine.UI.Controls.TopMenu>
+
+                <div style="display: flex; flex-direction: row; height: 100%; width: 100%">
+                    <DevEngine.UI.Controls.SolutionExplorer OnOpenClassRequested="OnOpenClassRequested"></DevEngine.UI.Controls.SolutionExplorer>
+
+                    <DevEngine.UI.Controls.ClassesEditor @ref="ClassesEditor"></DevEngine.UI.Controls.ClassesEditor>
+                </div>
+
             </div>
 
         </CascadingValue>
@@ -45,6 +51,10 @@
         ClassesEditor?.OpenClass(devClass);
     }
 
+    private void Save()
+    {
+        Program.Project.Save(Program.Folder);
+    }
 
 
 }

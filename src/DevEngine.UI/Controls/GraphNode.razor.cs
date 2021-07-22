@@ -10,14 +10,17 @@ namespace DevEngine.UI.Controls
 {
     public partial class GraphNode : ComponentBase
     {
+        [EditorRequired]
         [Parameter]
-        public IDevGraphDefinition DevGraphDefinition { get; set; }
+        public IDevGraphDefinition DevGraphDefinition { get; set; } = null!;
 
+        [EditorRequired]
         [Parameter]
-        public IDevGraphNode DevGraphNode { get; set; }
+        public IDevGraphNode DevGraphNode { get; set; } = null!;
 
+        [EditorRequired]
         [Parameter]
-        public GraphArea GraphArea { get; set; }
+        public GraphArea GraphArea { get; set; } = null!;
 
         public GraphNodeSavedContent? GraphNodeSavedContent { get; private set; }
 
@@ -30,7 +33,9 @@ namespace DevEngine.UI.Controls
             {
                 GraphArea.Nodes[DevGraphNode] = this;
 
-                if (DevGraphNode.AdditionalContent.TryGetValue("GraphNodeUI", out var content))
+                if (DevGraphNode.AdditionalContentToBeSerialized.TryGetValue("GraphNodeUI", out var graphNodeUI) && graphNodeUI != null)
+                    GraphNodeSavedContent = (GraphNodeSavedContent)graphNodeUI;
+                else if (DevGraphNode.AdditionalContent.TryGetValue("GraphNodeUI", out var content))
                     GraphNodeSavedContent = System.Text.Json.JsonSerializer.Deserialize<GraphNodeSavedContent>(content);
                 else
                     GraphNodeSavedContent = new GraphNodeSavedContent();
