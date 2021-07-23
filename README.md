@@ -18,6 +18,8 @@ Set of tools to generate C# code from either a visual web environement ( DevEngi
 - [ ] Zoom in and out in graph
 - [ ] Rename class after initial creation
 - [ ] Rename method after initial creation
+- [ ] Goto method from another graph
+- [ ] Close methods and classes after it's opened
 
 ### DevEngine.Generator
 - [ ] Generate dll with empty methods
