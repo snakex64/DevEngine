@@ -21,6 +21,8 @@ namespace DevEngine.Core
 
         bool IsEnum { get; }
 
+        bool IsRealType { get; }
+
         bool CanBeAssignedTo(IDevType type);
     }
 }

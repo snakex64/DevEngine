@@ -116,7 +116,7 @@ namespace DevEngine.Graph
             }
 
             var nodes = new Dictionary<Guid, DevSavedGraphNode>();
-            foreach( var node in Nodes)
+            foreach (var node in Nodes)
                 nodes[node.Id] = SaveNode(node);
 
             var savedDefinition = new DevSavedGraphDefinition()
@@ -144,18 +144,19 @@ namespace DevEngine.Graph
                     node.AdditionalContent.Remove(additionalContent.Key);
             }
 
+
             return new DevSavedGraphNode()
             {
-                TypeFullName = node.GetType().FullName ?? throw new Exception("Unable to get type full name"),
+                TypeFullName = node.GetType().AssemblyQualifiedName ?? throw new Exception("Unable to get type full name"),
                 Id = node.Id,
                 Name = node.Name,
                 AdditionalContent = node.AdditionalContent,
-                ParameterConnections = Nodes.SelectMany( x=> x.Outputs.SelectMany( y => y.Connections.Select( z => new DevSavedGraphNodeParameterConnection()
+                ParameterConnections = node.Outputs.SelectMany(y => y.Connections.Select(z => new DevSavedGraphNodeParameterConnection()
                 {
                     DistantNodeId = z.ParentNode.Id,
                     DistantNodeParameterName = z.Name,
                     LocalNodeParameterName = y.Name
-                }))).ToList()
+                })).ToList()
             };
         }
 
@@ -163,5 +164,100 @@ namespace DevEngine.Graph
 
         #endregion
 
+        #region Load
+
+        public static DevGraphDefinition Load(string serializedGraph, IDevProject project, IDevMethod owningMethod)
+        {
+            var savedGraphDefinition = JsonSerializer.Deserialize<DevSavedGraphDefinition>(serializedGraph);
+            if (savedGraphDefinition == null)
+                throw new Exception("Unable to deserialize savedGraphDefinition");
+
+            if (!savedGraphDefinition.OwningType.TryGetDevType(project, out var owningType))
+                throw new Exception("Unable to get type:" + (savedGraphDefinition.OwningType.FullNetClassName ?? savedGraphDefinition.OwningType.FullDevClassName));
+
+            var graphDefinition = new DevGraphDefinition(project, savedGraphDefinition.Name, owningType, savedGraphDefinition.DefinitionType, savedGraphDefinition.OwningMemberName);
+
+            // first create and add all the nodes
+            foreach (var node in savedGraphDefinition.Nodes)
+            {
+                var type = Type.GetType(node.Value.TypeFullName);
+
+                if (type == null)
+                    throw new Exception("Unable to get node type:" + node.Value.TypeFullName);
+
+                var constructor = type.GetConstructors().OrderByDescending(x => x.GetParameters().Length).FirstOrDefault();
+                if (constructor == null)
+                    throw new Exception("Unable to find constructor for node type:" + node.Value.TypeFullName);
+
+                var constructorParametersDefinition = constructor.GetParameters();
+
+                var parameters = new object[constructorParametersDefinition.Length];
+
+                for (int i = 0; i < constructorParametersDefinition.Length; i++)
+                {
+                    var parameterDefinition = constructorParametersDefinition[i];
+
+                    parameters[i] = parameterDefinition.Name switch
+                    {
+                        "name" => node.Value.Name,
+                        "id" => node.Key,
+                        "project" => project,
+                        _ => throw new Exception("Unable to find parameter to fit in node constructor:" + parameterDefinition.Name),
+                    };
+                }
+
+                var nodeInstance = (IDevGraphNode?)Activator.CreateInstance(type, parameters);
+                if (nodeInstance == null)
+                    throw new Exception("Unable to create node instance:" + node.Value.TypeFullName);
+
+                foreach (var additionalContent in node.Value.AdditionalContent)
+                    nodeInstance.AdditionalContent.Add(additionalContent);
+
+                if (nodeInstance is DevGraphEntryPoint entry)
+                {
+                    foreach (var parameter in owningMethod.Parameters)
+                    {
+                        if (!parameter.IsOut)
+                            entry.Outputs.Add(new DevGraphNodeParameter(false, parameter.ParameterType, parameter.Name, entry));
+                    }
+
+                }
+                else if (nodeInstance is DevGraphExitPoint exit)
+                {
+                    foreach (var parameter in owningMethod.Parameters)
+                    {
+                        if (parameter.IsOut)
+                            exit.Inputs.Add(new DevGraphNodeParameter(true, parameter.ParameterType, parameter.Name, exit));
+                    }
+
+                    if (owningMethod.ReturnType != project.GetVoidType())
+                        exit.Inputs.Add(new DevGraphNodeParameter(true, owningMethod.ReturnType, "return", exit));
+                }
+
+                graphDefinition.Nodes.Add(nodeInstance);
+
+                nodeInstance.InitializeAfterPreLoad();
+            }
+
+            // then connect the nodes together
+            foreach (var node in savedGraphDefinition.Nodes)
+            {
+                var currentNode = graphDefinition.Nodes.First(x => x.Id == node.Value.Id);
+
+                foreach (var connection in node.Value.ParameterConnections)
+                {
+                    var otherNode = graphDefinition.Nodes.First(x => x.Id == connection.DistantNodeId);
+
+                    var currentNodeParameter = currentNode.Outputs.First(x => x.Name == connection.LocalNodeParameterName);
+                    var distantNodeParameter = otherNode.Inputs.First(x => x.Name == connection.DistantNodeParameterName);
+
+                    graphDefinition.ConnectNodesParameters(currentNodeParameter, distantNodeParameter);
+                }
+            }
+
+            return graphDefinition;
+        }
+
+        #endregion
     }
 }

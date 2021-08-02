@@ -4,12 +4,12 @@ using System.Text;
 
 namespace DevEngine.Core.Class
 {
-    public struct DevClassName
+    public class DevClassName
     {
-        public string FullNameWithNamespace { get; }
+        public string FullNameWithNamespace { get; set; } = null!;
 
         // Name without namespace
-        public string Name { get; }
+        public string Name { get; set; } = null!;
 
         public string Namespace => FullNameWithNamespace[..^(Name.Length + 1)];
 
@@ -26,6 +26,10 @@ namespace DevEngine.Core.Class
                 return devClassName.FullNameWithNamespace == FullNameWithNamespace;
 
             return false;
+        }
+
+        public DevClassName()
+        {
         }
 
         public DevClassName(string @namespace, string name)

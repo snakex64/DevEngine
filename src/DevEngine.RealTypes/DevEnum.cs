@@ -32,6 +32,8 @@ namespace DevEngine.RealTypes
 
         public bool IsEnum => true;
 
+        public bool IsRealType => true;
+
         public bool CanBeAssignedTo(IDevType type)
         {
             return type == this;

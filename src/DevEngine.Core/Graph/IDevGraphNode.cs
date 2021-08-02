@@ -58,6 +58,6 @@ namespace DevEngine.Core.Graph
         /// </summary>
         IDictionary<string, object?> AdditionalContentToBeSerialized { get; }
 
-        void InitializeAfterLoad();
+        void InitializeAfterPreLoad();
     }
 }

@@ -50,6 +50,7 @@ namespace DevEngine.FakeTypes.Class
 
         public string Folder { get; set; }
 
+        public bool IsRealType => false;
 
         private DevClassSerializedContent? PreloadedSerializedContent;
 
@@ -69,7 +70,9 @@ namespace DevEngine.FakeTypes.Class
 
         internal static DevClass Preload(Project.DevProject devProject, string file, Project.DevProjectSerializedContent projectSerializedContent)
         {
-            var serializedContent = System.Text.Json.JsonSerializer.Deserialize<DevClassSerializedContent>(file);
+            var content = System.IO.File.ReadAllText(file);
+
+            var serializedContent = System.Text.Json.JsonSerializer.Deserialize<DevClassSerializedContent>(content);
 
             if (serializedContent == null)
                 throw new Exception("Unable to deserialize DevClass during Preload:" + file);
@@ -104,6 +107,10 @@ namespace DevEngine.FakeTypes.Class
                 Methods = Methods.OfType<DevMethod>().Select(x => x.Save()).ToList()
             };
 
+            var path = System.IO.Path.GetDirectoryName(file) ?? throw new Exception("Unable to get directory from class file name");
+            if(!System.IO.Directory.Exists(path))
+                System.IO.Directory.CreateDirectory(path);
+
             System.IO.File.WriteAllText(file, System.Text.Json.JsonSerializer.Serialize(serializedContent));
         }
 
@@ -124,7 +131,7 @@ namespace DevEngine.FakeTypes.Class
             }
         }
 
-        internal void LoadMethodsAfterPreload(DevProject devProject)
+        internal void LoadMethodsAfterPreload(DevProject project)
         {
             if (PreloadedSerializedContent == null)
                 throw new Exception("Class doesn't seems like it was preloaded?");
@@ -134,19 +141,20 @@ namespace DevEngine.FakeTypes.Class
 
             foreach (var savedMethod in PreloadedSerializedContent.Methods)
             {
-                if (savedMethod.ReturnType.TryGetDevType(devProject, out var returnType))
+                if (savedMethod.ReturnType.TryGetDevType(project, out var returnType))
                 {
                     var method = new DevMethod(this, savedMethod.Name, savedMethod.IsStatic, returnType, savedMethod.Visibility);
 
                     foreach (var parameter in savedMethod.Parameters)
                     {
-                        if (parameter.ParameterType.TryGetDevType(devProject, out var parameterType))
+                        if (parameter.ParameterType.TryGetDevType(project, out var parameterType))
                             method.Parameters.Add(new DevMethodParameter(parameterType, parameter.Name, parameter.IsOut, parameter.IsRef));
                         else
                             throw new Exception("unable to find parameter type");
                     }
 
-
+                    if( savedMethod.SerializedGraph != null )
+                        method.GraphDefinition = Graph.DevGraphDefinition.Load(savedMethod.SerializedGraph, project, method);
 
                     Methods.Add(method);
                 }

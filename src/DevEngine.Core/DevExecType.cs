@@ -27,6 +27,8 @@ namespace DevEngine.Core
 
         public bool IsEnum => false;
 
+        public bool IsRealType => true;
+
         public bool CanBeAssignedTo(IDevType type)
         {
             return type is DevExecType;

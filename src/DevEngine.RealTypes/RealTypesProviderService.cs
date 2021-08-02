@@ -23,11 +23,12 @@ namespace DevEngine.RealTypes
                     IsStruct = type.IsValueType
                 };
 
-                CachedTypes[type] = realClass;
+                return CachedTypes[type] = realClass;
             }
             else if (type.IsEnum)
                 return CachedTypes[type] = new DevEnum(project, type);
-            throw new NotImplementedException("Cannot create wrapper around real type:" + type.FullName);
+            else
+                throw new NotImplementedException("Cannot create wrapper around real type:" + type.FullName);
         }
     }
 }

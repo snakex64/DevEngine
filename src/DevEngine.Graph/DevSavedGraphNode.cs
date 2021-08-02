@@ -10,7 +10,9 @@ namespace DevEngine.Graph
     {
         public Guid Id { get; set; }
 
-        public string TypeFullName { get; set; }
+        public string TypeFullName { get; set; } = null!;
+
+        public List<string> GenericTypes { get; set; } = new List<string>();
 
         public string Name { get; set; } = null!;
 

@@ -59,6 +59,8 @@ namespace DevEngine.RealTypes.Class
 
         public bool IsEnum => false;
 
+        public bool IsRealType => true;
+
         #endregion
 
         public bool CanBeAssignedTo(IDevType type)

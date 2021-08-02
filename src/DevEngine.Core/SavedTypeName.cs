@@ -19,15 +19,15 @@ namespace DevEngine.Core
 
         public SavedTypeName(IDevType devType)
         {
-            if (devType is IDevClass devClass)
-            {
-                IsDevClass = true;
-                FullDevClassName = devClass.TypeNamespaceAndName;
-            }
-            else
+            if (devType.IsRealType)
             {
                 IsNetClass = true;
                 FullNetClassName = devType.TypeNamespaceAndName;
+            }
+            else
+            {
+                IsDevClass = true;
+                FullDevClassName = devType.TypeNamespaceAndName;
             }
         }
         public DevClassName? FullDevClassName { get; set; }
@@ -58,9 +58,15 @@ namespace DevEngine.Core
                 if (FullDevClassName == null)
                     throw new Exception("FullDevClassName shouldn't be null here");
 
-                var classFound = project.Classes.Where(x => x.Key.FullNameWithNamespace == FullDevClassName.Value.FullNameWithNamespace).Select( x=> x.Value).FirstOrDefault();
+                if (FullDevClassName.FullNameWithNamespace == "System.Exec")
+                {
+                    devType = DevExecType.ExecType;
+                    return true;
+                }
 
-                if( classFound == null )
+                var classFound = project.Classes.Where(x => x.Key.FullNameWithNamespace == FullDevClassName.FullNameWithNamespace).Select(x => x.Value).FirstOrDefault();
+
+                if (classFound == null)
                 {
                     devType = null;
 

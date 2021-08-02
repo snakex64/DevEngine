@@ -40,7 +40,7 @@ namespace DevEngine.Standard
 
         public abstract IDevGraphNodeParameter GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance);
 
-        public virtual void InitializeAfterLoad()
+        public virtual void InitializeAfterPreLoad()
         {
 
         }

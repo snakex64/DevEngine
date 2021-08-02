@@ -21,6 +21,8 @@ namespace DevEngine.FakeTypes.Project
 
         public IDevClassCollection Classes { get; } = new DevClassCollection();
 
+        public string? Folder { get; private set; }
+
         public DevProject(string name, IRealTypesProviderService realTypesProviderService)
         {
             Name = name;
@@ -51,6 +53,8 @@ namespace DevEngine.FakeTypes.Project
 
         public void Save(string folder)
         {
+            Folder = folder;
+
             if (Directory.Exists(folder + "_backup"))
                 Directory.Delete(folder + "_backup", true);
 
@@ -60,7 +64,7 @@ namespace DevEngine.FakeTypes.Project
 
             Directory.CreateDirectory(folder);
 
-            var projectContent = JsonSerializer.Serialize(new DevProjectSerializedContent(Name, Classes.Values.ToDictionary(x => x.Name.FullNameWithNamespace, x => Path.Combine(x.Folder, x.Name.Name))));
+            var projectContent = JsonSerializer.Serialize(new DevProjectSerializedContent(Name, Classes.Values.ToDictionary(x => x.Name.FullNameWithNamespace, x => Path.Combine(folder, x.Folder[1..], x.Name + ".json"))));
             File.WriteAllText(Path.Combine(folder, "project.json"), projectContent);
 
             SaveClasses(folder);
@@ -71,7 +75,7 @@ namespace DevEngine.FakeTypes.Project
             foreach (var classToSave in Classes)
             {
                 if (classToSave.Value.ShouldBeSaved)
-                    classToSave.Value.Save(Path.Combine(folder, classToSave.Value.Folder, classToSave.Value.Name + ".json"));
+                    classToSave.Value.Save(Path.Combine(folder, classToSave.Value.Folder[1..], classToSave.Value.Name + ".json"));
             }
         }
 
@@ -81,6 +85,8 @@ namespace DevEngine.FakeTypes.Project
 
         public void Load(string folder)
         {
+            Folder = folder;
+
             var projectFile = Path.Combine(folder, "project.json");
             if (!File.Exists(projectFile))
                 throw new Exception("Project file not found:" + projectFile);
@@ -146,7 +152,7 @@ namespace DevEngine.FakeTypes.Project
                 throw new Exception("Unable to find net class:" + savedClassName.FullNetClassName);
             }
             else if (savedClassName.IsDevClass && savedClassName.FullDevClassName != null)
-                return PreloadClass(savedClassName.FullDevClassName.Value, devProjectSerializedContent);
+                return PreloadClass(savedClassName.FullDevClassName, devProjectSerializedContent);
             else
                 throw new Exception("Unable to preload class from savedClassName");
         }
@@ -162,9 +168,9 @@ namespace DevEngine.FakeTypes.Project
             }
             else if (savedClassName.IsDevClass && savedClassName.FullDevClassName != null)
             {
-                if (Classes.TryGetValue(savedClassName.FullDevClassName.Value, out var devClass))
+                if (Classes.TryGetValue(savedClassName.FullDevClassName, out var devClass))
                     return devClass;
-                throw new Exception("Unable to find devClass in preloaded classes:" +  savedClassName.FullDevClassName.Value.FullNameWithNamespace);
+                throw new Exception("Unable to find devClass in preloaded classes:" + savedClassName.FullDevClassName.FullNameWithNamespace);
             }
             else
                 throw new Exception("Unable to preload class from savedClassName");
