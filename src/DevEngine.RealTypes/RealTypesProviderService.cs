@@ -16,7 +16,15 @@ namespace DevEngine.RealTypes
                 return cachedType;
 
             if (type.IsClass || type.IsValueType)
-                return CachedTypes[type] = new RealTypes.Class.RealClass(project, type, this);
+            {
+                var realClass = new Class.RealClass(project, type, this)
+                {
+                    IsClass = type.IsClass,
+                    IsStruct = type.IsValueType
+                };
+
+                CachedTypes[type] = realClass;
+            }
             else if (type.IsEnum)
                 return CachedTypes[type] = new DevEnum(project, type);
             throw new NotImplementedException("Cannot create wrapper around real type:" + type.FullName);

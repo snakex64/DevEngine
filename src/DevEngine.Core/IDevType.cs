@@ -17,6 +17,10 @@ namespace DevEngine.Core
 
         bool IsClass { get; }
 
+        bool IsStruct { get; }
+
+        bool IsEnum { get; }
+
         bool CanBeAssignedTo(IDevType type);
     }
 }

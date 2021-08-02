@@ -4,16 +4,17 @@ using DevEngine.Core.Method;
 using DevEngine.Core.Project;
 using DevEngine.Core.Property;
 using DevEngine.FakeTypes.Method;
+using DevEngine.FakeTypes.Project;
 using DevEngine.FakeTypes.Property;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DevEngine.FakeTypes.Class
 {
     public class DevClass : IDevClass
     {
-
         public DevClass(IDevProject project, IDevType? baseType, DevClassName name, string folder)
         {
             Project = project;
@@ -39,17 +40,25 @@ namespace DevEngine.FakeTypes.Class
 
         public bool IsClass => true;
 
+        public bool IsStruct => false;
+
+        public bool IsEnum => false;
+
         public IDevProject Project { get; }
 
         public bool ShouldBeSaved => true;
 
         public string Folder { get; set; }
 
+
         private DevClassSerializedContent? PreloadedSerializedContent;
 
         public bool CanBeAssignedTo(IDevType type)
         {
-            if (!type.IsClass)
+            if (type.IsClass != IsClass)
+                return false;
+
+            if (type.IsStruct != IsStruct)
                 return false;
 
             if (type == this)
@@ -66,14 +75,14 @@ namespace DevEngine.FakeTypes.Class
                 throw new Exception("Unable to deserialize DevClass during Preload:" + file);
 
 
-            var parentClassName = serializedContent.ParentClassFullNameWithNamespace != null ? (DevClassName?)new DevClassName(serializedContent.ParentClassFullNameWithNamespace) : null;
-            var parentClass = parentClassName == null ? null : devProject.PreloadClass(parentClassName.Value, projectSerializedContent);
+            var parentClass = serializedContent.ParentClass == null ? null : devProject.PreloadClass(serializedContent.ParentClass, projectSerializedContent);
 
-            var devClass = new DevClass(devProject, parentClass, new DevClassName(serializedContent.FullNameWithNamespace), System.IO.Path.GetDirectoryName(file) ?? throw new Exception("Unable to get directory name from file:" + file))
+            var devClass = new DevClass(devProject, parentClass, new DevClassName(serializedContent.FullNameWithNamespace), serializedContent.Folder)
             {
                 Visibility = serializedContent.Visibility,
                 PreloadedSerializedContent = serializedContent,
             };
+
 
             return devClass;
         }
@@ -83,11 +92,67 @@ namespace DevEngine.FakeTypes.Class
             var serializedContent = new DevClassSerializedContent()
             {
                 FullNameWithNamespace = Name.FullNameWithNamespace,
-                ParentClassFullNameWithNamespace = BaseType?.TypeNamespaceAndName,
-                Visibility = Visibility
+                ParentClass = BaseType == null ? null : new SavedTypeName(BaseType),
+                Visibility = Visibility,
+                Properties = Properties.Select(x => new SavedProperty()
+                {
+                    ClassName = new SavedTypeName(x.Value.PropertyType),
+                    Name = x.Key,
+                    GetVisibility = x.Value.GetVisibility,
+                    SetVisibility = x.Value.SetVisibility
+                }).ToList(),
+                Methods = Methods.OfType<DevMethod>().Select(x => x.Save()).ToList()
             };
 
             System.IO.File.WriteAllText(file, System.Text.Json.JsonSerializer.Serialize(serializedContent));
+        }
+
+
+        internal void LoadPropertiesAfterPreload(DevProject devProject)
+        {
+            if (PreloadedSerializedContent == null)
+                throw new Exception("Class doesn't seems like it was preloaded?");
+
+            if (PreloadedSerializedContent.Properties == null)
+                return;
+
+            foreach (var savedProperty in PreloadedSerializedContent.Properties)
+            {
+                var property = new DevProperty(devProject.GetTypeFromSavedClassName(savedProperty.ClassName), savedProperty.Name, savedProperty.GetVisibility, savedProperty.SetVisibility);
+
+                Properties.Add(property.Name, property);
+            }
+        }
+
+        internal void LoadMethodsAfterPreload(DevProject devProject)
+        {
+            if (PreloadedSerializedContent == null)
+                throw new Exception("Class doesn't seems like it was preloaded?");
+
+            if (PreloadedSerializedContent.Methods == null)
+                return;
+
+            foreach (var savedMethod in PreloadedSerializedContent.Methods)
+            {
+                if (savedMethod.ReturnType.TryGetDevType(devProject, out var returnType))
+                {
+                    var method = new DevMethod(this, savedMethod.Name, savedMethod.IsStatic, returnType, savedMethod.Visibility);
+
+                    foreach (var parameter in savedMethod.Parameters)
+                    {
+                        if (parameter.ParameterType.TryGetDevType(devProject, out var parameterType))
+                            method.Parameters.Add(new DevMethodParameter(parameterType, parameter.Name, parameter.IsOut, parameter.IsRef));
+                        else
+                            throw new Exception("unable to find parameter type");
+                    }
+
+
+
+                    Methods.Add(method);
+                }
+                else
+                    throw new Exception("Unable to load return type");
+            }
         }
     }
 }

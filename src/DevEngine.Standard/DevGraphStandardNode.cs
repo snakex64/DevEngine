@@ -1,4 +1,5 @@
-﻿using DevEngine.Core.Graph;
+﻿using DevEngine.Core;
+using DevEngine.Core.Graph;
 using DevEngine.Core.Project;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,6 @@ namespace DevEngine.Standard
 {
     public abstract class DevGraphStandardNode : IDevGraphNode
     {
-        public string Name { get; }
-
         public abstract bool IsExecNode { get; }
 
         public ICollection<IDevGraphNodeParameter> Inputs { get; }
@@ -20,12 +19,17 @@ namespace DevEngine.Standard
 
         public abstract bool ExecuteExecAsSubGraph { get; }
 
+        public string Name { get; }
+
         public IDictionary<string, string> AdditionalContent { get; } = new Dictionary<string, string>();
 
         public IDictionary<string, object?> AdditionalContentToBeSerialized { get; } = new Dictionary<string, object?>();
 
-        protected DevGraphStandardNode(string name)
+        public Guid Id { get; }
+
+        protected DevGraphStandardNode(Guid id, string name)
         {
+            Id = id;
             Name = name;
 
             Inputs = new List<IDevGraphNodeParameter>();
@@ -35,5 +39,10 @@ namespace DevEngine.Standard
         public abstract DevGraphNodeExecuteResult Execute(IDevGraphNodeInstance devGraphNodeInstance);
 
         public abstract IDevGraphNodeParameter GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance);
+
+        public virtual void InitializeAfterLoad()
+        {
+
+        }
     }
 }

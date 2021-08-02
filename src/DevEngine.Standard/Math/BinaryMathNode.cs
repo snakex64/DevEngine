@@ -20,7 +20,7 @@ namespace DevEngine.Standard.Math
 
         private IDevGraphNodeParameter OutputNode;
 
-        protected BinaryMathNode(string name, IDevProject project) : base(name)
+        protected BinaryMathNode(Guid id, string name, IDevProject project) : base(id, name)
         {
             Inputs.Add(Parameter_A = project.CreateGraphNodeParameter("A", project.GetRealType<T>(), true, this));
             Inputs.Add(Parameter_B = project.CreateGraphNodeParameter("B", project.GetRealType<T>(), true, this));

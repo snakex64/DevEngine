@@ -9,8 +9,9 @@ namespace DevEngine.Graph
 {
     public class DevGraphEntryPoint :  IDevGraphEntryPoint
     {
-        public DevGraphEntryPoint()
+        public DevGraphEntryPoint(Guid id)
         {
+            Id = id;
             Name = "Entry";
 
             Inputs = new List<IDevGraphNodeParameter>();
@@ -33,6 +34,8 @@ namespace DevEngine.Graph
 
         public IDictionary<string, object?> AdditionalContentToBeSerialized { get; } = new Dictionary<string, object?>();
 
+        public Guid Id { get; }
+
         private IDevGraphNodeParameter ExecNode;
 
         public DevGraphNodeExecuteResult Execute(IDevGraphNodeInstance devGraphNodeInstance)
@@ -43,6 +46,10 @@ namespace DevEngine.Graph
         public IDevGraphNodeParameter GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance)
         {
             return ExecNode;
+        }
+
+        public void InitializeAfterLoad()
+        {
         }
     }
 }

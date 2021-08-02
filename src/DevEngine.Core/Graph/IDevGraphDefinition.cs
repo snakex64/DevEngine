@@ -49,5 +49,7 @@ namespace DevEngine.Core.Graph
         /// If a Value is null, it won't be saved and any previously saved value associated with this Key will be removed
         /// </summary>
         IDictionary<string, object?> AdditionalContentToBeSerialized { get; }
+
+        string Save();
     }
 }

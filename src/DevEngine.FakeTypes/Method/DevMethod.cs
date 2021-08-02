@@ -4,6 +4,7 @@ using DevEngine.Core.Method;
 using DevEngine.Core.Project;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DevEngine.FakeTypes.Method
@@ -33,5 +34,25 @@ namespace DevEngine.FakeTypes.Method
 
         public Core.Graph.IDevGraphDefinition? GraphDefinition { get; set; }
 
+        internal DevSavedMethod Save()
+        {
+            var savedMethod = new DevSavedMethod
+            {
+                Name = Name,
+                ReturnType = new SavedTypeName(ReturnType),
+                SerializedGraph = GraphDefinition?.Save(),
+                IsStatic = IsStatic,
+                Visibility = Visibility,
+                Parameters = Parameters.Select(x => new DevSavedParameter()
+                {
+                    Name = x.Name,
+                    IsOut = x.IsOut,
+                    IsRef = x.IsRef,
+                    ParameterType = new SavedTypeName(x.ParameterType)
+                }).ToList(),
+            };
+
+            return savedMethod;
+        }
     }
 }

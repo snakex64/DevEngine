@@ -35,7 +35,7 @@ namespace DevEngine.Tests
 
 
             // we add a "Add" node to the graph
-            var addNode = new Standard.Math.AddNode<int>("Add", project);
+            var addNode = new Standard.Math.AddNode<int>(Guid.NewGuid(), "Add", project);
             graph.Nodes.Add(addNode);
 
 

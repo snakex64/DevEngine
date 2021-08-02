@@ -11,8 +11,13 @@ namespace DevEngine.Standard
 {
     public class SelfNode : DevGraphStandardNode
     {
-        public SelfNode(string name, IDevGraphDefinition devDefinition, IDevProject project) : base(name)
+        public SelfNode(string name, IDevGraphDefinition devDefinition, IDevProject project) : this(Guid.Empty, name, devDefinition, project)
         {
+        }
+
+        public SelfNode(Guid id, string name, IDevGraphDefinition devDefinition, IDevProject project) : base(id, name)
+        {
+
             SelfType = devDefinition.OwningType;
 
             Outputs.Add(SelfParameterNode = project.CreateGraphNodeParameter("Self", SelfType, false, this));

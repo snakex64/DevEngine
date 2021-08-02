@@ -23,6 +23,9 @@ namespace DevEngine.Core
 
         public bool IsClass => false;
 
+        public bool IsStruct => false;
+
+        public bool IsEnum => false;
 
         public bool CanBeAssignedTo(IDevType type)
         {

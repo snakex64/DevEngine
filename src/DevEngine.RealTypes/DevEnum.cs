@@ -28,6 +28,10 @@ namespace DevEngine.RealTypes
 
         public IDevProject Project { get; }
 
+        public bool IsStruct => false;
+
+        public bool IsEnum => true;
+
         public bool CanBeAssignedTo(IDevType type)
         {
             return type == this;

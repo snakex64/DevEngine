@@ -103,8 +103,17 @@ namespace DevEngine.FakeTypes.Project
                 Classes[devClassName] = preloadedClass;
             }
 
+            foreach (var classToLoad in Classes)
+            {
+                if (classToLoad.Value is DevClass devClass)
+                    devClass.LoadPropertiesAfterPreload(this);
+            }
 
-
+            foreach (var classToLoad in Classes)
+            {
+                if (classToLoad.Value is DevClass devClass)
+                    devClass.LoadMethodsAfterPreload(this);
+            }
         }
 
         /// <summary>
@@ -112,18 +121,54 @@ namespace DevEngine.FakeTypes.Project
         /// A <seealso cref="DevClass.Preload(IDevProject, string)"/> might also call this <seealso cref="PreloadClass(DevClassName)"/> if it needs to preload a parent class
         /// </summary>
         /// <param name=""></param>
-        internal IDevClass PreloadClass(DevClassName devClass, string file, DevProjectSerializedContent serializedContent)
+        internal IDevClass PreloadClass(DevClassName devClass, string file, DevProjectSerializedContent devProjectSerializedContent)
         {
             if (Classes.TryGetValue(devClass, out var preloadedClass))
                 return preloadedClass;
 
-            return DevClass.Preload(this, file, serializedContent);
+            var c = Classes[devClass] = DevClass.Preload(this, file, devProjectSerializedContent);
+
+            return c;
         }
+
         internal IDevClass PreloadClass(DevClassName devClass, DevProjectSerializedContent devProjectSerializedContent)
         {
             return PreloadClass(devClass, devProjectSerializedContent.Classes[devClass.FullNameWithNamespace], devProjectSerializedContent);
         }
 
+        internal IDevType PreloadClass(SavedTypeName savedClassName, DevProjectSerializedContent devProjectSerializedContent)
+        {
+            if (savedClassName.IsNetClass && savedClassName.FullNetClassName != null)
+            {
+                var type = Type.GetType(savedClassName.FullNetClassName);
+                if (type != null)
+                    return GetRealType(type); // could crash here
+                throw new Exception("Unable to find net class:" + savedClassName.FullNetClassName);
+            }
+            else if (savedClassName.IsDevClass && savedClassName.FullDevClassName != null)
+                return PreloadClass(savedClassName.FullDevClassName.Value, devProjectSerializedContent);
+            else
+                throw new Exception("Unable to preload class from savedClassName");
+        }
+
+        internal IDevType GetTypeFromSavedClassName(SavedTypeName savedClassName)
+        {
+            if (savedClassName.IsNetClass && savedClassName.FullNetClassName != null)
+            {
+                var type = Type.GetType(savedClassName.FullNetClassName);
+                if (type != null)
+                    return (IDevClass)GetRealType(type); // could crash here
+                throw new Exception("Unable to find net class:" + savedClassName.FullNetClassName);
+            }
+            else if (savedClassName.IsDevClass && savedClassName.FullDevClassName != null)
+            {
+                if (Classes.TryGetValue(savedClassName.FullDevClassName.Value, out var devClass))
+                    return devClass;
+                throw new Exception("Unable to find devClass in preloaded classes:" +  savedClassName.FullDevClassName.Value.FullNameWithNamespace);
+            }
+            else
+                throw new Exception("Unable to preload class from savedClassName");
+        }
 
         #endregion
 

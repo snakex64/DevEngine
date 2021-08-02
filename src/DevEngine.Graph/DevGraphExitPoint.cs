@@ -9,8 +9,9 @@ namespace DevEngine.Graph
 {
     public class DevGraphExitPoint : IDevGraphExitPoint
     {
-        public DevGraphExitPoint()
+        public DevGraphExitPoint(Guid id)
         {
+            Id = id;
             Name = "Exit";
 
             Inputs = new List<IDevGraphNodeParameter>();
@@ -33,12 +34,19 @@ namespace DevEngine.Graph
 
         public IDictionary<string, object?> AdditionalContentToBeSerialized { get; } = new Dictionary<string, object?>();
 
+        public Guid Id { get; }
+
         public DevGraphNodeExecuteResult Execute(IDevGraphNodeInstance devGraphNodeInstance)
         {
             return DevGraphNodeExecuteResult.Exit;
         }
 
         public IDevGraphNodeParameter GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InitializeAfterLoad()
         {
             throw new NotImplementedException();
         }

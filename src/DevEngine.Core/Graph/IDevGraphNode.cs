@@ -10,6 +10,8 @@ namespace DevEngine.Core.Graph
     }
     public interface IDevGraphNode
     {
+        Guid Id { get; }
+
         string Name { get; }
 
         /// <summary>
@@ -55,5 +57,7 @@ namespace DevEngine.Core.Graph
         /// If a Key existed before and isn't defined now, it wil stay the same
         /// </summary>
         IDictionary<string, object?> AdditionalContentToBeSerialized { get; }
+
+        void InitializeAfterLoad();
     }
 }

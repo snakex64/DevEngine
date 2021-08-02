@@ -7,7 +7,7 @@ namespace DevEngine.Standard.Math
 {
     public class AddNode<T> : BinaryMathNode<T>
     {
-        public AddNode(string name, IDevProject project) : base(name, project)
+        public AddNode(Guid id, string name, IDevProject project) : base(id, name, project)
         {
         }
 

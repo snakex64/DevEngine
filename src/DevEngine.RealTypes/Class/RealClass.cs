@@ -49,11 +49,15 @@ namespace DevEngine.RealTypes.Class
 
         public string TypeNamespace => Name.Namespace;
 
-        public bool IsClass => true;
+        public bool IsClass { get; internal set; }
 
         public bool ShouldBeSaved => false;
 
         public string Folder => throw new NotImplementedException();
+
+        public bool IsStruct { get; internal set; }
+
+        public bool IsEnum => false;
 
         #endregion
 

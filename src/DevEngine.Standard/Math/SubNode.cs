@@ -7,7 +7,7 @@ namespace DevEngine.Standard.Math
 {
     public class SubNode<T> : BinaryMathNode<T>
     {
-        public SubNode(string name, IDevProject project) : base(name, project)
+        public SubNode(Guid id, string name, IDevProject project) : base(id, name, project)
         {
         }
 
