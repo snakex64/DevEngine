@@ -2,8 +2,8 @@
 Set of tools to generate C# code from either a visual web environement ( DevEngine.UI ) or a from code
 
 ### Core
-- [ ] Save project
-- [ ] Load project
+- [x] Save project
+- [x] Load project
 - [ ] Load external .NET dlls
 - [ ] Load nuget packages
 
