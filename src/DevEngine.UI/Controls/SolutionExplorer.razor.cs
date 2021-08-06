@@ -143,7 +143,7 @@ namespace DevEngine.UI.Controls
             var fullPath = string.Join(".", fullPathArr);
 
             var folder = string.Join("/", fullPathArr.Take(..^1));
-            var devClass = new FakeTypes.Class.DevClass(Program.Project, null, new DevClassName(fullPath, name), folder);
+            var devClass = new FakeTypes.Class.DevClass(Program.Project, null, new DevClassName(fullPath), folder);
             item.Class = devClass;
             Program.Project.Classes.Add(devClass);
 

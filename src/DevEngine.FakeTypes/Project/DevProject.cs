@@ -64,7 +64,7 @@ namespace DevEngine.FakeTypes.Project
 
             Directory.CreateDirectory(folder);
 
-            var projectContent = JsonSerializer.Serialize(new DevProjectSerializedContent(Name, Classes.Values.ToDictionary(x => x.Name.FullNameWithNamespace, x => Path.Combine(folder, x.Folder[1..], x.Name + ".json"))));
+            var projectContent = JsonSerializer.Serialize(new DevProjectSerializedContent(Name, Classes.Values.ToDictionary(x => x.Name.FullNameWithNamespace, x => Path.Combine(folder, x.Folder, x.Name + ".json"))));
             File.WriteAllText(Path.Combine(folder, "project.json"), projectContent);
 
             SaveClasses(folder);
@@ -75,7 +75,7 @@ namespace DevEngine.FakeTypes.Project
             foreach (var classToSave in Classes)
             {
                 if (classToSave.Value.ShouldBeSaved)
-                    classToSave.Value.Save(Path.Combine(folder, classToSave.Value.Folder[1..], classToSave.Value.Name + ".json"));
+                    classToSave.Value.Save(Path.Combine(folder, classToSave.Value.Folder, classToSave.Value.Name + ".json"));
             }
         }
 
