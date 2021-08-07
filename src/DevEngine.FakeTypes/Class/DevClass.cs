@@ -82,10 +82,10 @@ namespace DevEngine.FakeTypes.Class
 
             var devClass = new DevClass(devProject, parentClass, new DevClassName(serializedContent.FullNameWithNamespace), serializedContent.Folder)
             {
+                Folder = serializedContent.Folder,
                 Visibility = serializedContent.Visibility,
                 PreloadedSerializedContent = serializedContent,
             };
-
 
             return devClass;
         }
@@ -97,6 +97,7 @@ namespace DevEngine.FakeTypes.Class
                 FullNameWithNamespace = Name.FullNameWithNamespace,
                 ParentClass = BaseType == null ? null : new SavedTypeName(BaseType),
                 Visibility = Visibility,
+                Folder = Folder,
                 Properties = Properties.Select(x => new SavedProperty()
                 {
                     ClassName = new SavedTypeName(x.Value.PropertyType),
@@ -108,7 +109,7 @@ namespace DevEngine.FakeTypes.Class
             };
 
             var path = System.IO.Path.GetDirectoryName(file) ?? throw new Exception("Unable to get directory from class file name");
-            if(!System.IO.Directory.Exists(path))
+            if (!System.IO.Directory.Exists(path))
                 System.IO.Directory.CreateDirectory(path);
 
             System.IO.File.WriteAllText(file, System.Text.Json.JsonSerializer.Serialize(serializedContent));
@@ -153,7 +154,7 @@ namespace DevEngine.FakeTypes.Class
                             throw new Exception("unable to find parameter type");
                     }
 
-                    if( savedMethod.SerializedGraph != null )
+                    if (savedMethod.SerializedGraph != null)
                         method.GraphDefinition = Graph.DevGraphDefinition.Load(savedMethod.SerializedGraph, project, method);
 
                     Methods.Add(method);

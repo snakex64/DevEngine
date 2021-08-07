@@ -3,7 +3,7 @@
 
     <div style="height: 100%; width: 100%" @oncontextmenu="OnSolutionExplorerRightClick" @oncontextmenu:preventDefault>
         <TreeView TNode="SolutionExplorerTreeViewItem" Nodes="Items" GetChildNodes="@(item => item.Children)" HasChildNodes="@(item => item.Children?.Any() == true)" 
-            SelectedNodeChanged="OnSelectedTreeViewItemChanged" @bind-ExpandedNodes="ExpandedTreeViewItems">
+            SelectedNodeChanged="OnSelectedTreeViewItemChanged" @bind-ExpandedNodes="ExpandedTreeViewItems" SelectedNode="SelectedTreeViewItem">
 
             <NodeContent>
 
