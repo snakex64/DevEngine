@@ -1,0 +1,22 @@
+﻿<div style="height: 100vh; width: 100vw; position: absolute; z-index: 1000" @onclick="CloseMenu">
+	<div style="position: absolute; left: @(MenuX)px; top: @(MenuY)px">
+		<div class="searchContextualPopup">
+
+			<TextEdit Text="@SearchText" TextChanged="OnSearchTextChanged" ChangeTextOnKeyPress="true" DelayTextOnKeyPressInterval="100" DelayTextOnKeyPress="true"></TextEdit>
+
+			<div class="searchResults">
+				<Dropdown Visible="true">
+					<DropdownMenu>
+						@foreach (var result in Results)
+						{
+							<DropdownItem Clicked="() => OnSearchResultClicked(result)">@result.DisplayName</DropdownItem>
+						}
+					</DropdownMenu>
+				</Dropdown>
+
+			</div>
+
+		</div>
+
+	</div>
+</div>

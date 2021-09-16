@@ -17,8 +17,4 @@
     <ProjectReference Include="..\DevEngine.Standard\DevEngine.Standard.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
