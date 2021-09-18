@@ -68,7 +68,7 @@ namespace DevEngine.FakeTypes.Class
             return BaseType?.CanBeAssignedTo(type) ?? false;
         }
 
-        internal static DevClass Preload(Project.DevProject devProject, string file, Project.DevProjectSerializedContent projectSerializedContent)
+        internal static DevClass Preload(DevProject devProject, string file, DevProjectSerializedContent projectSerializedContent)
         {
             var content = System.IO.File.ReadAllText(file);
 
