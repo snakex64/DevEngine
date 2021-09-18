@@ -61,10 +61,22 @@ namespace DevEngine.RealTypes.Class
 
         public bool IsRealType => true;
 
+        public bool IsUnknownedType => RealType == typeof(UnknownedType);
+
         #endregion
+
 
         public bool CanBeAssignedTo(IDevType type)
         {
+            if (IsUnknownedType) // we can be assigned to anything, except other unknowned type
+            {
+                if (type is RealClass realClassType) // if real class, we have to make sure it's not an unknowned type
+                    return !realClassType.IsUnknownedType;
+
+                // if it's fake class, then sure, we can assign to
+                return type is not DevExecType;
+            }
+
             if (type == this)
                 return true;
 

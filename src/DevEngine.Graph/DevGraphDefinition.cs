@@ -197,12 +197,13 @@ namespace DevEngine.Graph
                 {
                     var parameterDefinition = constructorParametersDefinition[i];
 
+
                     parameters[i] = parameterDefinition.Name switch
                     {
                         "name" => node.Value.Name,
                         "id" => node.Key,
                         "project" => project,
-                        _ => throw new Exception("Unable to find parameter to fit in node constructor:" + parameterDefinition.Name),
+                        _ => parameterDefinition.HasDefaultValue ? null! : throw new Exception("Unable to find parameter to fit in node constructor:" + parameterDefinition.Name),
                     };
                 }
 

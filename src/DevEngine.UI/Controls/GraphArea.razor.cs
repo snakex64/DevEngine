@@ -1,4 +1,5 @@
 ﻿using DevEngine.Core.Graph;
+using DevEngine.UI.Nodes;
 using DevEngine.UI.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -22,6 +23,9 @@ namespace DevEngine.UI.Controls
 
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
+
+        [CascadingParameter]
+        public RightClickController RightClickController { get; set; }
 
 
         private ElementReference? GraphAreaDivRef;
@@ -275,6 +279,52 @@ namespace DevEngine.UI.Controls
             StateHasChanged();
 
             return true;
+        }
+
+        #endregion
+
+        #region OnBackgroundClicked
+
+        private void OnBackgroundClicked(MouseEventArgs mouseEventArgs)
+        {
+            if (mouseEventArgs.Button != 2)
+                return;
+
+            void buildFragment(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder builder)
+            {
+                builder.OpenComponent<SearchContextualPopup>(0);
+
+                builder.AddAttribute(0, "OnResultSelected", EventCallback.Factory.Create<DevGraphNodeSearchResult>(this, OnContextualSearchSelected));
+
+                builder.CloseComponent();
+            }
+
+            RightClickController.DisplayRightClickMenu(mouseEventArgs, buildFragment);
+        }
+
+        #endregion
+
+        #region OnContextualSearchSelected
+
+        private void OnContextualSearchSelected(DevGraphNodeSearchResult result)
+        {
+            RightClickController.CloseRightClickMenu();
+
+            // if it's a generic type, we have to put a generic builder instead, the user will be able to configure the type of the generic parameters with the builder
+            if (result.GenericType != null)
+            {
+                var node = new DevGenericNodeBuilder(Guid.NewGuid(), result.DisplayName, Program.Project, result.GenericType);
+
+                DevGraphDefinition.AddNode(node);
+            }
+            else
+            {
+                var node = result.BuildNewNode(Guid.NewGuid(), result.DisplayName, Program.Project);
+
+                DevGraphDefinition.AddNode(node);
+            }
+
+            StateHasChanged();
         }
 
         #endregion

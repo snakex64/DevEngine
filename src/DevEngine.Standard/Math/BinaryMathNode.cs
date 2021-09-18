@@ -57,5 +57,18 @@ namespace DevEngine.Standard.Math
         {
             throw new NotImplementedException();
         }
+
+        [GenericParameterProvider(typeof(BinaryMathNode<int>))]
+        public static List<GenericParameterResult> GetGenericParameters()
+        {
+            return new List<GenericParameterResult>
+            {
+                new GenericParameterResult("A", "T", true),
+                new GenericParameterResult("B", "T", true),
+                new GenericParameterResult("V", "T", false),
+            };
+        }
+
+
     }
 }

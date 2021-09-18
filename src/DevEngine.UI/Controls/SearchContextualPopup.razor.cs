@@ -10,31 +10,23 @@ namespace DevEngine.UI.Controls
 {
     public partial class SearchContextualPopup : ComponentBase
     {
-        private readonly Services.NodeSearchService NodeSearchService;
+        [Inject]
+        private NodeSearchService NodeSearchService { get; set; } = null!;
 
         private string SearchText { get; set; } = "";
-
-        [Parameter]
-        [EditorRequired]
-        public double MenuX { get; set; }
-
-        [Parameter]
-        [EditorRequired]
-        public double MenuY { get; set; }
 
         private List<DevGraphNodeSearchResult> Results = new List<DevGraphNodeSearchResult>();
 
         [Parameter]
         public EventCallback<DevGraphNodeSearchResult> OnResultSelected { get; set; }
 
-        [Parameter]
-        public EventCallback OnCloseMenuSelected { get; set; }
-
-        public SearchContextualPopup(NodeSearchService nodeSearchService)
+        protected override void OnAfterRender(bool firstRender)
         {
-            NodeSearchService = nodeSearchService;
-        }
+            base.OnAfterRender(firstRender);
 
+            if (firstRender)
+                RefreshSearchResults();
+        }
 
         private void OnSearchTextChanged(string search)
         {
@@ -53,11 +45,6 @@ namespace DevEngine.UI.Controls
         private Task OnSearchResultClicked(DevGraphNodeSearchResult result)
         {
             return OnResultSelected.InvokeAsync(result);
-        }
-
-        private Task CloseMenu()
-        {
-            return OnCloseMenuSelected.InvokeAsync();
         }
 
     }

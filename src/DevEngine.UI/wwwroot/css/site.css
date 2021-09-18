@@ -83,6 +83,9 @@ html, body {
             border-radius: 0.5em;
         }
 
+            .devNode .devNodeBody .devParameterNode.genericParameterNode {
+                background-color: mediumpurple;
+            }
 
         .devNode .devNodeBody .devNodeParameter {
             display: flex;

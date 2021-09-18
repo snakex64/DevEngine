@@ -20,17 +20,20 @@ namespace DevEngine.Core.Graph
 
     public class DevGraphNodeSearchResult
     {
-        public DevGraphNodeSearchResult(string displayName, string? description, Func<Guid, string, IDevProject, IDevGraphNode> buildNewNode)
+        public DevGraphNodeSearchResult(string displayName, string? description, Func<Guid, string, IDevProject, IDevGraphNode> buildNewNode, Type? genericType)
         {
             DisplayName = displayName;
             Description = description;
             BuildNewNode = buildNewNode;
+            GenericType = genericType;
         }
 
-        public string DisplayName { get; set; }
+        public string DisplayName { get; }
 
-        public string? Description { get; set; }
+        public string? Description { get; }
 
-        public Func<Guid, string, IDevProject, IDevGraphNode> BuildNewNode { get; set; }
+        public Func<Guid, string, IDevProject, IDevGraphNode> BuildNewNode { get; }
+
+        public Type? GenericType { get; }
     }
 }

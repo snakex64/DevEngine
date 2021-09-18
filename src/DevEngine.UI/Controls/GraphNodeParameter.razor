@@ -5,7 +5,7 @@
         <div>@DevGraphNodeParameter.Name</div>
     }
 
-    <div class="devParameterNode">
+    <div class="devParameterNode@(IsGenericType ? " genericParameterNode" : "")">
         <div class="devParameterNodeDraggable" draggable="true" @ondragstart="OnDragStart" @ondrag="OnDrag" @ondragend="OnDragEnd">
         </div>
     </div>

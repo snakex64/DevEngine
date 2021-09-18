@@ -33,6 +33,9 @@ namespace DevEngine.UI.Services
 
         private void InitializeProviders()
         {
+            // patch, since the standard engine is never used statically, it won't be loaded, so let's just hit it once to load it!
+            var hit = typeof(Standard.SelfNode);
+
             var providers = new List<IDevGraphNodeSearchProvider>();
 
             foreach (var type in AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()))
@@ -45,6 +48,8 @@ namespace DevEngine.UI.Services
                         providers.Add(provider);
                 }
             }
+
+            Providers = providers;
         }
     }
 }

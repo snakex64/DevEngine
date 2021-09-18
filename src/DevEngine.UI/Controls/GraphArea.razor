@@ -1,6 +1,4 @@
-﻿<SearchContextualPopup></SearchContextualPopup>
-
-<div class="devGraphContainer">
+﻿<div class="devGraphContainer" @oncontextmenu="OnBackgroundClicked" @oncontextmenu:preventDefault>
 
     <div @ref="GraphAreaDivRef" class="devGraph" ondragover="allowDrop(event)" style="width: @(GraphSavedContent.AreaSize.Width)px; height: @(GraphSavedContent.AreaSize.Height)px; left: @(GraphSavedContent.BackgroundPosition.X)px; top: @(GraphSavedContent.BackgroundPosition.Y)px; ">
 

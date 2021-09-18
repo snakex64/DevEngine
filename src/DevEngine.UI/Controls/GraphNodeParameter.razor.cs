@@ -9,11 +9,24 @@ namespace DevEngine.UI.Controls
 {
     public partial class GraphNodeParameter : ComponentBase
     {
+        [EditorRequired]
         [Parameter]
-        public DevEngine.Core.Graph.IDevGraphNodeParameter DevGraphNodeParameter { get; set; }
+        public DevEngine.Core.Graph.IDevGraphNodeParameter DevGraphNodeParameter { get; set; } = null!;
 
+        [EditorRequired]
         [Parameter]
-        public GraphNode ParentGraphNode { get; set; }
+        public GraphNode ParentGraphNode { get; set; } = null!;
+
+        public bool IsGenericType
+        {
+            get
+            {
+                if (DevGraphNodeParameter.Type is RealTypes.Class.RealClass real)
+                    return real.IsUnknownedType;
+
+                return false;
+            }
+        }
 
         private void OnDragStart(DragEventArgs args)
         {

@@ -28,7 +28,7 @@ namespace DevEngine.Standard
             {
                 return new[]
                 {
-                    new DevGraphNodeSearchResult(Name, Description, CreateNodeInstance)
+                    new DevGraphNodeSearchResult(Name, Description, CreateNodeInstance, TypeToInstanciate.ContainsGenericParameters ? TypeToInstanciate : null)
                 };
             }
 
