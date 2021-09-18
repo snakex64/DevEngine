@@ -4,6 +4,7 @@ Set of tools to generate C# code from either a visual web environement ( DevEngi
 ### Core
 - [x] Save project
 - [x] Load project
+- [x] Handle generics
 - [ ] Load external .NET dlls
 - [ ] Load nuget packages
 
@@ -14,7 +15,7 @@ Set of tools to generate C# code from either a visual web environement ( DevEngi
 - [x] Create empty methods
 - [x] Drag nodes around
 - [x] Connect nodes togethers ( parameters and exec )
-- [ ] Add new nodes to graph with search
+- [x] Add new nodes to graph with search
 - [ ] Drag parameter to open contextual search
 - [ ] Load external .NET dlls
 - [ ] Load nuget packages
