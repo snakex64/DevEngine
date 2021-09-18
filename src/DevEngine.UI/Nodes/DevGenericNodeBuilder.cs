@@ -29,7 +29,7 @@ namespace DevEngine.UI.Nodes
 
                 Parameters = Initialize();
 
-                AdditionalContent["GenericNodeType"] = genericNodeType.AssemblyQualifiedName;
+                AdditionalContent["GenericNodeType"] = genericNodeType.AssemblyQualifiedName ?? throw new Exception("Unable to get AssemblyQualifiedName from GenericNodeType:" + GenericNodeType);
             }
         }
 
