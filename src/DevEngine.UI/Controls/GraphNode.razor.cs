@@ -111,7 +111,9 @@ namespace DevEngine.UI.Controls
 
         private float GetWidth()
         {
-            return Math.Max(100, DevGraphNode.Name.Length * 5 + 20); // basic formulas to define the width of the node based on the name of the node
+            var parameterMaxLength = DevGraphNode.Inputs.Concat(DevGraphNode.Outputs).Max(x => x.Name.Length + (x.IsOutput || x.Type.IsUnknownedType || x.Connections.Any() ? 0 : 30));
+
+            return Math.Max(100, Math.Max(DevGraphNode.Name.Length, parameterMaxLength) * 5 + 20); // basic formulas to define the width of the node based on the name of the node
         }
 
         #endregion

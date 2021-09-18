@@ -329,19 +329,28 @@ namespace DevEngine.UI.Controls
         {
             RightClickController.CloseRightClickMenu();
 
+            IDevGraphNode node;
+
             // if it's a generic type, we have to put a generic builder instead, the user will be able to configure the type of the generic parameters with the builder
             if (result.GenericType != null)
             {
-                var node = new DevGenericNodeBuilder(Guid.NewGuid(), result.DisplayName, Program.Project, result.GenericType);
+                node = new DevGenericNodeBuilder(Guid.NewGuid(), result.DisplayName, Program.Project, result.GenericType);
 
                 DevGraphDefinition.AddNode(node);
             }
             else
             {
-                var node = result.BuildNewNode(Guid.NewGuid(), result.DisplayName, Program.Project);
+                node = result.BuildNewNode(Guid.NewGuid(), result.DisplayName, Program.Project);
 
                 DevGraphDefinition.AddNode(node);
             }
+
+
+            // doesn't work :(
+            //node.AdditionalContentToBeSerialized["GraphNodeUI"] = new GraphNodeSavedContent()
+            //{
+            //    Location = new PointF((float)RightClickController.MenuX + GraphSavedContent.BackgroundPosition.X, (float)RightClickController.MenuY + GraphSavedContent.BackgroundPosition.Y)
+            //};
 
             StateHasChanged();
         }

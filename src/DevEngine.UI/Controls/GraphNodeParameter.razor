@@ -16,7 +16,7 @@
 
         @if(IsBasicType && DevGraphNodeParameter.Connections.Count == 0) // we only add constant editors to parameters not connected to anything
         {
-            <TextEdit Text="@ConstantValueStr" TextChanged="OnConstantValueChanged" ChangeTextOnKeyPress="false" Style="height: calc(1.5em + .75rem + -13px)"></TextEdit>
+            <TextEdit Text="@ConstantValueStr" TextChanged="OnConstantValueChanged" ChangeTextOnKeyPress="false" Style="height: calc(1.5em + .75rem + -13px); margin-right: 6px; margin-left: 6px"></TextEdit>
         }
         
     }

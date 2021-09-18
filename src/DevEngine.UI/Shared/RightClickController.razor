@@ -41,7 +41,8 @@
 	}
 
 	private List<MenuItem>? CurrentlyDisplayedMenuItems { get; set; }
-	double MenuX, MenuY;
+	public double MenuX { get; private set; }
+	public double MenuY { get; private set; }
 
 	private RenderFragment? CurrentlyDisplayedRenderFragment { get; set; }
 
