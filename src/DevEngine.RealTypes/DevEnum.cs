@@ -34,6 +34,10 @@ namespace DevEngine.RealTypes
 
         public bool IsRealType => true;
 
+        public bool IsBasicType => true;
+
+        public bool IsUnknownedType => false;
+
         public bool CanBeAssignedTo(IDevType type)
         {
             return type == this;

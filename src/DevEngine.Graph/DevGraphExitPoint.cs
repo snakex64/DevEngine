@@ -28,11 +28,11 @@ namespace DevEngine.Graph
 
         public ICollection<IDevGraphNodeParameter> Outputs { get; }
 
-        public IDictionary<string, string> AdditionalContent { get; } = new Dictionary<string, string>();
+        public IDictionary<string, string> AdditionalContent { get; set; } = new Dictionary<string, string>();
 
         public bool ExecuteExecAsSubGraph => false;
 
-        public IDictionary<string, object?> AdditionalContentToBeSerialized { get; } = new Dictionary<string, object?>();
+        public IDictionary<string, object?> AdditionalContentToBeSerialized { get; set; } = new Dictionary<string, object?>();
 
         public Guid Id { get; }
 

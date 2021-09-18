@@ -99,8 +99,23 @@ namespace DevEngine.Evaluator
 
                 // not plugged to anything
                 if (otherNodeParameter == null)
-                    node.Parameters[input] = new DevObject(input.Type, null);
-                else if(input.Type != DevExecType.ExecType) // we don't need to connect execs
+                {
+                    // if it's basic type
+                    if (input.Type.IsBasicType && input.ConstantValueStr != null)
+                    {
+                        // we've never parsed the constant value yet
+                        if (!node.Parameters.TryGetValue(input, out var _))
+                        {
+                            var convertedType = Convert.ChangeType(input.ConstantValueStr, ((RealTypes.Class.RealClass)input.Type).RealType);
+
+                            node.Parameters[input] = new DevObject(input.Type, convertedType);
+
+                        }
+                    }
+                    else
+                        node.Parameters[input] = new DevObject(input.Type, null);
+                }
+                else if (input.Type != DevExecType.ExecType) // we don't need to connect execs
                 {
                     // get the linked node and populate it's own inputs
                     var otherNode = node.DevGraphInstance.NodeInstances[otherNodeParameter.ParentNode];

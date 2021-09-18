@@ -22,12 +22,14 @@ namespace DevEngine.Graph
 
         public bool IsInput { get; }
 
-        public IDevType Type { get; }
+        public IDevType Type { get; set; }
 
         public string Name { get; }
 
         public ICollection<IDevGraphNodeParameter> Connections { get; }
 
         public IDevGraphNode ParentNode { get; }
+
+        public string? ConstantValueStr { get; set; }
     }
 }

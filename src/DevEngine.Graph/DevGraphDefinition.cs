@@ -93,6 +93,7 @@ namespace DevEngine.Graph
 
         #endregion
 
+
         #region DisconnectNodes
 
         public void DisconnectNodesParameters(IDevGraphNodeParameter nodeParameter1, IDevGraphNodeParameter nodeParameter2)
@@ -136,6 +137,15 @@ namespace DevEngine.Graph
 
         private DevSavedGraphNode SaveNode(IDevGraphNode node)
         {
+            var constantInputs = new Dictionary<string, string>();
+
+            foreach( var input in node.Inputs)
+            {
+                if( input.ConstantValueStr != null )
+                    constantInputs[input.Name] = input.ConstantValueStr;
+            }
+            node.AdditionalContentToBeSerialized["ConstantInputs"] = constantInputs;
+
             foreach (var additionalContent in node.AdditionalContentToBeSerialized)
             {
                 if (additionalContent.Value != null)

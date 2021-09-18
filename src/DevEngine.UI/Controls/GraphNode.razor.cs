@@ -1,4 +1,5 @@
 ﻿using DevEngine.Core.Graph;
+using DevEngine.UI.Nodes;
 using DevEngine.UI.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -42,7 +43,16 @@ namespace DevEngine.UI.Controls
 
                 DevGraphNode.AdditionalContentToBeSerialized["GraphNodeUI"] = GraphNodeSavedContent;
 
-                StateHasChanged();
+                if (DevGraphNode.AdditionalContent.ContainsKey("GenericNodeType") && DevGraphNode is not DevGenericNodeBuilder)
+                {
+                    DevGraphNode.AdditionalContent.Remove("GenericNodeType");
+                    DevGraphNode.AdditionalContentToBeSerialized.Remove("GenericNodeType");
+
+                    GraphArea.ForceStateHasChanged();
+                }
+                else
+                    StateHasChanged();
+
             }
         }
 

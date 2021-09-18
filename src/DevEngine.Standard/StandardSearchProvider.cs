@@ -28,18 +28,18 @@ namespace DevEngine.Standard
             {
                 return new[]
                 {
-                    new DevGraphNodeSearchResult(Name, Description, CreateNodeInstance, TypeToInstanciate.ContainsGenericParameters ? TypeToInstanciate : null)
+                    new DevGraphNodeSearchResult(Name, Description, (id, name, project) => CreateNodeInstance(TypeToInstanciate, id, name, project), TypeToInstanciate.ContainsGenericParameters ? TypeToInstanciate : null)
                 };
             }
 
             return Array.Empty<DevGraphNodeSearchResult>();
         }
 
-        private IDevGraphNode CreateNodeInstance(Guid id, string name, Core.Project.IDevProject project)
+        public static IDevGraphNode CreateNodeInstance(Type typeToInstanciate, Guid id, string name, Core.Project.IDevProject project)
         {
-            var constructor = TypeToInstanciate.GetConstructors().OrderByDescending(x => x.GetParameters().Length).FirstOrDefault();
+            var constructor = typeToInstanciate.GetConstructors().OrderByDescending(x => x.GetParameters().Length).FirstOrDefault();
             if (constructor == null)
-                throw new Exception("Unable to find constructor for node type:" + TypeToInstanciate.FullName);
+                throw new Exception("Unable to find constructor for node type:" + typeToInstanciate.FullName);
 
             var constructorParametersDefinition = constructor.GetParameters();
 
@@ -58,10 +58,10 @@ namespace DevEngine.Standard
                 };
             }
 
-            var nodeInstance = (IDevGraphNode?)Activator.CreateInstance(TypeToInstanciate, parameters);
+            var nodeInstance = (IDevGraphNode?)Activator.CreateInstance(typeToInstanciate, parameters);
 
             if (nodeInstance == null)
-                throw new Exception("Unable to instanciate node:" + TypeToInstanciate.FullName);
+                throw new Exception("Unable to instanciate node:" + typeToInstanciate.FullName);
 
             return nodeInstance;
         }

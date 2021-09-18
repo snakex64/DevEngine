@@ -37,7 +37,7 @@ namespace DevEngine.Standard
 
         public string? GenericName { get; }
 
-        public IDevType? KnownedType { get; }
+        public IDevType? KnownedType { get; set; }
 
         public bool IsInput { get; }
     }

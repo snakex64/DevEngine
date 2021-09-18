@@ -4,6 +4,8 @@ using DevEngine.Core.Graph;
 using DevEngine.Core.Project;
 using DevEngine.RealTypes.Class;
 using DevEngine.Standard;
+using DevEngine.UI.Controls;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +14,14 @@ namespace DevEngine.UI.Nodes
 {
     public class DevGenericNodeBuilder : Standard.DevGraphStandardNode
     {
-        private Type? GenericNodeType;
+        public Type? GenericNodeType { get; private set; }
 
         private readonly IDevProject Project;
 
-        private List<GenericParameterResult>? Parameters;
+        public IReadOnlyList<GenericParameterResult>? Parameters { get; private set;  }
+
+        public bool ReplaceGenericWithRealNode { get; private set; } = false;
+
 
         /// <param name="genericNodeType">is required when building this class manually</param>
         public DevGenericNodeBuilder(Guid id, string name, IDevProject project, Type? genericNodeType = null) : base(id, name)
@@ -67,7 +72,7 @@ namespace DevEngine.UI.Nodes
         {
             var parameters = SearchGenericParameterProvider();
 
-            foreach(var parameter in parameters)
+            foreach (var parameter in parameters)
             {
                 var collection = parameter.IsInput ? Inputs : Outputs;
                 collection.Add(Project.CreateGraphNodeParameter(parameter.Name, parameter.KnownedType ?? Project.GetRealType<UnknownedType>(), parameter.IsInput, this));
@@ -100,12 +105,12 @@ namespace DevEngine.UI.Nodes
 
             var method = fakeTemporaryTypeToGetGenericParameters.GetMethod(provider.Key.Name, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
 
-            if( method == null)
+            if (method == null)
                 throw new Exception("Unable to find GenericParameterProvider method in type:" + GenericNodeType.Name);
 
             var parameters = (List<GenericParameterResult>?)method.Invoke(null, null);
 
-            if( parameters == null)
+            if (parameters == null)
                 throw new Exception("Unable to find GenericParameterProvider, returning null in type:" + GenericNodeType.Name);
 
             return parameters;
@@ -113,6 +118,39 @@ namespace DevEngine.UI.Nodes
         }
 
         #endregion
+
+        #region OnParameterConnectionChanged
+
+        public override void OnParameterConnectionChanged(IDevGraphNodeParameter devGraphNodeParameter)
+        {
+            if (!devGraphNodeParameter.Type.IsUnknownedType)
+                return; // nothing to do if it was a normal type
+
+            if (Parameters == null)
+                throw new Exception("Parameters should be initialized here");
+
+            var otherNode = devGraphNodeParameter.Connections.FirstOrDefault();
+            if (otherNode == null)
+                throw new Exception("otherNode shouldn't be null here");
+
+            var p = Parameters.Single(x => x.IsInput == devGraphNodeParameter.IsInput && x.Name == devGraphNodeParameter.Name);
+
+            // find all the other parameters that are using the same generic ( <T> )
+            foreach (var parameter in Parameters.Where(x => x.GenericName == p.GenericName))
+            {
+                var collection = parameter.IsInput ? Inputs : Outputs;
+
+                var parameterToChange = collection.Single(x => x.Name == parameter.Name);
+
+                parameterToChange.Type = otherNode.Type;
+                parameter.KnownedType = otherNode.Type;
+            }
+
+            ReplaceGenericWithRealNode = Parameters.All(x => x.KnownedType != null);
+        }
+
+        #endregion
+
     }
 
 }

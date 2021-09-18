@@ -54,6 +54,15 @@ namespace DevEngine.UI.Controls
             }
         }
 
+        #region ForceStateHasChanged
+
+        internal void ForceStateHasChanged()
+        {
+            StateHasChanged();
+        }
+
+        #endregion
+
         #region GetParameterAbsolutePosition
 
         private System.Drawing.PointF? GetParameterAbsolutePosition(IDevGraphNodeParameter devGraphNodeParameter)
@@ -210,6 +219,16 @@ namespace DevEngine.UI.Controls
 
             DevGraphDefinition.ConnectNodesParameters(outputParameter, inputParameter);
 
+            // trigger the parameter changed event for both the input and the output
+            outputParameter.ParentNode.OnParameterConnectionChanged(outputParameter);
+            inputParameter.ParentNode.OnParameterConnectionChanged(inputParameter);
+
+
+            if (outputParameter.ParentNode is DevGenericNodeBuilder builder && builder.ReplaceGenericWithRealNode)
+                ReplaceGenericBuilderWithRealNode(builder);
+            if (inputParameter.ParentNode is DevGenericNodeBuilder builder2 && builder2.ReplaceGenericWithRealNode)
+                ReplaceGenericBuilderWithRealNode(builder2);
+
             if (changeState)
                 StateHasChanged();
 
@@ -323,6 +342,68 @@ namespace DevEngine.UI.Controls
 
                 DevGraphDefinition.AddNode(node);
             }
+
+            StateHasChanged();
+        }
+
+        #endregion
+
+        #region RemoveNode
+
+        public void RemoveNode(IDevGraphNode node)
+        {
+            DevGraphDefinition.RemoveNode(node);
+
+            Nodes.Remove(node);
+        }
+
+        #endregion
+
+        #region ReplaceGenericBuilderWithRealNode
+
+        public void ReplaceGenericBuilderWithRealNode(DevGenericNodeBuilder devGenericNodeBuilder)
+        {
+
+            if (devGenericNodeBuilder.GenericNodeType == null)
+                throw new Exception("devGenericNodeBuilder.GenericNodeType shouldn't be null here");
+
+            if (devGenericNodeBuilder.Parameters == null)
+                throw new Exception("devGenericNodeBuilder.Parameters shouldn't be null here");
+
+            var generics = devGenericNodeBuilder.Parameters
+                .Where(x => x.GenericName != null)
+                .GroupBy(x => x.GenericName)
+                .Select(x => ((RealTypes.Class.RealClass?)x.First().KnownedType)?.RealType ?? throw new Exception("Unable to get real type from generic"))
+                .ToArray();
+
+            var genericType = devGenericNodeBuilder.GenericNodeType.MakeGenericType(generics);
+
+            var node = Standard.StandardSearchProvider.CreateNodeInstance(genericType, Guid.NewGuid(), devGenericNodeBuilder.Name, Program.Project);
+
+            foreach (var genericParameter in devGenericNodeBuilder.Inputs.Concat(devGenericNodeBuilder.Outputs))
+            {
+                if (genericParameter.Connections.Count == 0)
+                    continue;
+
+                var nodeParameter = node.Inputs.Concat(node.Outputs).Single(x => x.IsInput == genericParameter.IsInput && x.Name == genericParameter.Name);
+
+
+                foreach (var connection in genericParameter.Connections.ToList()) // the ToList is required since we're modifying the collection while in the foreach, which isn't allowed
+                {
+                    // remove the old connection
+                    DevGraphDefinition.DisconnectNodesParameters(genericParameter, connection);
+
+                    // add the new one
+                    DevGraphDefinition.ConnectNodesParameters(nodeParameter, connection);
+                }
+            }
+
+            node.AdditionalContent = devGenericNodeBuilder.AdditionalContent;
+            node.AdditionalContentToBeSerialized = devGenericNodeBuilder.AdditionalContentToBeSerialized;
+
+            DevGraphDefinition.AddNode(node);
+
+            RemoveNode(devGenericNodeBuilder);
 
             StateHasChanged();
         }

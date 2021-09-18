@@ -29,7 +29,7 @@ namespace DevEngine.RealTypes.Class
 
         public IDevProject Project { get; }
 
-        private Type RealType { get; }
+        public Type RealType { get; }
 
         private RealTypesProviderService RealTypesProviderService { get; }
 
@@ -63,6 +63,8 @@ namespace DevEngine.RealTypes.Class
 
         public bool IsUnknownedType => RealType == typeof(UnknownedType);
 
+        public bool IsBasicType => RealType.IsPrimitive || RealType == typeof(string);
+
         #endregion
 
 
@@ -76,6 +78,8 @@ namespace DevEngine.RealTypes.Class
                 // if it's fake class, then sure, we can assign to
                 return type is not DevExecType;
             }
+            else if (type.IsUnknownedType)
+                return true; // any non-generic can be plugged into a generic
 
             if (type == this)
                 return true;

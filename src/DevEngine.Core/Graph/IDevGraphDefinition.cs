@@ -33,11 +33,18 @@ namespace DevEngine.Core.Graph
             Nodes.Add(node);
         }
 
+        void RemoveNode(IDevGraphNode node)
+        {
+            Nodes.Remove(node);
+        }
+
         /// <summary>
         /// Does nothing special but validating really basic checkups, if both are inputs, if they are in the same node, etc..
         /// Direction doesn't matter, input to output or output to input will both work
         /// </summary>
         void ConnectNodesParameters(IDevGraphNodeParameter nodeParameter1, IDevGraphNodeParameter nodeParameter2);
+
+        void DisconnectNodesParameters(IDevGraphNodeParameter nodeParameter1, IDevGraphNodeParameter nodeParameter2);
 
         /// <summary>
         /// used to save content with the graph definition

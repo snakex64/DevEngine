@@ -23,6 +23,10 @@ namespace DevEngine.Core
 
         bool IsRealType { get; }
 
+        bool IsBasicType { get; }
+
+        bool IsUnknownedType { get; }
+
         bool CanBeAssignedTo(IDevType type);
     }
 }

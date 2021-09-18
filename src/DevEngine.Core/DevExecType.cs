@@ -8,7 +8,7 @@ namespace DevEngine.Core
 {
     public class DevExecType : IDevType
     {
-        public static readonly IDevType ExecType = new DevExecType(null);
+        public static readonly IDevType ExecType = new DevExecType(null!);
 
         public DevExecType(IDevProject project)
         {
@@ -28,6 +28,10 @@ namespace DevEngine.Core
         public bool IsEnum => false;
 
         public bool IsRealType => true;
+
+        public bool IsBasicType => false;
+
+        public bool IsUnknownedType => false;
 
         public bool CanBeAssignedTo(IDevType type)
         {

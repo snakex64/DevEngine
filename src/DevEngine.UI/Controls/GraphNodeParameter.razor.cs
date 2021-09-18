@@ -11,7 +11,7 @@ namespace DevEngine.UI.Controls
     {
         [EditorRequired]
         [Parameter]
-        public DevEngine.Core.Graph.IDevGraphNodeParameter DevGraphNodeParameter { get; set; } = null!;
+        public Core.Graph.IDevGraphNodeParameter DevGraphNodeParameter { get; set; } = null!;
 
         [EditorRequired]
         [Parameter]
@@ -28,6 +28,31 @@ namespace DevEngine.UI.Controls
             }
         }
 
+        public bool IsBasicType
+        {
+            get
+            {
+                if (IsGenericType)
+                    return false;
+
+                if (DevGraphNodeParameter.Type is RealTypes.Class.RealClass real)
+                    return real.IsBasicType;
+
+                return false;
+            }
+        }
+
+        public string? ConstantValueStr
+        {
+            get
+            {
+                if (DevGraphNodeParameter.IsOutput)
+                    throw new Exception("Cannot get constant value for an output");
+
+                return DevGraphNodeParameter.ConstantValueStr;
+            }
+        }
+
         private void OnDragStart(DragEventArgs args)
         {
             ParentGraphNode.OnNodeParameterDragStart(this, args);
@@ -39,6 +64,11 @@ namespace DevEngine.UI.Controls
         private void OnDragEnd(DragEventArgs args)
         {
             ParentGraphNode.OnNodeParameterDragEnd(this, args);
+        }
+
+        private void OnConstantValueChanged(string newValue)
+        {
+            DevGraphNodeParameter.ConstantValueStr = newValue;
         }
     }
 }

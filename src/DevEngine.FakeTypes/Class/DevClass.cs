@@ -52,10 +52,17 @@ namespace DevEngine.FakeTypes.Class
 
         public bool IsRealType => false;
 
+        public bool IsBasicType => false;
+
+        public bool IsUnknownedType => false;
+
         private DevClassSerializedContent? PreloadedSerializedContent;
 
         public bool CanBeAssignedTo(IDevType type)
         {
+            if (type.IsUnknownedType)
+                return true; // any class can be plugged into a generic type, converting that generic type at that point
+
             if (type.IsClass != IsClass)
                 return false;
 

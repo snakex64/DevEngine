@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 
 namespace DevEngine.Core.Graph
 {
@@ -43,12 +44,11 @@ namespace DevEngine.Core.Graph
         /// </summary>
         IDevGraphNodeParameter? GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance);
 
-
         /// <summary>
         /// Additional content to be saved and loaded with this node.
         /// One should only add one KeyValuePair per system using this node, ex a single one for the XY position, do not over-use this
         /// </summary>
-        IDictionary<string, string> AdditionalContent { get; }
+        IDictionary<string, string> AdditionalContent { get; set; }
 
         /// <summary>
         /// Content to be saved with this graph node
@@ -56,8 +56,29 @@ namespace DevEngine.Core.Graph
         /// If a Value is null, any previously saved content with that Key will be removed
         /// If a Key existed before and isn't defined now, it wil stay the same
         /// </summary>
-        IDictionary<string, object?> AdditionalContentToBeSerialized { get; }
+        IDictionary<string, object?> AdditionalContentToBeSerialized { get; set; }
 
-        void InitializeAfterPreLoad();
+        void InitializeAfterPreLoad()
+        {
+            if (!AdditionalContent.TryGetValue("ConstantInputs", out var constantsStr))
+                return;
+
+            var constants = JsonSerializer.Deserialize<Dictionary<string, string>>(constantsStr);
+            if (constants == null)
+                return;
+            // load the constant values
+            foreach (var input in Inputs)
+            {
+                if (input.Type.IsBasicType)
+                {
+                    if (constants.TryGetValue(input.Name, out var constant))
+                        input.ConstantValueStr = constant;
+                }
+            }
+        }
+
+        void OnParameterConnectionChanged(IDevGraphNodeParameter parameter)
+        { }
+
     }
 }
