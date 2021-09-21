@@ -138,14 +138,66 @@ namespace DevEngine.UI.Controls
             var newPos = new PointF(initialPos.Value.X + CurrentNodeParameterDragPosition.X - CurrentNodeParameterDragStartPosition.X, initialPos.Value.Y + CurrentNodeParameterDragPosition.Y - CurrentNodeParameterDragStartPosition.Y);
 
             // if we're an input, we try to connect to outputs, vice versa
-            var nodeParameterFound = GetNodeParameterUnderMouse(newPos, graphNodeParameter.DevGraphNodeParameter.IsOutput);
+            var nodeParameterFound = GetNodeParameterUnderMouse(newPos, graphNodeParameter.DevGraphNodeParameter.IsOutput, out var node);
 
 
             if (nodeParameterFound != null)
                 ConnectNodesParameters(nodeParameterFound, CurrentDraggedNodeParameter.DevGraphNodeParameter, false);
+            else if (node != null && !graphNodeParameter.DevGraphNodeParameter.Type.IsUnknownedType)
+            {
+                if (node.Value.Key is IDevGraphEntryPoint entry && graphNodeParameter.DevGraphNodeParameter.IsInput)
+                {
+                    // search for an available name
+                    AddInputToGraph(graphNodeParameter, entry);
+                }
+                else if (node.Value.Key is IDevGraphExitPoint exit && graphNodeParameter.DevGraphNodeParameter.IsOutput)
+                {
+                    // search for an available name
+                    AddOutputToGraph(graphNodeParameter, exit);
+                }
+            }
 
             CurrentDraggedNodeParameter = null;
             StateHasChanged();
+        }
+
+
+        #endregion
+
+        #region AddInputToGraph
+
+        private void AddInputToGraph(GraphNodeParameter graphNodeParameter, IDevGraphEntryPoint entry)
+        {
+            string name = graphNodeParameter.DevGraphNodeParameter.Name;
+            for (int i = 1; entry.Outputs.Any(x => x.Name == name); ++i)
+                name = $"{name}_{i}";
+
+            DevGraphDefinition.AddInput(name, graphNodeParameter.DevGraphNodeParameter.Type);
+
+            var newInput = entry.Outputs.First(x => x.Name == name); // get the new input, which is the output parameter node of the entry node... confusioooonnn
+
+            DevGraphDefinition.ConnectNodesParameters(graphNodeParameter.DevGraphNodeParameter, newInput);
+
+            // TODO --- must update opened tabs and all the other people calling that specific method, to make sure they visually have the new parameter!
+        }
+
+        #endregion
+
+        #region AddOutputToGraph
+
+        private void AddOutputToGraph(GraphNodeParameter parameterToConnect, IDevGraphExitPoint exit)
+        {
+            string name = parameterToConnect.DevGraphNodeParameter.Name;
+            for (int i = 1; exit.Inputs.Any(x => x.Name == name); ++i)
+                name = $"{name}_{i}";
+
+            DevGraphDefinition.AddOutput(name, parameterToConnect.DevGraphNodeParameter.Type);
+
+            var newOutput = exit.Inputs.First(x => x.Name == name); // get the new output, which is the input parameter node of the exit node... confusioooonnn
+
+            DevGraphDefinition.ConnectNodesParameters(parameterToConnect.DevGraphNodeParameter, newOutput);
+
+            // TODO --- must update opened tabs and all the other people calling that specific method, to make sure they visually have the new parameter!
         }
 
         #endregion
@@ -172,16 +224,21 @@ namespace DevEngine.UI.Controls
 
         #region GetNodeParameterUnderMouse
 
-        private IDevGraphNodeParameter? GetNodeParameterUnderMouse(PointF mouse, bool lookAtInputs)
+        private IDevGraphNodeParameter? GetNodeParameterUnderMouse(PointF mouse, bool lookAtInputs, out KeyValuePair<IDevGraphNode, GraphNode>? nodeUnder)
         {
+            nodeUnder = null;
+
             foreach (var node in EnumerateNodesUnderMouse(mouse))
             {
+                nodeUnder = node;
+
                 var parameters = lookAtInputs ? node.Key.Inputs : node.Key.Outputs;
                 foreach (var parameter in parameters)
                 {
                     var parameterPosition = node.Value.GetParameterAbsolutePosition(parameter);
                     if (parameterPosition == null)
                         continue;
+
                     if (Math.Abs(parameterPosition.Value.Y - mouse.Y) < 10)
                     {
                         // we found it, wouhou
@@ -189,6 +246,7 @@ namespace DevEngine.UI.Controls
                     }
                 }
             }
+
             return null;
         }
 

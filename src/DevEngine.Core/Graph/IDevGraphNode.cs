@@ -79,6 +79,5 @@ namespace DevEngine.Core.Graph
 
         void OnParameterConnectionChanged(IDevGraphNodeParameter parameter)
         { }
-
     }
 }

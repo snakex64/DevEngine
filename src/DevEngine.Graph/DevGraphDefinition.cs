@@ -269,6 +269,19 @@ namespace DevEngine.Graph
             return graphDefinition;
         }
 
+        public void AddInput(string name, IDevType devType)
+        {
+            var entry = EntryPoint;
+
+            entry.Outputs.Add(new DevGraphNodeParameter(false, devType, name, entry));
+        }
+
+        public void AddOutput(string name, IDevType devType)
+        {
+            foreach (var exit in ExitPoints)
+                exit.Inputs.Add(new DevGraphNodeParameter(true, devType, name, exit));
+        }
+
         #endregion
     }
 }

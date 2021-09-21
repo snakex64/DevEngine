@@ -58,5 +58,9 @@ namespace DevEngine.Core.Graph
         IDictionary<string, object?> AdditionalContentToBeSerialized { get; }
 
         string Save();
+
+        void AddInput(string name, IDevType devType);
+
+        void AddOutput(string name, IDevType devType);
     }
 }

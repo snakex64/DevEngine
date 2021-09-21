@@ -20,6 +20,8 @@ namespace DevEngine.Graph
             Outputs.Add(ExecNode = new DevGraphNodeParameter(false, Core.DevExecType.ExecType, "Exec", this));
         }
 
+        private IDevGraphDefinition DevGraphDefinition { get; }
+
         public string Name { get; }
 
         public bool IsExecNode => true;
@@ -51,5 +53,6 @@ namespace DevEngine.Graph
         public void InitializeAfterPreLoad()
         {
         }
+
     }
 }
