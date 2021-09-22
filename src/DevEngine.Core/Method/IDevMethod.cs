@@ -19,5 +19,9 @@ namespace DevEngine.Core.Method
         Visibility Visibility { get; }
 
         IDevType ReturnType { get; }
+
+        void AddInput(IDevMethodParameter parameter);
+
+        void AddOutput(IDevMethodParameter parameter);
     }
 }

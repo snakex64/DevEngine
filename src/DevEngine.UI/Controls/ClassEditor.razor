@@ -20,7 +20,7 @@
 
                         @if (tab.DevMethod?.GraphDefinition != null) // check both the DevMethod and the GraphDefinition
                         {
-                            <GraphArea @key="tab" DevGraphDefinition="tab.DevMethod.GraphDefinition"></GraphArea>
+                            <GraphArea @key="tab" DevGraphDefinition="tab.DevMethod.GraphDefinition" DevMethod="tab.DevMethod"></GraphArea>
                         }
 
                     </TabPanel>

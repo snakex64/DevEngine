@@ -42,5 +42,15 @@ namespace DevEngine.RealTypes.Method
         public Visibility Visibility { get; }
 
         public IDevType ReturnType { get; }
+
+        public void AddInput(IDevMethodParameter parameter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddOutput(IDevMethodParameter parameter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

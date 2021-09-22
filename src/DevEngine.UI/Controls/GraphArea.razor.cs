@@ -1,4 +1,5 @@
 ﻿using DevEngine.Core.Graph;
+using DevEngine.Core.Method;
 using DevEngine.UI.Nodes;
 using DevEngine.UI.Shared;
 using Microsoft.AspNetCore.Components;
@@ -18,6 +19,9 @@ namespace DevEngine.UI.Controls
     {
         [Parameter]
         public IDevGraphDefinition DevGraphDefinition { get; set; }
+
+        [Parameter]
+        public IDevMethod? DevMethod { get; set; }
 
         private GraphSavedContent GraphSavedContent { get; set; } = new Shared.GraphSavedContent();
 
@@ -172,13 +176,17 @@ namespace DevEngine.UI.Controls
             for (int i = 1; entry.Outputs.Any(x => x.Name == name); ++i)
                 name = $"{name}_{i}";
 
-            DevGraphDefinition.AddInput(name, graphNodeParameter.DevGraphNodeParameter.Type);
+            if (DevMethod == null)
+                throw new Exception("DevMethod can't be null here");
+
+            DevMethod.AddInput(new FakeTypes.Method.DevMethodParameter(graphNodeParameter.DevGraphNodeParameter.Type, name, false, false));
 
             var newInput = entry.Outputs.First(x => x.Name == name); // get the new input, which is the output parameter node of the entry node... confusioooonnn
 
             DevGraphDefinition.ConnectNodesParameters(graphNodeParameter.DevGraphNodeParameter, newInput);
 
             // TODO --- must update opened tabs and all the other people calling that specific method, to make sure they visually have the new parameter!
+
         }
 
         #endregion
@@ -191,7 +199,10 @@ namespace DevEngine.UI.Controls
             for (int i = 1; exit.Inputs.Any(x => x.Name == name); ++i)
                 name = $"{name}_{i}";
 
-            DevGraphDefinition.AddOutput(name, parameterToConnect.DevGraphNodeParameter.Type);
+            if (DevMethod == null)
+                throw new Exception("DevMethod can't be null here");
+
+            DevMethod.AddOutput(new FakeTypes.Method.DevMethodParameter(parameterToConnect.DevGraphNodeParameter.Type, name, true, false));
 
             var newOutput = exit.Inputs.First(x => x.Name == name); // get the new output, which is the input parameter node of the exit node... confusioooonnn
 

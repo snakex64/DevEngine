@@ -11,7 +11,7 @@ namespace DevEngine.FakeTypes.Method
 {
     public class DevMethod : IDevMethod
     {
-        public DevMethod( IDevClass declaringClass, string name, bool isStatic, IDevType returnType, Visibility visibility = Visibility.Private)
+        public DevMethod(IDevClass declaringClass, string name, bool isStatic, IDevType returnType, Visibility visibility = Visibility.Private)
         {
             DeclaringType = declaringClass;
             Name = name;
@@ -33,6 +33,20 @@ namespace DevEngine.FakeTypes.Method
         public IDevType ReturnType { get; }
 
         public Core.Graph.IDevGraphDefinition? GraphDefinition { get; set; }
+
+        public void AddInput(IDevMethodParameter parameter)
+        {
+            Parameters.Add(parameter);
+
+            GraphDefinition?.AddInput(parameter.Name, parameter.ParameterType);
+        }
+
+        public void AddOutput(IDevMethodParameter parameter)
+        {
+            Parameters.Add(parameter);
+
+            GraphDefinition?.AddOutput(parameter.Name, parameter.ParameterType);
+        }
 
         internal DevSavedMethod Save()
         {
