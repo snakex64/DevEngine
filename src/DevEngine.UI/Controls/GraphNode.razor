@@ -7,6 +7,18 @@
             @DevGraphNode.Name
         </div>
 
+        @if(DevGraphNode.AmountOfDifferentVersions > 0)
+        {
+            <div class="devVersionSelection">
+
+                <Button Clicked="DecreaseVersion">&lt;</Button>
+
+                <span>@(DevGraphNode.Version + " / " + DevGraphNode.AmountOfDifferentVersions)</span>
+
+                <Button Clicked="IncreaseVersion">&gt;</Button>
+            </div>
+        }
+
         <div class="devNodeBody">
 
             <div class="devNodeInputs">

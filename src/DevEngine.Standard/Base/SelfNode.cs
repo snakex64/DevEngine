@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevEngine.Standard
+namespace DevEngine.Standard.Base
 {
     public class SelfNode : DevGraphStandardNode
     {

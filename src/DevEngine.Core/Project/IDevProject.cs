@@ -14,6 +14,8 @@ namespace DevEngine.Core.Project
 
         IDevType GetRealType<T>();
 
+        IDevType ExecType {  get; }
+
         IDevType GetVoidType();
 
         IDevGraphNodeParameter CreateGraphNodeParameter(string name, IDevType devType, bool isInput, IDevGraphNode owner);

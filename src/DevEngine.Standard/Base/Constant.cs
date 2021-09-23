@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevEngine.Standard.Math
+namespace DevEngine.Standard.Base
 {
     [ConstantSearchProvider]
     public class Constant<T> : DevGraphStandardNode
@@ -59,7 +59,7 @@ namespace DevEngine.Standard.Math
                 typeof(string),
             };
 
-            return types.Select(x => new DevGraphNodeSearchResult("Constant_" + x.Name, "Constant_" + x.Name, (id, name, project) =>
+            return types.Where( x=> string.IsNullOrEmpty(content) || ("Constant_" + x.Name).Contains(content, StringComparison.OrdinalIgnoreCase)).Select(x => new DevGraphNodeSearchResult("Constant_" + x.Name, "Constant_" + x.Name, (id, name, project) =>
             {
                 var type = typeof(Constant<>);
 

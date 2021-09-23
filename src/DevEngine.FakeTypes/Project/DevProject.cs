@@ -23,6 +23,8 @@ namespace DevEngine.FakeTypes.Project
 
         public string? Folder { get; private set; }
 
+        public IDevType ExecType => GetRealType<DevExecType>();
+
         public DevProject(string name, IRealTypesProviderService realTypesProviderService)
         {
             Name = name;

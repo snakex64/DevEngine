@@ -27,6 +27,14 @@ namespace DevEngine.Standard
 
         public Guid Id { get; }
 
+        public virtual int AmountOfDifferentVersions => 0;
+
+        public virtual int Version
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+
         protected DevGraphStandardNode(Guid id, string name)
         {
             Id = id;
@@ -45,7 +53,8 @@ namespace DevEngine.Standard
         }
 
         public virtual void OnParameterConnectionChanged(IDevGraphNodeParameter devGraphNodeParameter)
-        { 
+        {
         }
+
     }
 }

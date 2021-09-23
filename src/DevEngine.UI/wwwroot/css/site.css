@@ -35,6 +35,14 @@ html, body {
         background-color: #6e6e6e;
         cursor: move;
     }
+    .devNode .devVersionSelection {
+        height: 50px;
+        overflow-y: hidden;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: baseline;
+    }
 
     .devNode .devNodeBody {
         display: flex;
@@ -160,3 +168,4 @@ html, body {
     display: flex;
     flex-direction: column;
 }
+    

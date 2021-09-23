@@ -60,7 +60,7 @@ namespace DevEngine.UI.Controls
 
         private float? GetAbsoluteYPositionFromParameterIndex(int index)
         {
-            return GraphNodeSavedContent?.Location.Y + 39 + index * 24;
+            return GraphNodeSavedContent?.Location.Y + 39 + index * 24 + (DevGraphNode.AmountOfDifferentVersions > 0 ? 50 : 0);
         }
 
         public System.Drawing.PointF? GetParameterAbsolutePosition(IDevGraphNodeParameter devGraphNodeParameter)
@@ -111,7 +111,7 @@ namespace DevEngine.UI.Controls
 
         private float GetWidth()
         {
-            var parameterMaxLength = DevGraphNode.Inputs.Concat(DevGraphNode.Outputs).Max(x => x.Name.Length + (x.IsOutput || x.Type.IsUnknownedType || x.Connections.Any() ? 0 : 30));
+            var parameterMaxLength = DevGraphNode.Inputs.Concat(DevGraphNode.Outputs).Select(x => x.Name.Length + (x.IsOutput || x.Type.IsUnknownedType || x.Connections.Any() ? 0 : 30)).DefaultIfEmpty(5).Max();
 
             return Math.Max(100, Math.Max(DevGraphNode.Name.Length, parameterMaxLength) * 5 + 20); // basic formulas to define the width of the node based on the name of the node
         }
@@ -169,6 +169,24 @@ namespace DevEngine.UI.Controls
             GraphArea.OnNodeParameterDragEnd(this, graphNodeParameter, args);
         }
 
+
+        #endregion
+
+        #region Change version
+
+        private void DecreaseVersion()
+        {
+            var c = DevGraphNode.Version;
+            if (c > 1)
+                DevGraphNode.Version = c - 1;
+        }
+
+        private void IncreaseVersion()
+        {
+            var c = DevGraphNode.Version;
+            if (c < DevGraphNode.AmountOfDifferentVersions - 1)
+                DevGraphNode.Version = c + 1;
+        }
 
         #endregion
     }

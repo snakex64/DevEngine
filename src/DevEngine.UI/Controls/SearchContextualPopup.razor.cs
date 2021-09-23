@@ -37,7 +37,7 @@ namespace DevEngine.UI.Controls
 
         private void RefreshSearchResults()
         {
-            Results = NodeSearchService.Search(SearchText).ToList();
+            Results = NodeSearchService.Search(SearchText).Take(500).ToList();
 
             StateHasChanged();
         }

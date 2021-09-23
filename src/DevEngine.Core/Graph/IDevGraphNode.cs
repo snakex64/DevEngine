@@ -58,6 +58,14 @@ namespace DevEngine.Core.Graph
         /// </summary>
         IDictionary<string, object?> AdditionalContentToBeSerialized { get; set; }
 
+        int AmountOfDifferentVersions => 0;
+
+        int Version
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+
         void InitializeAfterPreLoad()
         {
             if (!AdditionalContent.TryGetValue("ConstantInputs", out var constantsStr))

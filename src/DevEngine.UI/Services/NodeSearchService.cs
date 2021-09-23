@@ -34,7 +34,7 @@ namespace DevEngine.UI.Services
         private void InitializeProviders()
         {
             // patch, since the standard engine is never used statically, it won't be loaded, so let's just hit it once to load it!
-            var hit = typeof(Standard.SelfNode);
+            var hit = typeof(Standard.Base.SelfNode);
 
             var providers = new List<IDevGraphNodeSearchProvider>();
 
