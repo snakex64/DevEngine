@@ -73,7 +73,7 @@ namespace DevEngine.Standard.Math
             }
         }
 
-        public void ChooseMethod(IDevMethod devMethod)
+        private void ChooseMethod(IDevMethod devMethod)
         {
             if (DevMethods == null)
                 throw new Exception("DevMethods shouldn't be null here");
@@ -84,13 +84,12 @@ namespace DevEngine.Standard.Math
 
             AdditionalContentToBeSerialized[nameof(MethodCall)] = CurrentSavedMethodCallInfo ?? throw new Exception("CurrentSavedMethodCallInfo shouldn't be null here");
 
-            // remove previous inputs and ouputs
             Inputs.Clear();
             Outputs.Clear();
 
 
-            Inputs.Add(Project.CreateGraphNodeParameter("_In", Project.ExecType, true, this));
-            Outputs.Add(Project.CreateGraphNodeParameter("_Out", Project.ExecType, false, this));
+            Inputs.Add(Project.CreateGraphNodeParameter("ExecIn", Project.ExecType, true, this));
+            Outputs.Add(Project.CreateGraphNodeParameter("ExecOut", Project.ExecType, false, this));
 
             // if the method is not a static call, add the "self" / "this" input parameter
             if (!devMethod.IsStatic)

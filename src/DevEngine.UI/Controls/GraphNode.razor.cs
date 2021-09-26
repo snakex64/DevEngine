@@ -178,16 +178,52 @@ namespace DevEngine.UI.Controls
         {
             var c = DevGraphNode.Version;
             if (c > 1)
-                DevGraphNode.Version = c - 1;
+                ChangeVersion(c - 1);
         }
 
         private void IncreaseVersion()
         {
             var c = DevGraphNode.Version;
-            if (c < DevGraphNode.AmountOfDifferentVersions - 1)
-                DevGraphNode.Version = c + 1;
+            if (c < DevGraphNode.AmountOfDifferentVersions)
+                ChangeVersion(c + 1);
         }
 
+
+        private void ChangeVersion(int newVersion)
+        {
+            // backup the inputs and outputs, so we can update the graph definition
+            var previousInputs = DevGraphNode.Inputs.ToList();
+            var previousOutputs = DevGraphNode.Outputs.ToList();
+
+            DevGraphNode.Version = newVersion;
+
+            foreach (var previousParameter in previousInputs.Concat(previousOutputs))
+            {
+                if (DevGraphNode.Inputs.Contains(previousParameter) || DevGraphNode.Outputs.Contains(previousParameter))
+                    continue; // nothing to do if the same parameter is still there
+
+                if (!previousParameter.Connections.Any())
+                    continue; // nothing to do if nothing was connected to it anyway
+
+                var connectionsToRemake = previousParameter.Connections.ToList();
+                // make sure they other side is disconnected
+                foreach (var connection in connectionsToRemake)
+                    DevGraphDefinition.DisconnectNodesParameters(previousParameter, connection);
+
+                // remake the connections to the new parameter
+                foreach (var connection in connectionsToRemake)
+                {
+                    var newParameter = (previousParameter.IsInput ? DevGraphNode.Inputs : DevGraphNode.Outputs).FirstOrDefault(x => x.Name == previousParameter.Name);
+
+                    if (newParameter == null)
+                        continue; // the parameter doesn't exist anymore
+
+                    DevGraphDefinition.ConnectNodesParameters(newParameter, connection);
+                }
+            }
+
+            GraphArea.ForceStateHasChanged();
+        }
         #endregion
     }
 }
