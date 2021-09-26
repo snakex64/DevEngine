@@ -70,5 +70,40 @@ namespace DevEngine.UI.Controls
         {
             DevGraphNodeParameter.ConstantValueStr = newValue;
         }
+
+        public string GetToolTip()
+        {
+            if (IsGenericType)
+                return "<T>";
+
+            if (DevGraphNodeParameter.Type is RealTypes.Class.RealClass real)
+            {
+                if (real.IsBasicType)
+                {
+                    if (real.RealType == typeof(int))
+                        return "int";
+                    else if (real.RealType == typeof(float))
+                        return "float";
+                    else if (real.RealType == typeof(double))
+                        return "double";
+                    else if (real.RealType == typeof(string))
+                        return "string";
+                    else if (real.RealType == typeof(bool))
+                        return "boolean";
+                    else if (real.RealType == typeof(char))
+                        return "char";
+                    else if (real.RealType == typeof(long))
+                        return "long";
+                    else
+                        return real.RealType.Name;
+                }
+                else
+                {
+                    return real.RealType.Name;
+                }
+            }
+            else
+                return DevGraphNodeParameter.Type.TypeNamespaceAndName;
+        }
     }
 }
