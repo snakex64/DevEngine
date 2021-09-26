@@ -147,7 +147,7 @@ namespace DevEngine.UI.Controls
 
             if (nodeParameterFound != null)
                 ConnectNodesParameters(nodeParameterFound, CurrentDraggedNodeParameter.DevGraphNodeParameter, false);
-            else if (node != null && !graphNodeParameter.DevGraphNodeParameter.Type.IsUnknownedType)
+            else if (node != null && !graphNodeParameter.DevGraphNodeParameter.Type.IsUnknownedType && graphNodeParameter.DevGraphNodeParameter.Type != Core.DevExecType.ExecType)
             {
                 if (node.Value.Key is IDevGraphEntryPoint entry && graphNodeParameter.DevGraphNodeParameter.IsInput)
                 {
@@ -284,6 +284,11 @@ namespace DevEngine.UI.Controls
                 // if not, we clear the connections to the input before plugging something else
                 foreach (var connection in inputParameter.Connections.ToList()) // ToList() is there to be able to modify the Connections while inside the foreach
                     RemoveNodeParameterConnection(inputParameter, connection, false);
+            }
+            else // for ExecType, we can only have one output, as opposed to every other types who can have multiple connections on an output
+            {
+                foreach (var connection in outputParameter.Connections.ToList()) // ToList() is there to be able to modify the Connections while inside the foreach
+                    RemoveNodeParameterConnection(outputParameter, connection, false);
             }
 
             DevGraphDefinition.ConnectNodesParameters(outputParameter, inputParameter);
