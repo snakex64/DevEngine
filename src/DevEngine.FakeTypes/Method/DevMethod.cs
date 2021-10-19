@@ -24,7 +24,7 @@ namespace DevEngine.FakeTypes.Method
 
         public string Name { get; }
 
-        public bool IsStatic { get; }
+        public bool IsStatic { get; set; }
 
         public IList<IDevMethodParameter> Parameters { get; } = new List<IDevMethodParameter>();
 

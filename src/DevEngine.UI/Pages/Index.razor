@@ -17,7 +17,7 @@
 
             <div style="display: flex; flex-direction: column; min-width: 0; height: 100%; width: 100%">
 
-                <DevEngine.UI.Controls.TopMenu OnSaveRequested="Save"></DevEngine.UI.Controls.TopMenu>
+                <DevEngine.UI.Controls.TopMenu OnSaveRequested="Save" OnRunRequested="Run"></DevEngine.UI.Controls.TopMenu>
 
                 <div style="display: flex; flex-direction: row; height: 100%; width: 100%">
                     <DevEngine.UI.Controls.SolutionExplorer OnOpenClassRequested="OnOpenClassRequested"></DevEngine.UI.Controls.SolutionExplorer>
@@ -56,6 +56,12 @@
         Program.Project.Save(Program.Folder);
     }
 
+    private void Run()
+    {
+        var evaluator = new Evaluator.DevGraphEvaluator();
+
+        Program.Project.RunAsConsole(evaluator);
+    }
 
 }
 

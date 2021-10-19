@@ -48,6 +48,8 @@ namespace DevEngine.Standard.Math
 
         private IDevProject Project { get; }
 
+        IDevGraphNodeParameter? ExecOut;
+
         private SavedMethodCallInfo? CurrentSavedMethodCallInfo { get; set; }
 
         public override int AmountOfDifferentVersions => DevMethods?.Count ?? 0;
@@ -89,7 +91,7 @@ namespace DevEngine.Standard.Math
 
 
             Inputs.Add(Project.CreateGraphNodeParameter("ExecIn", Project.ExecType, true, this));
-            Outputs.Add(Project.CreateGraphNodeParameter("ExecOut", Project.ExecType, false, this));
+            Outputs.Add(ExecOut = Project.CreateGraphNodeParameter("ExecOut", Project.ExecType, false, this));
 
             // if the method is not a static call, add the "self" / "this" input parameter
             if (!devMethod.IsStatic)
@@ -101,6 +103,9 @@ namespace DevEngine.Standard.Math
 
                 collection.Add(Project.CreateGraphNodeParameter(parameter.Name, parameter.ParameterType, !parameter.IsOut, this));
             }
+
+            if (devMethod.ReturnType != Project.GetVoidType())
+                Outputs.Add(Project.CreateGraphNodeParameter("return", devMethod.ReturnType, false, this));
 
             CurrentSavedMethodCallInfo.Parameters = Inputs.Where(x => x.Name != "self").Concat(Outputs).ToDictionary(x => x.Name, x => new SavedTypeName(x.Type));
 
@@ -123,10 +128,12 @@ namespace DevEngine.Standard.Math
 
             foreach (var method in DevMethods)
             {
-                if (method.Parameters.Count != CurrentSavedMethodCallInfo.Parameters.Count)
+                var nbParameter = method.Parameters.Count + (method.ReturnType != Project.GetVoidType() ? 1 : 0) + 2;// + 2, 1 for ExecIn and the other one for ExecOut
+
+                if (nbParameter != CurrentSavedMethodCallInfo.Parameters.Count) 
                     continue;
 
-                var same = method.Parameters.All(parameter => CurrentSavedMethodCallInfo.Parameters[parameter.Name].TryGetDevType(Project, out var savedType) ? false : parameter.ParameterType == savedType);
+                var same = method.Parameters.All(parameter => CurrentSavedMethodCallInfo.Parameters.ContainsKey(parameter.Name) && (CurrentSavedMethodCallInfo.Parameters[parameter.Name].TryGetDevType(Project, out var savedType) && parameter.ParameterType == savedType));
                 if (same)
                 {
                     savedMethod = method;
@@ -143,14 +150,50 @@ namespace DevEngine.Standard.Math
 
         public override DevGraphNodeExecuteResult Execute(IDevGraphNodeInstance devGraphNodeInstance)
         {
-            devGraphNodeInstance.Parameters[Outputs.First()] = devGraphNodeInstance.Parameters[Inputs.First()];
+            if (MethodChoosen == null)
+                throw new Exception("Unable to call method, no method version was choosen");
+
+            if (MethodChoosen is RealTypes.Method.DevMethod realMethod)
+            {
+                object? self = null;
+                if (!realMethod.IsStatic)
+                    self = devGraphNodeInstance.Parameters[Inputs.First(x => x.Name == "self")].Value;
+
+                var methodInfoParameters = realMethod.MethodInfo.GetParameters();
+                var parameters = new object?[methodInfoParameters.Length];
+
+                for (int i = 0; i < methodInfoParameters.Length; ++i)
+                {
+                    var methodInfoParameter = methodInfoParameters[i];
+
+                    if (!methodInfoParameter.IsOut)
+                        parameters[i] = devGraphNodeInstance.Parameters[Inputs.First(x => x.Name == methodInfoParameter.Name)].Value;
+                }
+
+                var result = realMethod.MethodInfo.Invoke(self, parameters);
+                for (int i = 0; i < methodInfoParameters.Length; ++i)
+                {
+                    var methodInfoParameter = methodInfoParameters[i];
+
+                    if (methodInfoParameter.IsOut)
+                    {
+                        var output = Outputs.First(x => x.Name == methodInfoParameter.Name);
+                        devGraphNodeInstance.Parameters[output] = new DevObject(output.Type, parameters[i]);
+                    }
+                }
+
+                if (MethodChoosen.ReturnType != Project.GetVoidType())
+                    devGraphNodeInstance.Parameters[Outputs.First(x => x.Name == "return")] = new DevObject(MethodChoosen.ReturnType, result);
+            }
+            else
+                throw new NotImplementedException("Cannot call fake methods, yet");
 
             return DevGraphNodeExecuteResult.Continue;
         }
 
         public override IDevGraphNodeParameter GetNextExecutionParameter(IDevGraphNodeInstance devGraphNodeInstance)
         {
-            throw new NotImplementedException();
+            return ExecOut ?? throw new Exception("ExecOut shouldn't be null here");
         }
 
         private class SavedMethodCallInfo

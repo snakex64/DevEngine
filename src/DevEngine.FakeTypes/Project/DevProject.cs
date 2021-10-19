@@ -10,6 +10,7 @@ using DevEngine.Core.Graph;
 using System.IO;
 using System.Text.Json;
 using System.Linq;
+using DevEngine.Core.Evaluator;
 
 namespace DevEngine.FakeTypes.Project
 {
@@ -185,6 +186,19 @@ namespace DevEngine.FakeTypes.Project
         public void RenameClass(string oldFullNameWithNamespace, string newFullNameWithNamespace)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region RunAsConsole
+
+        public void RunAsConsole(IDevGraphEvaluator evaluator)
+        {
+            var mainClass = Classes.First(x => x.Value.Methods.Any(y => y.IsStatic && y.Name == "Main"));
+
+            var mainMethod = mainClass.Value.Methods.First(x => x.Name == "Main" && x.IsStatic);
+
+            evaluator.Evaluate(new Core.DevObject(mainClass.Value, null), mainMethod, new Dictionary<string, Core.DevObject>(), out var outputs);
         }
 
         #endregion

@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DevEngine.Core\DevEngine.Core.csproj" />
     <ProjectReference Include="..\DevEngine.Graph\DevEngine.Graph.csproj" />
+    <ProjectReference Include="..\DevEngine.RealTypes\DevEngine.RealTypes.csproj" />
   </ItemGroup>
 
 </Project>

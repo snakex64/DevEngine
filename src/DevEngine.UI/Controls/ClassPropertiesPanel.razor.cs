@@ -52,7 +52,7 @@ namespace DevEngine.UI.Controls
         {
             base.OnAfterRender(firstRender);
 
-            if( firstRender )
+            if (firstRender)
             {
                 Initialize();
 
@@ -72,12 +72,12 @@ namespace DevEngine.UI.Controls
             Items.Add(methodHeader);
             ExpandedTreeViewItems.Add(methodHeader);
 
-            foreach( var method in DevClass.Methods )
+            foreach (var method in DevClass.Methods)
             {
                 methodHeader.Children.Add(new TreeViewItem()
                 {
                     Text = method.Name,
-                    Method= (FakeTypes.Method.DevMethod)method,
+                    Method = (FakeTypes.Method.DevMethod)method,
                     Type = TreeViewItemType.Method
                 });
             }
@@ -137,7 +137,7 @@ namespace DevEngine.UI.Controls
         {
             SelectedTreeViewItem = item;
 
-            if( SelectedTreeViewItem?.Type == TreeViewItemType.Method)
+            if (SelectedTreeViewItem?.Type == TreeViewItemType.Method)
             {
                 if (SelectedTreeViewItem.IsRenaming) // don't open it if we clicked while renaming, we'll open it after it's renamed
                     return;
@@ -163,7 +163,7 @@ namespace DevEngine.UI.Controls
 
             SelectedTreeViewItem.Children.Add(newMethodItem);
 
-            if(!ExpandedTreeViewItems.Contains(SelectedTreeViewItem))
+            if (!ExpandedTreeViewItems.Contains(SelectedTreeViewItem))
                 ExpandedTreeViewItems.Add(SelectedTreeViewItem);
 
             StateHasChanged();
@@ -182,6 +182,15 @@ namespace DevEngine.UI.Controls
             return method;
         }
 
+
+        #endregion
+
+        #region ChangeMethodStatic
+
+        private void ChangeMethodStatic(FakeTypes.Method.DevMethod method)
+        {
+            method.IsStatic = !method.IsStatic;
+        }
 
         #endregion
     }

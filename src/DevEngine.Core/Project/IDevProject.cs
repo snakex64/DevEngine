@@ -1,4 +1,5 @@
 using DevEngine.Core.Class;
+using DevEngine.Core.Evaluator;
 using DevEngine.Core.Graph;
 using System;
 
@@ -25,5 +26,7 @@ namespace DevEngine.Core.Project
         void Load(string folder);
 
         void RenameClass(string oldFullNameWithNamespace, string newFullNameWithNamespace);
+
+        void RunAsConsole(IDevGraphEvaluator evaluator);
     }
 }

@@ -169,3 +169,15 @@ html, body {
     flex-direction: column;
 }
     
+
+    .nonStaticMethod{
+        margin-left: 10px;
+        border: 1px solid black;
+        padding: 2px;
+    }
+    .staticMethod{
+        margin-left: 10px;
+        border: 1px solid black;
+        padding: 2px;
+        background-color: green;
+    }

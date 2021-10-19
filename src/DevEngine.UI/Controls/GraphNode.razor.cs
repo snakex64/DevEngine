@@ -179,6 +179,8 @@ namespace DevEngine.UI.Controls
             var c = DevGraphNode.Version;
             if (c > 1)
                 ChangeVersion(c - 1);
+            else if (c == 1 && DevGraphNode.AmountOfDifferentVersions != 1)
+                ChangeVersion(DevGraphNode.AmountOfDifferentVersions);
         }
 
         private void IncreaseVersion()
@@ -186,6 +188,8 @@ namespace DevEngine.UI.Controls
             var c = DevGraphNode.Version;
             if (c < DevGraphNode.AmountOfDifferentVersions)
                 ChangeVersion(c + 1);
+            else if (c == DevGraphNode.AmountOfDifferentVersions && c != 1)
+                ChangeVersion(1);
         }
 
 

@@ -18,7 +18,16 @@
                         <BarDropdownItem>
                             <Button Clicked="()=> OnSaveRequested.InvokeAsync()">Save</Button>
                         </BarDropdownItem>
-
+                    </BarDropdownMenu>
+                </BarDropdown>
+            </BarItem>
+            <BarItem>
+                <BarDropdown>
+                    <BarDropdownToggle>Debug</BarDropdownToggle>
+                    <BarDropdownMenu>
+                        <BarDropdownItem>
+                            <Button Clicked="()=> OnRunRequested.InvokeAsync()">Run</Button>
+                        </BarDropdownItem>
                     </BarDropdownMenu>
                 </BarDropdown>
             </BarItem>

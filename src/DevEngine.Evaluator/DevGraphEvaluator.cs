@@ -1,5 +1,8 @@
 ﻿using DevEngine.Core;
+using DevEngine.Core.Evaluator;
 using DevEngine.Core.Graph;
+using DevEngine.Core.Method;
+using DevEngine.FakeTypes.Method;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -9,10 +12,12 @@ using System.Threading.Tasks;
 
 namespace DevEngine.Evaluator
 {
-    public class DevGraphEvaluator
+    public class DevGraphEvaluator : IDevGraphEvaluator
     {
-        public void Evaluate(DevObject self, FakeTypes.Method.DevMethod devMethod, Dictionary<string, DevObject> inputs, out Dictionary<string, DevObject> outputs)
+        public void Evaluate(DevObject self, IDevMethod iDevMethod, Dictionary<string, DevObject> inputs, out Dictionary<string, DevObject> outputs)
         {
+            var devMethod = (iDevMethod as DevMethod) ?? throw new Exception("iDevMethod should be a FakeType");
+
             if (devMethod.GraphDefinition == null)
                 throw new Exception("Cannot evaluate method, no graph provided");
 
@@ -72,7 +77,7 @@ namespace DevEngine.Evaluator
                     return true;
                 }
 
-                var nextExec = currentNode.GraphNode.GetNextExecutionParameter(currentNode);
+                var nextExec = currentNode.GraphNode.GetNextExecutionParameter(currentNode)?.Connections.Single();
 
                 // if there's nothing else to exec, just pop the stack and roll back to the upper node
                 if (nextExec == null)

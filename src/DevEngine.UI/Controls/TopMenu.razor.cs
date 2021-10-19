@@ -12,5 +12,8 @@ namespace DevEngine.UI.Controls
         [Parameter]
         public EventCallback OnSaveRequested { get; set; }
 
+        [Parameter]
+        public EventCallback OnRunRequested { get; set; }
+
     }
 }
