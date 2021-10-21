@@ -49,10 +49,5 @@ namespace DevEngine.Graph
         {
             return ExecNode;
         }
-
-        public void InitializeAfterPreLoad()
-        {
-        }
-
     }
 }

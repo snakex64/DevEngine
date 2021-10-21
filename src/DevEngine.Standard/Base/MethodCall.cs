@@ -114,7 +114,6 @@ namespace DevEngine.Standard.Math
 
         public override void InitializeAfterPreLoad()
         {
-            base.InitializeAfterPreLoad();
 
             CurrentSavedMethodCallInfo = JsonSerializer.Deserialize<SavedMethodCallInfo>(AdditionalContent[nameof(MethodCall)]) ?? throw new Exception("Unable to parse SavedMethodCallInfo");
 
@@ -146,6 +145,9 @@ namespace DevEngine.Standard.Math
 
             ChooseMethod(savedMethod);
 
+            // call the base InitializeAfterPreLoad only after we've choosen the method
+            // this will allow it to read the hard coded input values
+            base.InitializeAfterPreLoad();
         }
 
         public override DevGraphNodeExecuteResult Execute(IDevGraphNodeInstance devGraphNodeInstance)

@@ -50,6 +50,21 @@ namespace DevEngine.Standard
 
         public virtual void InitializeAfterPreLoad()
         {
+            if (!AdditionalContent.TryGetValue("ConstantInputs", out var constantsStr))
+                return;
+
+            var constants = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(constantsStr);
+            if (constants == null)
+                return;
+            // load the constant values
+            foreach (var input in Inputs)
+            {
+                if (input.Type.IsBasicType)
+                {
+                    if (constants.TryGetValue(input.Name, out var constant))
+                        input.ConstantValueStr = constant;
+                }
+            }
         }
 
         public virtual void OnParameterConnectionChanged(IDevGraphNodeParameter devGraphNodeParameter)

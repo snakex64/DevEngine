@@ -45,9 +45,5 @@ namespace DevEngine.Graph
         {
             throw new NotImplementedException();
         }
-
-        public void InitializeAfterPreLoad()
-        {
-        }
     }
 }
