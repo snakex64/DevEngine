@@ -37,7 +37,7 @@ namespace DevEngine.UI.Controls
 
         private void RefreshSearchResults()
         {
-            Results = NodeSearchService.Search(SearchText).Take(500).ToList();
+            Results = NodeSearchService.Search(SearchText).OrderBy(x => Math.Abs(x.DisplayName.Length - SearchText.Length)).Take(500).ToList();
 
             StateHasChanged();
         }
