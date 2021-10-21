@@ -18,6 +18,7 @@
     },
     "DevEngine.UI": {
       "commandName": "Project",
+      "commandLineArgs": "../testProject",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

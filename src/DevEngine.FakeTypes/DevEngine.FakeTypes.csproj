@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>Enable</Nullable>
   </PropertyGroup>
 
@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DevEngine.Compiler\DevEngine.Compiler.csproj" />
     <ProjectReference Include="..\DevEngine.Core\DevEngine.Core.csproj" />
     <ProjectReference Include="..\DevEngine.Graph\DevEngine.Graph.csproj" />
   </ItemGroup>

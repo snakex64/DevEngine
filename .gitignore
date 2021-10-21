@@ -33,3 +33,10 @@
 /src/DevEngine.UI/bin/Debug/net6.0
 /src/testProject_backup
 /.vs
+/src/DevEngine.Compiler/bin/Debug/net6.0
+/src/DevEngine.Compiler/obj
+/src/DevEngine.Core/bin/Debug/net6.0
+/src/DevEngine.Evaluator/bin/Debug/net6.0
+/src/DevEngine.Graph/bin/Debug/net6.0
+/src/DevEngine.Standard/bin/Debug/net6.0
+/src/DevEngine.RealTypes/bin/Debug/net6.0

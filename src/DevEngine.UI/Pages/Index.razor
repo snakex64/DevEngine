@@ -60,7 +60,18 @@
     {
         var evaluator = new Evaluator.DevGraphEvaluator();
 
+
+        var previousOut = Console.Out;
+        var builder = new System.Text.StringBuilder();
+        var writer = new System.IO.StringWriter(builder);
+        Console.SetOut(writer);
+
         Program.Project.RunAsConsole(evaluator);
+
+        var str = builder.ToString();
+
+        Console.SetOut(previousOut);
+
     }
 
 }

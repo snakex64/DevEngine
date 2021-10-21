@@ -194,6 +194,10 @@ namespace DevEngine.FakeTypes.Project
 
         public void RunAsConsole(IDevGraphEvaluator evaluator)
         {
+            var compiler = new Compiler.DevCompiler(this);
+
+            compiler.CompileProject();
+
             var mainClass = Classes.First(x => x.Value.Methods.Any(y => y.IsStatic && y.Name == "Main"));
 
             var mainMethod = mainClass.Value.Methods.First(x => x.Name == "Main" && x.IsStatic);
