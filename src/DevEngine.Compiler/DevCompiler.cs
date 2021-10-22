@@ -31,7 +31,9 @@ namespace DevEngine.Compiler
             if (devClass.IsRealType)
                 throw new Exception("Cannot compile real types");
 
-            var file = Path.Combine(mainFolder, devClass.Folder, devClass.Name + ".cs");
+            var folder = Path.Combine(mainFolder, devClass.Folder);
+            var file = Path.Combine(folder, devClass.Name + ".cs");
+            Directory.CreateDirectory(folder);
 
             var builder = new StringBuilder();
 
@@ -39,7 +41,10 @@ namespace DevEngine.Compiler
 
             AddProperties(devClass, builder, ref indentation);
 
+            AddMethods(devClass, builder, ref indentation);
+
             AddClassBottomBoilerPlate(devClass, builder, indentation);
+
 
             var content = builder.ToString();
             File.WriteAllText(file, content);
@@ -51,7 +56,10 @@ namespace DevEngine.Compiler
 
         private void AddMethods(IDevClass devClass, StringBuilder builder, ref int indentation)
         {
-
+            foreach (var method in devClass.Methods)
+            {
+                AddMethod(method, builder, ref indentation);
+            }
         }
 
         #endregion
@@ -60,7 +68,34 @@ namespace DevEngine.Compiler
 
         private void AddMethod(IDevMethod devMethod, StringBuilder builder, ref int indentation)
         {
+            AddMethodHeader(devMethod, builder, ref indentation);
 
+            builder.AppendLine(GetTabs(indentation) + "throw new NotImplementedException();");
+
+            indentation--;
+            builder.AppendLine(GetTabs(indentation) + "}");
+        }
+
+        #endregion
+
+
+        #region AddMethodHeader
+
+        private void AddMethodHeader(IDevMethod devMethod, StringBuilder builder, ref int indentation)
+        {
+            builder.Append(GetTabs(indentation) + devMethod.Visibility.ToString().ToLower() + " ");
+
+            builder.Append(devMethod.ReturnType.TypeNamespaceAndName + " ");
+
+            builder.Append(devMethod.Name + "(");
+
+            var parameters = devMethod.Parameters.Select(x => (x.IsOut ? "out " : x.IsRef ? "ref " : "") + x.ParameterType.TypeNamespaceAndName + " " + x.Name);
+            builder.Append(string.Join(", ", parameters));
+
+            builder.AppendLine(")");
+
+            builder.AppendLine(GetTabs(indentation) + "{");
+            indentation++;
         }
 
         #endregion
@@ -93,9 +128,10 @@ namespace DevEngine.Compiler
 
         private void AddClassBottomBoilerPlate(IDevClass devClass, StringBuilder builder, int indentation)
         {
-            builder.AppendLine(GetTabs(indentation) + "}"); // close the class
             indentation--;
+            builder.AppendLine(GetTabs(indentation) + "}"); // close the class
 
+            indentation--;
             builder.AppendLine(GetTabs(indentation) + "}"); // close the namespace
         }
 
@@ -114,6 +150,7 @@ namespace DevEngine.Compiler
 
             builder.AppendLine($"{GetTabs(indentation)}public class {devClass.TypeName}");
             builder.AppendLine(GetTabs(indentation) + "{");
+            indentation++;
         }
 
         #endregion
