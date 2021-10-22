@@ -1,6 +1,7 @@
 ﻿using DevEngine.Core.Class;
 using DevEngine.Core.Method;
 using DevEngine.Core.Project;
+using System.Diagnostics;
 using System.Text;
 
 namespace DevEngine.Compiler
@@ -14,19 +15,49 @@ namespace DevEngine.Compiler
             Project = project;
         }
 
-        public void CompileProject()
+        public void CompileProject(string folder)
         {
-            var tempFolder = Path.GetTempPath();
+            if(Directory.Exists(folder))
+                Directory.Delete(folder, true);
 
-            Directory.CreateDirectory(tempFolder);
+            Directory.CreateDirectory(folder);
+
+            CreateCsproj(folder);
 
             foreach (var classToCompile in Project.Classes)
-                CompileClass(classToCompile.Value, tempFolder);
+                GenerateClass(classToCompile.Value, folder);
+
+            var startInfo = new ProcessStartInfo("dotnet", "build")
+            {
+                WorkingDirectory = folder,
+            };
+            var process = Process.Start(startInfo) ?? throw new Exception("Couldn't start build process");
+
+            process.WaitForExit();
         }
 
-        #region CompileClass
+        #region CreateCsproj
 
-        private void CompileClass(IDevClass devClass, string mainFolder)
+        private void CreateCsproj(string folder)
+        {
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine("<Project Sdk=\"Microsoft.NET.Sdk\">");
+            stringBuilder.AppendLine("\t<PropertyGroup>");
+            stringBuilder.AppendLine("\t\t<TargetFramework>net6.0</TargetFramework>");
+            stringBuilder.AppendLine("\t</PropertyGroup>");
+            stringBuilder.AppendLine("</Project>");
+
+            var content = stringBuilder.ToString();
+
+            File.WriteAllText(Path.Combine(folder, Project.Name + ".csproj"), content);
+        }
+
+        #endregion
+
+        #region GenerateClass
+
+        private void GenerateClass(IDevClass devClass, string mainFolder)
         {
             if (devClass.IsRealType)
                 throw new Exception("Cannot compile real types");
@@ -78,14 +109,14 @@ namespace DevEngine.Compiler
 
         #endregion
 
-
         #region AddMethodHeader
 
         private void AddMethodHeader(IDevMethod devMethod, StringBuilder builder, ref int indentation)
         {
             builder.Append(GetTabs(indentation) + devMethod.Visibility.ToString().ToLower() + " ");
 
-            builder.Append(devMethod.ReturnType.TypeNamespaceAndName + " ");
+            var returnType = devMethod.ReturnType == Project.GetVoidType() ? "void" : devMethod.ReturnType.TypeNamespaceAndName;
+            builder.Append(returnType + " ");
 
             builder.Append(devMethod.Name + "(");
 

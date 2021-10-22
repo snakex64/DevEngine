@@ -196,7 +196,7 @@ namespace DevEngine.FakeTypes.Project
         {
             var compiler = new Compiler.DevCompiler(this);
 
-            compiler.CompileProject();
+            compiler.CompileProject(Path.Combine(Folder ?? throw new Exception("Must save before compilation"), "compile"));
 
             var mainClass = Classes.First(x => x.Value.Methods.Any(y => y.IsStatic && y.Name == "Main"));
 
