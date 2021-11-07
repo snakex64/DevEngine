@@ -77,7 +77,9 @@ namespace DevEngine.FakeTypes.Class
 
         internal static DevClass Preload(DevProject devProject, string file, DevProjectSerializedContent projectSerializedContent)
         {
-            var content = System.IO.File.ReadAllText(file);
+            var content = devProject.FileProvider(file);
+            if (content == null)
+                throw new Exception("Unable to find file:" + file);
 
             var serializedContent = System.Text.Json.JsonSerializer.Deserialize<DevClassSerializedContent>(content);
 

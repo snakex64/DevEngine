@@ -2,6 +2,7 @@
 using DevEngine.Core.Evaluator;
 using DevEngine.Core.Graph;
 using DevEngine.Core.Method;
+using DevEngine.Core.Project;
 using DevEngine.FakeTypes.Method;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,11 @@ namespace DevEngine.Evaluator
                 outputs = new Dictionary<string, DevObject>();
             else
                 outputs = exitNodeInstance.Parameters.Where(x => x.Key.IsInput).ToDictionary(x => x.Key.Name, x => x.Value);
+        }
+
+        public IDevCompiler GetCompiler(IDevProject project)
+        {
+            return new Compiler.DevCompiler(project);
         }
 
         /// <summary>

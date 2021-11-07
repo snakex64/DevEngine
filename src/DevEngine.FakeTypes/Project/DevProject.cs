@@ -26,10 +26,20 @@ namespace DevEngine.FakeTypes.Project
 
         public IDevType ExecType => DevExecType.ExecType;
 
-        public DevProject(string name, IRealTypesProviderService realTypesProviderService)
+        public readonly Func<string, string?> FileProvider;
+
+        public DevProject(string name, IRealTypesProviderService realTypesProviderService, Func<string, string?>? fileProvider = null)
         {
             Name = name;
             RealTypesProviderService = realTypesProviderService;
+
+            FileProvider = fileProvider ?? (file =>
+            {
+                file = Path.Combine(Folder, file);
+                if( File.Exists(file))
+                    return File.ReadAllText(file);
+                return null;
+            });
         }
 
         public IDevType GetRealType(Type type)
@@ -67,7 +77,7 @@ namespace DevEngine.FakeTypes.Project
 
             Directory.CreateDirectory(folder);
 
-            var projectContent = JsonSerializer.Serialize(new DevProjectSerializedContent(Name, Classes.Values.ToDictionary(x => x.Name.FullNameWithNamespace, x => Path.Combine(folder, x.Folder, x.Name + ".json"))));
+            var projectContent = JsonSerializer.Serialize(new DevProjectSerializedContent(Name, Classes.Values.ToDictionary(x => x.Name.FullNameWithNamespace, x => Path.Combine(x.Folder, x.Name + ".json"))));
             File.WriteAllText(Path.Combine(folder, "project.json"), projectContent);
 
             SaveClasses(folder);
@@ -90,11 +100,13 @@ namespace DevEngine.FakeTypes.Project
         {
             Folder = folder;
 
-            var projectFile = Path.Combine(folder, "project.json");
-            if (!File.Exists(projectFile))
+            var projectFile = "project.json";
+
+            var fileContent = FileProvider(projectFile);
+            if (fileContent == null)
                 throw new Exception("Project file not found:" + projectFile);
 
-            var serializedContent = JsonSerializer.Deserialize<DevProjectSerializedContent>(File.ReadAllText(projectFile));
+            var serializedContent = JsonSerializer.Deserialize<DevProjectSerializedContent>(fileContent);
             if (serializedContent == null)
                 throw new Exception("Unable to deserialize project file:" + projectFile);
 
@@ -194,7 +206,7 @@ namespace DevEngine.FakeTypes.Project
 
         public void RunAsConsole(IDevGraphEvaluator evaluator)
         {
-            var compiler = new Compiler.DevCompiler(this);
+            var compiler = evaluator.GetCompiler(this);
 
             compiler.CompileProject(Path.Combine(Folder ?? throw new Exception("Must save before compilation"), "compile"));
 

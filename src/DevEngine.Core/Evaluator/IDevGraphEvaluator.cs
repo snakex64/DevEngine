@@ -10,5 +10,7 @@ namespace DevEngine.Core.Evaluator
     public interface IDevGraphEvaluator
     {
         void Evaluate(DevObject self, Method.IDevMethod devMethod, Dictionary<string, DevObject> inputs, out Dictionary<string, DevObject> outputs);
+
+        IDevCompiler GetCompiler(Project.IDevProject project);
     }
 }
