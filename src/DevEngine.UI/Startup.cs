@@ -38,7 +38,9 @@ namespace DevEngine.UI
                 .AddBootstrapProviders()
                 .AddFontAwesomeIcons();
 
-            services.AddSingleton<Services.NodeSearchService>();
+            services
+                .AddSingleton<Services.NodeSearchService>()
+                .AddSingleton<Services.ConsoleService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

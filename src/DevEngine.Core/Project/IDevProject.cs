@@ -2,6 +2,7 @@ using DevEngine.Core.Class;
 using DevEngine.Core.Evaluator;
 using DevEngine.Core.Graph;
 using System;
+using System.Threading.Tasks;
 
 namespace DevEngine.Core.Project
 {
@@ -21,12 +22,12 @@ namespace DevEngine.Core.Project
 
         IDevGraphNodeParameter CreateGraphNodeParameter(string name, IDevType devType, bool isInput, IDevGraphNode owner);
 
-        void Save(string folder);
+        void Save(string folder, bool updateProjectFolder);
 
         void Load(string folder);
 
         void RenameClass(string oldFullNameWithNamespace, string newFullNameWithNamespace);
 
-        void RunAsConsole(IDevGraphEvaluator evaluator);
+        Task RunAsConsole(IDevGraphEvaluator evaluator, IConsoleLogger? consoleLogger);
     }
 }

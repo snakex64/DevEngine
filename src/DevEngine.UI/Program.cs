@@ -25,7 +25,7 @@ namespace DevEngine.UI
             Folder = args[0];
 
             if (!System.IO.File.Exists(System.IO.Path.Combine(args[0], "project.json")))
-                Project.Save(Folder);
+                Project.Save(Folder, true);
             else
                 Project.Load(Folder);
 

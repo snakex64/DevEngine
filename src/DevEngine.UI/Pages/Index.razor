@@ -7,6 +7,8 @@
 @using DevEngine.Graph
 @using Microsoft.Extensions.DependencyInjection
 
+@inject Services.ConsoleService ConsoleService
+
 <div style="height: 100vh; width: 100vw; overflow: hidden">
 
     <RightClickController @ref="RightClickController"></RightClickController>
@@ -19,12 +21,17 @@
 
                 <DevEngine.UI.Controls.TopMenu OnSaveRequested="Save" OnRunRequested="Run"></DevEngine.UI.Controls.TopMenu>
 
-                <div style="display: flex; flex-direction: row; height: 100%; width: 100%">
+                <div style="display: flex; flex-direction: row; height: 85%; width: 100%">
                     <DevEngine.UI.Controls.SolutionExplorer OnOpenClassRequested="OnOpenClassRequested"></DevEngine.UI.Controls.SolutionExplorer>
 
                     <DevEngine.UI.Controls.ClassesEditor @ref="ClassesEditor"></DevEngine.UI.Controls.ClassesEditor>
                 </div>
 
+                <div style="height: 15%; width: 100%">
+
+                    <DevEngine.UI.Controls.ConsoleViewer />
+
+                </div>
             </div>
 
         </CascadingValue>
@@ -53,7 +60,7 @@
 
     private void Save()
     {
-        Program.Project.Save(Program.Folder);
+        Program.Project.Save(Program.Folder, true);
     }
 
     private void Run()
@@ -66,7 +73,7 @@
         var writer = new System.IO.StringWriter(builder);
         Console.SetOut(writer);
 
-        Program.Project.RunAsConsole(evaluator);
+        Program.Project.RunAsConsole(evaluator, ConsoleService);
 
         var str = builder.ToString();
 

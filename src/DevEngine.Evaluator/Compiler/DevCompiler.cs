@@ -41,7 +41,7 @@ namespace DevEngine.Evaluator.Compiler
             foreach (var classToCompile in Project.Classes)
                 GenerateClass(classToCompile.Value, folder);
 
-            var startInfo = new ProcessStartInfo("dotnet", "build")
+            var startInfo = new ProcessStartInfo("dotnet", "build /p:Platform=x64")
             {
                 WorkingDirectory = folder,
             };
@@ -135,7 +135,7 @@ namespace DevEngine.Evaluator.Compiler
 
         private void SaveDevProject(string folder)
         {
-            Project.Save(Path.Combine(folder, "_project"));
+            Project.Save(Path.Combine(folder, "_project"), false);
         }
 
         #endregion

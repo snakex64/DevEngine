@@ -11,6 +11,7 @@ using System.IO;
 using System.Text.Json;
 using System.Linq;
 using DevEngine.Core.Evaluator;
+using System.Threading.Tasks;
 
 namespace DevEngine.FakeTypes.Project
 {
@@ -36,7 +37,7 @@ namespace DevEngine.FakeTypes.Project
             FileProvider = fileProvider ?? (file =>
             {
                 file = Path.Combine(Folder, file);
-                if( File.Exists(file))
+                if (File.Exists(file))
                     return File.ReadAllText(file);
                 return null;
             });
@@ -64,9 +65,10 @@ namespace DevEngine.FakeTypes.Project
 
         #region Save
 
-        public void Save(string folder)
+        public void Save(string folder, bool updateProjectFolder)
         {
-            Folder = folder;
+            if (updateProjectFolder)
+                Folder = folder;
 
             if (Directory.Exists(folder + "_backup"))
                 Directory.Delete(folder + "_backup", true);
@@ -204,17 +206,38 @@ namespace DevEngine.FakeTypes.Project
 
         #region RunAsConsole
 
-        public void RunAsConsole(IDevGraphEvaluator evaluator)
+        public Task RunAsConsole(IDevGraphEvaluator evaluator, IConsoleLogger? consoleLogger)
         {
-            var compiler = evaluator.GetCompiler(this);
+            return Task.Run(() =>
+            {
+                var compiler = evaluator.GetCompiler(this);
 
-            compiler.CompileProject(Path.Combine(Folder ?? throw new Exception("Must save before compilation"), "compile"));
+                compiler.CompileProject(Path.Combine(Folder ?? throw new Exception("Must save before compilation"), "compile"));
 
-            var mainClass = Classes.First(x => x.Value.Methods.Any(y => y.IsStatic && y.Name == "Main"));
+                var loadContext = new System.Runtime.Loader.AssemblyLoadContext("Debugger", true);
+                try
+                {
+                    var path = Path.GetFullPath(Path.Combine(Folder, "compile", "bin", "x64", "Debug", "net6.0", Name + ".dll"));
+                    var assembly = loadContext.LoadFromAssemblyPath(path);
 
-            var mainMethod = mainClass.Value.Methods.First(x => x.Name == "Main" && x.IsStatic);
+                    var main = assembly.ExportedTypes.Select(x => x.GetMethod("Main")).First(x => x != null);
 
-            evaluator.Evaluate(new Core.DevObject(mainClass.Value, null), mainMethod, new Dictionary<string, Core.DevObject>(), out var outputs);
+                    try
+                    {
+                        consoleLogger?.StartLogging();
+
+                        main.Invoke(null, null);
+                    }
+                    finally
+                    {
+                        consoleLogger?.StopLogging();
+                    }
+                }
+                finally
+                {
+                    loadContext.Unload();
+                }
+            });
         }
 
         #endregion
