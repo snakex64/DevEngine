@@ -19,8 +19,8 @@ Set of tools to generate C# code from either a visual web environement ( DevEngi
 - [ ] Drag parameter to open contextual search
 - [ ] Load external .NET dlls
 - [ ] Load nuget packages
-- [ ] Run from UI
-- [ ] Integrated console to see running program output
+- [x] Run from UI
+- [x] Integrated console to see running program output
 - [ ] Zoom in and out in graph
 - [ ] Rename class after initial creation
 - [ ] Rename method after initial creation
@@ -28,7 +28,7 @@ Set of tools to generate C# code from either a visual web environement ( DevEngi
 - [ ] Close methods and classes after it's opened
 
 ### DevEngine.Generator
-- [ ] Generate dll with empty methods
-- [ ] Embedded project in dll
-- [ ] Generate evaluation code in methods
+- [x] Generate dll with empty methods
+- [x] Embedded project in dll
+- [x] Generate evaluation code in methods
 - [ ] Generate actual C# code for the methods themself (if I can)
