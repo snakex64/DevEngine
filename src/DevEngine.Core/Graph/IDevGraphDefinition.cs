@@ -35,6 +35,17 @@ namespace DevEngine.Core.Graph
 
         void RemoveNode(IDevGraphNode node)
         {
+            foreach (var parameter in node.Inputs)
+            {
+                foreach (var connection in parameter.Connections.ToList())
+                    DisconnectNodesParameters(connection, parameter);
+            }
+            foreach (var parameter in node.Outputs)
+            {
+                foreach (var connection in parameter.Connections.ToList())
+                    DisconnectNodesParameters(connection, parameter);
+            }
+
             Nodes.Remove(node);
         }
 

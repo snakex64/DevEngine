@@ -3,7 +3,7 @@
     <div class="devNode" style="width: @(GetWidth())px; left: @(GraphNodeSavedContent.Location.X)px; top: @(GraphNodeSavedContent.Location.Y)px">
 
         @*Name*@
-        <div class="devTitle" draggable="true" @ondragend="OnDragEnd" @ondragstart="OnDragStart" @ondrag="OnDrag">
+        <div class="devTitle" draggable="true" @ondragend="OnDragEnd" @ondragstart="OnDragStart" @ondrag="OnDrag" @oncontextmenu="OnRightClick" @oncontextmenu:stopPropagation @oncontextmenu:preventDefault>
             @DevGraphNode.Name
         </div>
 
@@ -25,7 +25,7 @@
 
                 @foreach (var input in DevGraphNode.Inputs)
                 {
-                    <GraphNodeParameter ParentGraphNode="this" DevGraphNodeParameter="input"></GraphNodeParameter>
+                    <GraphNodeParameter ParentGraphNode="this" DevGraphNodeParameter="input" GraphArea="GraphArea"></GraphNodeParameter>
                 }
 
             </div>
@@ -35,7 +35,7 @@
 
                 @foreach (var output in DevGraphNode.Outputs)
                 {
-                    <GraphNodeParameter ParentGraphNode="this" DevGraphNodeParameter="output"></GraphNodeParameter>
+                    <GraphNodeParameter ParentGraphNode="this" DevGraphNodeParameter="output" GraphArea="GraphArea"></GraphNodeParameter>
                 }
 
             </div>

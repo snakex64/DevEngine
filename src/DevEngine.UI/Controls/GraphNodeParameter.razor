@@ -9,7 +9,7 @@
 
 
     <div class="devParameterNode@(IsGenericType ? " genericParameterNode" : "")"  title="@typeText">
-        <div class="devParameterNodeDraggable" draggable="true" @ondragstart="OnDragStart" @ondrag="OnDrag" @ondragend="OnDragEnd">
+        <div class="devParameterNodeDraggable" draggable="true" @ondragstart="OnDragStart" @ondrag="OnDrag" @ondragend="OnDragEnd" @oncontextmenu="OnRightClick" @oncontextmenu:preventDefault  @oncontextmenu:stopPropagation>
         </div>
     </div>
 

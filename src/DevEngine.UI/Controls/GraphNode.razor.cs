@@ -23,6 +23,9 @@ namespace DevEngine.UI.Controls
         [Parameter]
         public GraphArea GraphArea { get; set; } = null!;
 
+        [CascadingParameter]
+        public RightClickController RightClickController { get; set; } = null!;
+
         public GraphNodeSavedContent? GraphNodeSavedContent { get; private set; }
 
 
@@ -52,9 +55,35 @@ namespace DevEngine.UI.Controls
                 }
                 else
                     StateHasChanged();
-
             }
         }
+
+        #region OnRightClick
+
+        private void OnRightClick(MouseEventArgs mouseEventArgs)
+        {
+            if (mouseEventArgs.Button != 2)
+                return;
+
+
+            RightClickController.DisplayRightClickMenu(mouseEventArgs, new List<RightClickController.MenuItem>
+            {
+                new RightClickController.MenuItem("Remove", RemoveNode)
+            });
+        }
+
+        #endregion
+
+        #region RemoveNode
+
+        private void RemoveNode()
+        {
+            GraphArea.RemoveNode(DevGraphNode);
+
+            GraphArea.ForceStateHasChanged();
+        }
+
+        #endregion
 
         #region GetParameterAbsolutePosition
 
